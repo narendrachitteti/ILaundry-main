@@ -1,0 +1,144 @@
+/* Bills.css */
+.billtotal{
+   
+    height:100%;
+    margin-top: 8%;
+}
+.nav111{
+    position: fixed;
+    top: 0px;
+    z-index: 9999;
+    margin-bottom: 8%;
+}
+
+.invoice-form {
+    width: 95%;
+    gap: 1rem;
+    margin: 0 auto;
+    /* margin-top: 8%;
+     */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+}
+  
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.table-container {
+    margin-top: 10px;
+}
+
+.medicine-table {
+    width: 95%;
+    border: 1px solid #ccc;
+    margin-left: 2.5%;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+}
+
+.medicine-table th,
+.medicine-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.medicine-table th {
+    background-color: #f2f2f2;
+}
+
+.medicine-table select {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.medicine-table input[type="text"],
+.medicine-table input[type="number"] {
+    width: calc(100% - 16px); /* Adjust the width based on your layout */
+    padding: 8px; /* Adjust the padding as needed */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.medicine-table input[type="text"]:focus,
+.medicine-table input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff; 
+}
+.iconflex{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+.row09{
+    width: 40%;
+    padding: 50px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+}
+/* Button.css */
+
+.review-button {
+    background-color: #007bff; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 20%;
+    height: 3rem;
+    /* margin-right: 1rem; */
+    margin-top: 6rem;
+  }
+  
+  .review-button:hover {
+    background-color: #0056b3; 
+  }
+  
+  .invoice-form2 {
+    width: 40%;
+    /* gap: 1rem; */
+    /* margin: 0 auto; */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+    /* display: flex; */
+}
+
+.invoice-form2 .input009{
+    width: calc(100% - 16px); /* Adjust the width based on your layout */
+    padding: 8px; /* Adjust the padding as needed */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.flexxx{
+    display: flex;
+    gap: 2rem;
+    margin-top: 10px;
+    width: 95%;
+}

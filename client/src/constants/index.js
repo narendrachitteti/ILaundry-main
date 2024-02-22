@@ -1,0 +1,134 @@
+import { facebook, instagram, shieldTick, support, truckFast, twitter } from "../assets/icons";
+import { bigShoe1, bigShoe2,customer1, customer2, shoe4, shoe5, shoe6, shoe7, thumbnailShoe1, thumbnailShoe2, thumbnailShoe3, bigshoe3s } from "../assets/images";
+import bigShoe4 from "../assets/images/big-shoe4.png"
+import bigShoe5 from "../assets/images/big-shoe5.png"
+import iron1 from "../assets/images/iron1.jpeg"
+
+export const navLinks = [
+    { href: "#home", label: "Home" },
+    { href: "#products", label: "Services" },
+    { href: "#about-us", label: "About Us" },
+  
+    // { href: "#contact-us", label: "Contact Us" },
+];
+
+export const shoes = [
+    {
+        thumbnail: bigShoe1,
+        bigShoe: bigShoe1,
+    },
+    {
+        thumbnail: bigShoe2,
+        bigShoe: bigShoe2,
+    },
+    {
+        thumbnail: iron1,
+        bigShoe: iron1,
+    },
+];
+
+export const statistics = [
+    { value: '1k+', label: 'Services' },
+    { value: '20+', label: 'Branches' },
+    { value: '250+', label: 'Customers' },
+];
+
+export const products = [
+    {
+        imgURL: bigShoe1,
+        name: "Wash & Fold",
+        price: "₹60.00",
+    },
+    {
+        imgURL: iron1,
+        name: "Wash & Iron",
+        price: "₹99.00",
+    },
+    {
+        imgURL: bigShoe2,
+        name: "Premium Laundry",
+        price: "₹79.00",
+    },
+    {
+        imgURL: bigShoe5,
+        name: "Steam Ironing",
+        price: "₹24.00",
+    },
+];
+
+export const services = [
+    {
+        imgURL: truckFast,
+        label: "Free shipping",
+        subtext: "Enjoy seamless shopping with our complimentary shipping service."
+    },
+    {
+        imgURL: shieldTick,
+        label: "Secure Payment",
+        subtext: "Experience worry-free transactions with our secure payment options."
+    },
+    {
+        imgURL: support,
+        label: "Love to help you",
+        subtext: "Our dedicated team is here to assist you every step of the way."
+    },
+];
+
+export const reviews = [
+    {
+        imgURL: customer1,
+        customerName: 'Shahrukh',
+        rating: 4.5,
+        feedback: "This laundry service is a huge help during my busy work weeks. They collect my dirty clothes and return everything neatly folded so I can focus on my job."
+    },
+    {
+        imgURL: customer2,
+        customerName: 'Suhasini',
+        rating: 5,
+        feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room. So convenient!"
+    },
+    // {
+    //     imgURL: customer2,
+    //     customerName: 'Suhas',
+    //     rating: 5,
+    //     feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room. So convenient!"
+    // }
+];
+
+
+export const footerLinks = [
+    {
+        title: "Services",
+        links: [
+            { name: "Wash and Fold", href: "#products"},
+            { name: "Wash and Iron", href: "#products"},
+            { name: "Dry Cleaning", href: "#products"},
+            // { name: "Air Force 2", link: "/" },
+            // { name: "Nike Waffle Racer", link: "/" },
+            // { name: "Nike Cortez", link: "/" },
+        ],
+    },
+    {
+        title: "Help",
+        links: [
+            { name: "About us", link: "/" },
+            { name: "FAQs", link: "/" },
+            { name: "How it works", link: "/" },
+            { name: "Privacy policy", link: "/" },
+            { name: "Payment policy", link: "/" },
+        ],
+    },
+    {
+        title: "Get in touch",
+        links: [
+            { name: "customer@ilaundry.in", link: "mailto:customer@ilaundry.in" },
+            { name: "+91-1234567890", link: "tel:+91-0987654321" },
+        ],
+    },
+];
+
+export const socialMedia = [
+    { src: facebook, alt: "facebook logo" , link: "https://www.facebook.com/" },
+    { src: twitter, alt: "twitter logo", link: "https://twitter.com" },
+    { src: instagram, alt: "instagram logo", link: "https://www.instagram.com" },
+];

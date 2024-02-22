@@ -1,0 +1,308 @@
+.Main-Details-popupcon {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.2rem;
+    .Details-popupcon {
+      width: 50%;
+      z-index: 100;
+      background-color: #fff;
+      padding: 15px 30px 0 30px;
+      border-radius: 5px;
+    }
+    .Details-popupcon .title {
+      font-size: 20px;
+      font-weight: 500;
+      position: relative;
+    }
+    .Details-popupcon .title {
+      color: #000;
+    }
+    .content form .user-details {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    form .user-details .input-box {
+      width: calc(100% / 2 - 20px);
+    }
+    form .input-box span.details {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .user-details .input-box input {
+      height: 35px;
+      width: 90%;
+      outline: none;
+      font-size: 16px;
+      border-radius: 5px;
+      padding-left: 15px;
+      border: 1px solid #ccc;
+      border-bottom-width: 2px;
+      transition: all 0.3s ease;
+    }
+    .user-details .input-box input:focus,
+    .user-details .input-box input:valid {
+      border-color: #121420;
+    }
+    form .gender-details .gender-title {
+      font-size: 20px;
+      font-weight: 500;
+    }
+    form .category {
+      display: flex;
+      width: 70%;
+      margin: 7px 0;
+      justify-content: space-between;
+    }
+    form .category label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    form .category label .dot {
+      height: 10px;
+      width: 18px;
+      border-radius: 50%;
+      margin-right: 10px;
+      background: #d9d9d9;
+      border: 5px solid transparent;
+      transition: all 0.3s ease;
+    }
+    #dot-1:checked ~ .category label .one,
+    #dot-2:checked ~ .category label .two,
+    #dot-3:checked ~ .category label .three {
+      background: #9b59b6;
+      border-color: #d9d9d9;
+    }
+    form input[type="radio"] {
+      display: none;
+    }
+    form .button-con {
+      height: 35px;
+      margin: 25px 0;
+    }
+    form .button-con {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+      .button {
+        height: 100%;
+        width: 35%;
+        margin: auto;
+        border-radius: 5px;
+        border: none;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        cursor: pointer;
+        margin-top: -15px;
+        transition: all 0.3s ease;
+        background-color: #121420;
+      }
+      .buttoncd {
+        font-family: inherit;
+        font-size: 20px;
+        padding: 0.7em 1em;
+        padding-left: 0.9em;
+        display: flex;
+        align-items: center;
+        border: none;
+        overflow: hidden;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .buttoncd span {
+        display: block;
+        margin-left: 0.3em;
+        transition: all 0.3s ease-in-out;
+      }
+      .buttoncd svg {
+        display: block;
+        transform-origin: center center;
+        transition: transform 0.3s ease-in-out;
+      }
+      .buttoncd:hover .svg-wrapper {
+        animation: fly-1 0.6s ease-in-out infinite alternate;
+      }
+      .buttoncd:hover svg {
+        transform: translateX(3em) rotate(360deg) scale(1.1);
+      }
+      .buttoncd:hover span {
+        transform: translateX(9em);
+      }
+      .buttoncd:active {
+        transform: scale(0.95);
+      }
+      @keyframes fly-1 {
+        from {
+          transform: translateY(0.1em);
+        }
+        to {
+          transform: translateY(-0.1em);
+        }
+      }
+    }
+    form .button input:hover {
+      background-color: #121420;
+    }
+  }
+  @media (max-width: 584px) {
+    .Details-popupcon {
+      max-width: 100%;
+      margin-top: 121px;
+    }
+    form .user-details .input-box {
+      margin-bottom: 15px;
+      width: 100%;
+    }
+    form .category {
+      width: 100%;
+    }
+    .content form .user-details {
+      max-height: 300px;
+      overflow-y: scroll;
+    }
+    .user-details::-webkit-scrollbar {
+      width: 5px;
+    }
+  }
+  @media (max-width: 459px) {
+    .Details-popupcon .content .category {
+      flex-direction: column;
+    }
+  }
+  .Details-popupcon {
+    width: 80%;
+    background-color: #fff;
+    margin: auto;
+    margin-top: 1%;
+  }
+  .btn-123-abc,
+  .btn-123-abc *,
+  .btn-123-abc :after,
+  .btn-123-abc :before,
+  .btn-123-abc:after,
+  .btn-123-abc:before {
+    border: none;
+    background-color: #121420;
+    border: 0 solid;
+    box-sizing: border-box;
+  }
+  .btn-123-abc {
+    -webkit-tap-highlight-color: transparent;
+    background-image: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 100%;
+    font-weight: 900;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+  }
+  .btn-123-abc:disabled {
+    cursor: default;
+  }
+  .btn-123-abc:-moz-focusring {
+    outline: auto;
+  }
+  .btn-123-abc svg {
+    display: block;
+  }
+  .btn-123-abc [hidden] {
+    display: none;
+  }
+  .btn-123-abc {
+    overflow: hidden;
+    position: relative;
+  }
+  .btn-123-abc span {
+    display: grid;
+    inset: 0;
+    color: #fff;
+    place-items: center;
+    position: absolute;
+    transition: opacity 0.01s ease;
+  }
+  .btn-123-abc .marquee {
+    --spacing: 3em;
+    --start: -2em;
+    --end: 4em;
+    display: flex;
+    gap: 1rem;
+    font-size: xx-large;
+    animation: marquee 2.5s linear infinite;
+    animation-play-state: paused;
+    opacity: 0;
+    position: relative;
+  }
+  .btn-123-abc:hover .marquee {
+    animation-play-state: running;
+    opacity: 1;
+  }
+  .btn-123-abc:hover .text {
+    opacity: 0;
+  }
+  @keyframes marquee {
+    0% {
+      transform: translateX(var(--start));
+    }
+    to {
+      transform: translateX(var(--end));
+    }
+  }
+  .radio-button-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .radio-button {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+  }
+  .radio-button__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .radio-button__label {
+    display: inline-block;
+    padding-left: 30px;
+    margin-bottom: 10px;
+    position: relative;
+    font-size: 15px;
+    color: #3e3e3e;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .radio-button__custom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #555;
+    transition: all 0.3s ease;
+  }
+  .radio-button__input:checked + .radio-button__label .radio-button__custom {
+    background-color: #060606;
+    border-color: transparent;
+    transform: scale(0.8);
+    box-shadow: 0 0 20px #04050680;
+  }
+  .radio-button__input:checked + .radio-button__label {
+    color: #1b1d20;
+  }
+  .radio-button__label:hover .radio-button__custom {
+    transform: scale(1.2);
+    border-color: #1b1c1e;
+    box-shadow: 0 0 20px #08090c80;
+  }
+  

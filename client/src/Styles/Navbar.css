@@ -1,0 +1,37 @@
+.bills {
+    position: relative;
+    display: inline-block;
+    display: flex;
+    cursor: pointer; /* Add cursor pointer for better UX */
+  }
+  
+  .bills:hover .dropdown-content {
+    display: block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px,
+    rgba(48, 48, 48, 0.5) 5px 10px 15px;
+    padding: 15px 18px;
+    z-index: 1;
+    top: 2.5rem;
+    left: 0;
+  }
+  
+  .dropdown-content p {
+    margin: 1;
+  }
+  .dropdown-content p:hover {
+    background-color:rgb(65, 119, 141);
+    color: white;
+    
+  }
+  .dropdown-content:hover {
+    background-color: #e0e0e0; /* Change to the desired background color */
+    /* Add any other styling for the hover effect */
+  }
+  

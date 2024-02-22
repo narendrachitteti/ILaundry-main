@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+
+* {
+  box-sizing: border-box;
+}
+
+.complete98 {
+  /* background: #f6f5f7; */
+  background-image: url('https://img.freepik.com/premium-vector/laundry-room-design-with-washing-machine-3d-illustration_858664-12745.jpg?w=900');
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Montserrat", sans-serif;
+  height: 100vh;
+  
+}
+
+
+.cursor-pointer{
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}

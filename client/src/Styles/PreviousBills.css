@@ -1,0 +1,659 @@
+
+.lab-service-table-container_5 {
+    padding: 2rem 1rem ;
+    /* min-height: 120vh; */
+    height: 100lvh;
+    /* background-color: #d4d3d3; */
+   }
+ 
+   .lab-service-table_5 tbody tr .remainingamount{
+    font-weight: bold;
+     color:rgb(248, 135, 6);
+   }
+ .lab-service-table_5 tbody tr .totalamount{
+   color:black;
+   font-weight: bold;
+ 
+ }
+ 
+ .lab-service-table_5 .paidamount{
+   color: green;
+   font-weight: bold;
+ }
+   .lab-service-table_5 tbody tr .unpaid{
+     color: #e7b416;
+   font-weight: bold;
+ 
+ 
+   }
+   .lab-service-table_5 tbody tr .paid{
+     color: #14c841;
+   font-weight: bold;
+ 
+   }
+   .active-page {
+    background-color:black;
+   
+    margin-top: -1px;
+    padding: 1px 8px;
+    border-radius: 30px;
+  
+    a{
+      color: #fff !important;
+      text-decoration: none;
+    }
+  }
+   
+   .product-ooi{
+     color: white;
+   }
+   .search-add_5 {
+     margin-bottom: 5vh;
+     display: flex;
+     justify-content: space-between;
+   }
+   
+   .lab-ser-headding-arun5 {
+    
+     display: flex;
+     justify-content: left;
+   }
+   .lab-ser-subheadding-arun5 {
+    
+     font-size: 30px;
+     display: flex;
+     color: #528575;
+     margin-top: 7%;
+     font-weight: bolder;
+     /* justify-content: left; */
+   }
+   
+   .add-button_5 {
+     border: none;
+     width: 150px;
+     height: 50px;
+     color: #fff;
+     z-index: 1;
+     display: flex;
+     background: #000;
+     position: relative;
+     cursor: pointer;
+   }
+   
+   .add-button_5container
+   
+   {
+ 
+ display: flex;
+ gap: 2rem;
+ 
+     a {
+       color: white;
+       margin: 0 auto;
+       align-self: center;
+       font-size: 17px;
+       font-weight: bold;
+       text-align: center;
+     }
+   }
+   
+   .upload-dialogpopup {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 500px;
+    text-align: center;
+    box-shadow: 0 255px 255px 255px rgba(0, 0, 0, 0.05),
+      255px -255px 255px 255px rgba(0, 0, 0, 0.05),
+      -255px -74px 255px 255px rgba(0, 0, 0, 0.05);
+    h2 {
+      margin-bottom: 5%;
+    }
+    input {
+      margin-left: 15%;
+    }
+    .uploadfilebuttoncon {
+      margin-top: 7%;
+      display: flex;
+      gap: 3rem;
+      margin-left: 30%;
+      button {
+        padding: 5px 15px;
+        cursor: pointer;
+      }
+      button.cancel {
+        background-color: #0056b3;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+      }
+      button.confirm {
+        background-color: tomato;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button.cancel:hover {
+        background-color: rgba(120, 154, 194, 1);
+      }
+      button.confirm:hover {
+        background-color: lightcoral;
+      }
+    }
+  }
+   
+   .add-button_5::after {
+     position: absolute;
+     content: "";
+     width: 100%;
+     z-index: -1;
+     height: 10%;
+     bottom: 0;
+     clip-path: polygon(
+       0% 74%,
+       4% 75%,
+       8% 76%,
+       11% 77%,
+       15% 78%,
+       20% 78%,
+       25% 77%,
+       32% 77%,
+       37% 75%,
+       40% 74%,
+       43% 74%,
+       46% 73%,
+       52% 72%,
+       57% 72%,
+       65% 74%,
+       66% 75%,
+       71% 78%,
+       75% 82%,
+       81% 86%,
+       83% 88%,
+       88% 91%,
+       90% 94%,
+       94% 96%,
+       98% 98%,
+       100% 100%,
+       82% 100%,
+       0 100%
+     );
+     background-color: #2b3375;
+     transition: 0.2s ease;
+   }
+   
+   .add-button_5::before {
+     position: absolute;
+     content: "";
+     /*   bottom: 80%; */
+     transform: rotate(180deg);
+     width: 100%;
+     height: 10%;
+     transition: 0.2s ease;
+     /*   bottom:; */
+     z-index: -1;
+     clip-path: polygon(
+       0% 74%,
+       4% 75%,
+       8% 76%,
+       11% 77%,
+       15% 78%,
+       20% 78%,
+       25% 77%,
+       32% 77%,
+       37% 75%,
+       40% 74%,
+       43% 74%,
+       46% 73%,
+       52% 72%,
+       57% 72%,
+       65% 74%,
+       66% 75%,
+       71% 78%,
+       75% 82%,
+       81% 86%,
+       83% 88%,
+       88% 91%,
+       90% 94%,
+       94% 96%,
+       98% 98%,
+       100% 100%,
+       82% 100%,
+       0 100%
+     );
+     background-color: #2b3375;
+   }
+   
+   .add-button_5:hover::after {
+     clip-path: polygon(
+       0 30%,
+       9% 34%,
+       7% 39%,
+       11% 43%,
+       13% 33%,
+       17% 30%,
+       24% 34%,
+       25% 35%,
+       30% 31%,
+       30% 38%,
+       39% 33%,
+       35% 43%,
+       43% 45%,
+       55% 46%,
+       65% 74%,
+       67% 66%,
+       81% 57%,
+       75% 82%,
+       81% 86%,
+       83% 88%,
+       88% 91%,
+       90% 94%,
+       94% 96%,
+       98% 98%,
+       100% 100%,
+       82% 100%,
+       0 100%
+     );
+     height: 80%;
+   }
+   
+   .add-button_5:hover::before {
+     clip-path: polygon(
+       0 30%,
+       9% 34%,
+       7% 39%,
+       11% 43%,
+       13% 33%,
+       17% 30%,
+       24% 34%,
+       25% 35%,
+       30% 31%,
+       30% 38%,
+       39% 33%,
+       35% 43%,
+       43% 45%,
+       55% 46%,
+       65% 74%,
+       67% 66%,
+       81% 57%,
+       75% 82%,
+       81% 86%,
+       83% 88%,
+       88% 91%,
+       90% 94%,
+       94% 96%,
+       98% 98%,
+       100% 100%,
+       82% 100%,
+       0 100%
+     );
+     height: 80%;
+   }
+   
+   
+   
+   /* Styling for the search bar */
+   .search-bar_5 {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     margin-bottom: -20px;
+     a{
+       color: white !important;
+     }
+   }
+   
+   .search-input_5 {
+    
+     display: flex;
+     align-items: center;
+     border: 3px solid #030303;
+     border-radius: 4px;
+     transition: border-color 0.3s, box-shadow 0.3s;
+     padding: 10px;
+ 
+     .input-field_1{
+       outline: none;
+       border: none;
+       background-color: transparent;
+     }
+   }
+   
+   .search-icon_5 {
+     margin-right: 8px;
+     color: #555;
+   }
+   
+ 
+   
+   /* Table styles */
+   .lab-service-table_5 {
+     width: 100%;
+     border-collapse: collapse;
+     border: 1px solid #ccc;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+     border-radius: 2px;
+     margin-top: 20px;
+     table-layout:auto;
+     font-size: 14px !important;
+ 
+    
+   }
+   .lab-service-table_5 thead{
+     background-color: #0f143c;
+   }
+   
+   .lab-service-table_5 th,
+   .lab-service-table_5 td {
+     border: 1px solid #ccc;
+     padding:1px;
+     text-align: center;
+   
+   }
+   .lab-service-table_5 th{
+     padding: 2px;
+   }
+   
+   
+   
+   .edit-button_5 {
+    color: white;
+ 
+     border: none;
+     border-radius: 4px;
+     padding: 4px 6px;
+     cursor: pointer;
+     transition: background-color 0.3s;
+     margin: 3px;
+   background-color: #121420;
+      
+   }
+   
+   .delete-button_5{
+     color: white;
+ 
+     border: none;
+     border-radius: 4px;
+     padding: 8px 16px;
+     cursor: pointer;
+     transition: background-color 0.3s;
+     margin: 6px;
+     background-color: #e5263c;
+   }
+   
+   .edit-button_5:hover,
+   .delete-button_5:hover {
+     color: white;
+     background-color: #2b3375;
+   }
+   
+   .pagination-container a{
+     color: #2b3375;
+   }
+   
+   .confirmation-dialog {
+     background-color: #fff;
+     border: 1px solid #ccc;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+     padding: 20px;
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     z-index: 1000;
+     width: 300px;
+     text-align: center;
+   }
+   
+   .confirmation-dialog p {
+     margin: 0 0 20px;
+   }
+   
+   .confirmation-dialog button {
+     margin: 0 10px;
+     padding: 5px 15px;
+     cursor: pointer;
+   }
+   
+   .confirmation-dialog button.cancel {
+     background-color:#0056b3;
+     color: #fff;
+     border: none;
+     border-radius: 5px;
+   }
+   
+   .confirmation-dialog button.confirm {
+     background-color:tomato;
+     color: #fff;
+     border: none;
+     border-radius: 5px;
+     cursor: pointer;
+   
+   }
+   .confirmation-dialog button.cancel:hover{
+     background-color:rgba(120, 154, 194, 1);
+   }
+   
+   .confirmation-dialog button.confirm:hover{
+     background-color: lightcoral;
+   }
+   .pagination-container {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 10px;
+     margin-top: 30px;
+     /* margin-left: 690px; */
+
+     a{
+      text-decoration: none;
+     }
+   }
+   
+   
+   .pagination{
+     display: flex;
+     align-items: right;
+     list-style: none;
+     /* display: grid; */
+   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Adjust column width */
+   gap: 15px;
+   }
+ 
+   
+   .asd_dsfet005{
+     display: inline-flex;
+   }
+   .input-field_1{
+     background-color: rgba(255, 255, 255, 0.76);
+   }
+   
+   
+   @media only screen and (max-width: 429px) {
+     .lab-service-table_5{
+       font-size: 0.8rem;
+       width: 97%;
+       overflow-x: scroll;
+       height: auto;
+       display: block;
+   
+     }
+     .lab-service-table_5 th,
+   .lab-service-table_5 td {
+     border: 1px solid #ccc;
+     /* padding: 5px; */
+     text-align: center;
+   }
+   
+   .search-input_5 {
+     padding: 2px;
+   }
+  
+   .search-input_5 {
+    
+     display: flex;
+     align-items: center;
+     border: 1px solid #ccc;
+     border-radius: 4px;
+     transition: border-color 0.3s, box-shadow 0.3s;
+     padding: 1px;
+   }
+ }
+   
+ 
+ 
+ 
+ .float-log-backButton{
+   border: none;
+ 
+   margin-left:1rem;
+   margin-bottom:1rem;
+   background: #00000000;
+ 
+ 
+ 
+   .button {
+     position: relative;
+     transition: all 0.3s ease-in-out;
+     box-shadow: rgba(215, 215, 225, 0.25) 0px 50px 100px -20px, rgba(227, 199, 199, 0.3) 0px 30px 60px -30px, rgba(192, 207, 223, 0.35) 0px -2px 6px 0px inset;
+     padding-block: 0.5rem;
+     padding-inline: 1.25rem;
+     background-color:rgb(14, 26, 61);
+     border-radius: 9999px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #ffff;
+     gap: 10px;
+     font-weight: bold;
+     outline: none;
+     overflow: hidden;
+     font-size: 15px;
+   }
+   
+   .icon {
+     width: 24px;
+     height: 24px;
+     transition: all 0.3s ease-in-out;
+   }
+   
+   .button:hover {
+     border-color: #fff9;
+   }
+   
+   .button:hover .icon {
+     transform: translate(-4px);
+   }
+   
+   .button:hover::before {
+     animation: shine 1.5s ease-out infinite;
+   }
+   
+   .button::before {
+     content: "";
+     position: absolute;
+     width: 100px;
+     height: 100%;
+     background-image: linear-gradient(
+       120deg,
+       rgba(255, 255, 255, 0) 30%,
+       rgba(255, 255, 255, 0.8),
+       rgba(255, 255, 255, 0) 70%
+     );
+     top: 0;
+     left: -100px;
+     opacity: 0.6;
+   }
+   
+   @keyframes shine {
+     0% {
+       left: -100px;
+     }
+   
+     60% {
+       left: 100%;
+     }
+   
+     to {
+       left: 100%;
+     }
+   }
+   
+ 
+ 
+ 
+ }
+ 
+ .flex56{
+  display: flex;
+ }
+ .bbb{
+  margin-top: 7%;
+  margin-right: 1%;
+  align-items: center;
+ }
+ 
+     
+ .upload-dialogpopup {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.upload-dialogpopup h2 {
+  margin-bottom: 10px;
+}
+
+.upload-dialogpopup table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.upload-dialogpopup th,
+.upload-dialogpopup td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.upload-dialogpopup th {
+  background-color: rgb(14, 26, 61);
+  text-align: left;
+  text-align: center;
+  color: white;
+}
+
+.upload-dialogpopup .uploadfilebuttoncon {
+  text-align: center;
+}
+
+.upload-dialogpopup button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.upload-dialogpopup button.cancel {
+  background-color: #dc3545;
+  margin-right: 10px;
+}
+
+.upload-dialogpopup button.cancel:hover,
+.upload-dialogpopup button:hover {
+  background-color: #0056b3;
+}
