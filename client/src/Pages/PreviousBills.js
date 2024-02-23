@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import Popup from "reactjs-popup";
-import CustomerForm from "./CustomerForm.js"
+import CustomerForm from "./CustomerForm.js";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
 import "../Styles/PreviousBills.css";
@@ -18,17 +18,16 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardDoubleArrowLeft from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRight from "@mui/icons-material/KeyboardDoubleArrowRight";
-import image13 from "../components/images/background.jpg"
+import image13 from "../components/images/background.jpg";
 import Navbar from "../components/Navbar.js";
 import Backbutton from "./Backbutton.js";
 import { BASE_URL } from "../Helper/Helper.js";
 
 const PreviousBills = () => {
-  //   console.log("hi" + BASE_URL)
   const [customerServicesCus, setcustomerServicesCus] = useState([]);
   const [searchTextCus, setsearchTextCus] = useState("");
   const [activePage, setActivePage] = useState(1);
-  const itemsPerPage = 5; // Number of items to display per page
+  const itemsPerPage = 5;
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [showUploadPopup, setShowUploadPopup] = useState(false);
   const [file, setFile] = useState(null);
@@ -38,10 +37,11 @@ const PreviousBills = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [selectedServiceCus, setselectedServiceCus] = useState(null);
   const [isAddPopupOpenCus, setAddPopupOpenCus] = useState(false);
+  const [selectedServiceIds, setSelectedServiceIds] = useState({});
 
   const fetchcustomerServicesCus = async () => {
     try {
-      console.log("Fetching Customer Details"); // Check if this log is printed
+      console.log("Fetching Customer Details");
       const response = await axios.get(`${BASE_URL}/invoice`);
       setcustomerServicesCus(response.data);
       console.log(customerServicesCus);
@@ -49,20 +49,20 @@ const PreviousBills = () => {
       console.error("Error fetching Customer Details:", error);
     }
   };
+
   const handleCancelCus = () => {
     setselectedServiceCus(null);
     setAddPopupOpenCus(false);
   };
+
   const handleEditCus = (service) => {
     setselectedServiceCus(service);
     setAddPopupOpenCus(true);
   };
-  
-  
+
   useEffect(() => {
     console.log("Before API call");
     fetchcustomerServicesCus();
-   
   }, []);
 
   useEffect(() => {
@@ -87,8 +87,6 @@ const PreviousBills = () => {
       console.error("Error adding/updating Customer Details:", error);
     }
   };
-  
-  
 
   const handlesearchTextCusChange = (newValue) => {
     setsearchTextCus(newValue);
@@ -98,58 +96,52 @@ const PreviousBills = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const filterByField = (item, field, searchText) => {
-   
-  
-    return item[field] && item[field].toString().toLowerCase().includes(searchText.toLowerCase());
+    return (
+      item[field] &&
+      item[field].toString().toLowerCase().includes(searchText.toLowerCase())
+    );
   };
+
   const handleDeleteCus = async () => {
-    // Your existing delete logic
     try {
-      await axios.delete(
-        `${BASE_URL}/invoice/${selectedServiceCus._id}`
-      );
+      await axios.delete(`${BASE_URL}/invoice/${selectedServiceCus._id}`);
       fetchcustomerServicesCus();
     } catch (error) {
       console.error("Error deleting Customer Details:", error);
     }
   };
-  
+
   const filteredData = customerServicesCus.filter((item) => {
     return (
-      filterByField(item, 'currentDate', searchTextCus) ||
-      filterByField(item, 'customerName', searchTextCus) ||
-      filterByField(item, 'phoneNumber', searchTextCus) ||
-      filterByField(item, 'Email', searchTextCus) ||
-      filterByField(item, 'notes', searchTextCus) ||
-      filterByField(item, 'total', searchTextCus) ||
-      filterByField(item, 'subTotal', searchTextCus) ||
-      filterByField(item, 'taxRate', searchTextCus) ||
-      filterByField(item, 'taxAmount', searchTextCus) ||
-      filterByField(item, 'discountRate', searchTextCus) ||
-      filterByField(item, 'discountAmount', searchTextCus) ||
-      filterByField(item, 'items', searchTextCus)
-
+      filterByField(item, "currentDate", searchTextCus) ||
+      filterByField(item, "customerName", searchTextCus) ||
+      filterByField(item, "phoneNumber", searchTextCus) ||
+      filterByField(item, "Email", searchTextCus) ||
+      filterByField(item, "notes", searchTextCus) ||
+      filterByField(item, "total", searchTextCus) ||
+      filterByField(item, "subTotal", searchTextCus) ||
+      filterByField(item, "taxRate", searchTextCus) ||
+      filterByField(item, "taxAmount", searchTextCus) ||
+      filterByField(item, "discountRate", searchTextCus) ||
+      filterByField(item, "discountAmount", searchTextCus) ||
+      filterByField(item, "items", searchTextCus)
     );
   });
+
   const handleDownloadPDF = (service) => {
     const pdf = new jsPDF();
 
-    // Set font size and style
     pdf.setFontSize(16);
     pdf.setFont("helvetica", "bold");
 
     const imgWidth = 30;
     const imgHeight = 15;
-    const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155; // Adjust X position if needed
-    const imgY = 15; // Adjust Y position if needed
+    const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
+    const imgY = 15;
     pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
 
     const billingDateTime = new Date().toLocaleString();
-    pdf.text(
-      `Customer Details          Date : ${billingDateTime}`,
-      20,
-      45
-    );
+    pdf.text(`Customer Details          Date : ${billingDateTime}`, 20, 45);
     pdf.rect(
       10,
       10,
@@ -157,14 +149,11 @@ const PreviousBills = () => {
       pdf.internal.pageSize.getHeight() - 20,
       "S"
     );
+    pdf.line(20, 55, 190, 55);
 
-    pdf.line(20, 55, 190, 55); // Add a horizontal line under the billingDateTime text
-
-    // Set font size and style for the table
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
 
-    // Create a table-like structure
     const tableRows = [
       ["Customer Name:", service.customerName],
       ["Phone Number:", service.phoneNumber],
@@ -177,39 +166,37 @@ const PreviousBills = () => {
       ["items:", service.items],
     ];
 
-    
-    let yPos = 65; 
+    let yPos = 65;
 
     tableRows.forEach(([label, value]) => {
-        const sanitizedLabel = label.replace(/[^\x20-\x7E]/g, '');
-      
-        console.log("Sanitized Label:", sanitizedLabel);
-        console.log("yPos:", yPos, typeof yPos);
-      
-        try {
-          pdf.text(sanitizedLabel, 20, yPos);
-        } catch (error) {
-          console.error("Error adding label:", error);
-        }
-      
-        try {
-          pdf.text(value, 80, yPos);
-        } catch (error) {
-          console.error("Error adding value:", error);
-        }
-      
-        yPos += 10;
-      });
-      
-      
-    const signature = "Signature Or Stamp"; // Change to your desired signature text
-    const signatureX = 150; // Adjust X position for signature
-    const signatureY = yPos + 20; // Adjust Y position for signature
+      const sanitizedLabel = label.replace(/[^\x20-\x7E]/g, "");
+
+      console.log("Sanitized Label:", sanitizedLabel);
+      console.log("yPos:", yPos, typeof yPos);
+
+      try {
+        pdf.text(sanitizedLabel, 20, yPos);
+      } catch (error) {
+        console.error("Error adding label:", error);
+      }
+
+      try {
+        pdf.text(value, 80, yPos);
+      } catch (error) {
+        console.error("Error adding value:", error);
+      }
+
+      yPos += 10;
+    });
+
+    const signature = "Signature Or Stamp";
+    const signatureX = 150;
+    const signatureY = yPos + 20;
     pdf.text(signature, signatureX, signatureY);
 
-    // Save the PDF
     pdf.save(`customer_details_${service._id}.pdf`);
   };
+
   const generateWhatsappMessage = (service) => {
     return `
       Customer Name: ${service.prefix}${service.customerName}
@@ -221,7 +208,7 @@ const PreviousBills = () => {
       Tax Rate: ${service.taxRate}
       Tax Amount: ${service.taxAmount}
       Discount Rate: ${service.discountRate}
-     Discount Amount: ${service.discountAmount}
+      Discount Amount: ${service.discountAmount}
       Items: ${service.items}
     `;
   };
@@ -230,14 +217,13 @@ const PreviousBills = () => {
     setActivePage(pageNumber);
   };
 
-
-  const openUploadPopup = (uniqueID) => {
-    setSelectedServiceId(uniqueID);
+  const openUploadPopup = (service) => {
+    setSelectedServiceId(service._id);
     setShowUploadPopup(true);
   };
 
-  const openUploadfilePopup = (uniqueID) => {
-    setSelectedServiceId(uniqueID);
+  const openUploadfilePopup = (service) => {
+    setSelectedServiceId(service._id);
     setShowUploadfilesPopup(true);
   };
 
@@ -245,16 +231,15 @@ const PreviousBills = () => {
     setFile(e.target.files[0]);
   };
 
-
   return (
     <>
-     <Navbar/>
-      <div className="lab-service-table-container_5" 
-            // style={{backgroundImage: `url(${image13})`}}
-      >
+      <Navbar />
+      <div className="lab-service-table-container_5">
         <div className="flex56">
-    <div className="bbb"> <Backbutton  /></div>   
-        <h2 className="lab-ser-subheadding-arun5">Previous Bills</h2>
+          <div className="bbb">
+            <Backbutton />
+          </div>
+          <h2 className="lab-ser-subheadding-arun5">Previous Bills</h2>
         </div>
         <br></br>
         <div className="search-add_5">
@@ -270,8 +255,6 @@ const PreviousBills = () => {
               />
             </div>
           </div>
-
-         
         </div>
         <table className="lab-service-table_5">
           <thead>
@@ -285,7 +268,6 @@ const PreviousBills = () => {
               <th className="product-ooi">SubTotal</th>
               <th className="product-ooi">TaxRate</th>
               <th className="product-ooi">Tax Amount</th>
-
               <th className="product-ooi">Discount Rate</th>
               <th className="product-ooi">Discount Amount</th>
               <th className="product-ooi">Items</th>
@@ -298,89 +280,63 @@ const PreviousBills = () => {
               .map((service) => (
                 <tr key={service._id}>
                   <td>{service.currentDate}</td>
-                  <td>
-                    {service.invoiceNumber}
-                  </td>
-                  <td>
-                    {service.customerName}
-                  </td>
+                  <td>{service.invoiceNumber}</td>
+                  <td>{service.customerName}</td>
                   <td>{service.phoneNumber}</td>
                   <td>{service.Email}</td>
                   <td>{service.total}</td>
                   <td>{service.subTotal}</td>
                   <td>{service.taxRate}</td>
                   <td>{service.taxAmount}</td>
-
                   <td>{service.discountRate}</td>
                   <td>{service.discountAmount}</td>
                   <td>
-
-                  <button
-                        className="edit-button_5"
-                        onClick={() => openUploadfilePopup(service.uniqueID)}
-                      >
-                        <HiOutlineViewfinderCircle title="file view" />
-                      </button>
-                      {showUploadfilesPopup && (
-                        // <div className="upload-dialogpopup">
-                        //   <h2>Added Items</h2>
-                        //   <span>{selectedServiceId}</span>
-                        //   <ol>
-                        //   {service.items.map((item) => (
-                        // <div key={item.id}>
-                        //     Item name: {item.name}, Price: {item.price}, Quantity: {item.quantity}, Description: {item.description}
-                        // </div>
-                        // ))}
-                        //   </ol>
-                        //   <div className="uploadfilebuttoncon">
-                        //     <button
-                        //       className="cancel"
-                        //       onClick={() => setShowUploadfilesPopup(false)}
-                        //     >
-                        //       Cancel
-                        //     </button>
-                        //   </div>
-                        // </div>
+                    <button
+                      className="edit-button_5"
+                      onClick={() => openUploadfilePopup(service)}
+                    >
+                      <HiOutlineViewfinderCircle title="file view" />
+                    </button>
+                    {showUploadfilesPopup &&
+                      selectedServiceId === service._id && (
                         <div className="upload-dialogpopup">
-                            <h2 style={{color:'darkgreen'}}>Added Items</h2>
-                            <span>{selectedServiceId}</span>
-                            <table>
-                              <thead>
-                                <tr>
-                                  <th>Item Name</th>
-                                  <th>Price</th>
-                                  <th>Quantity</th>
-                                  <th>Description</th>
+                          <h2 style={{ color: "darkgreen" }}>Added Items</h2>
+                          <span>{service.uniqueID}</span>
+                          <table>
+                            <thead>
+                              <tr>
+                      
+                                <th>Item Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Description</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {service.items.map((item) => (
+                                <tr key={item.id}>
+                                
+                                  <td>{item.name}</td>
+                                  <td>{item.price}</td>
+                                  <td>{item.quantity}</td>
+                                  <td>{item.description}</td>
                                 </tr>
-                              </thead>
-                              <tbody>
-                                {service.items.map((item) => (
-                                  <tr key={item.id}>
-                                    <td>{item.name}</td>
-                                    <td>{item.price}</td>
-                                    <td>{item.quantity}</td>
-                                    <td>{item.description}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                            <div className="uploadfilebuttoncon">
-                              <button className="cancel" onClick={() => setShowUploadfilesPopup(false)}>
-                                Cancel
-                              </button>
-                            </div>
+                              ))}
+                            </tbody>
+                          </table>
+                          <div className="uploadfilebuttoncon">
+                            <button
+                              className="cancel"
+                              onClick={() => setShowUploadfilesPopup(false)}
+                            >
+                              Cancel
+                            </button>
                           </div>
-
+                        </div>
                       )}
-                    </td>
-                    <td>
+                  </td>
+                  <td>
                     <div className="asd_dsfet005">
-                      {/* <button
-                        className="edit-button_5"
-                        onClick={() => handleEditCus(service)}
-                      >
-                        Edit
-                      </button> */}
                       <button
                         className="edit-button_5"
                         onClick={() => handleDownloadPDF(service)}
@@ -420,10 +376,8 @@ const PreviousBills = () => {
                           </button>
                         </div>
                       )}
-                      
-                        </div>
-                
-                  </td> 
+                    </div>
+                  </td>
                 </tr>
               ))}
           </tbody>
@@ -459,30 +413,17 @@ const PreviousBills = () => {
           />
         </div>
         <Popup
-  open={selectedServiceCus !== null || isAddPopupOpenCus}
-  onClose={handleCancelCus}
-  closeOnDocumentClick
->
-  <CustomerForm
-    selectedServiceCus={selectedServiceCus}
-    onSubmit={handleAddCusOrUpdate}
-    onCancel={handleCancelCus}
-    onDelete={handleDeleteCus}
-  />
-</Popup>
-{/* 
-        <Popup
           open={selectedServiceCus !== null || isAddPopupOpenCus}
           onClose={handleCancelCus}
           closeOnDocumentClick
         >
-          <InvoiceForm
+          <CustomerForm
             selectedServiceCus={selectedServiceCus}
             onSubmit={handleAddCusOrUpdate}
             onCancel={handleCancelCus}
             onDelete={handleDeleteCus}
           />
-        </Popup> */}
+        </Popup>
       </div>
     </>
   );
