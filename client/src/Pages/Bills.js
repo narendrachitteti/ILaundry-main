@@ -375,7 +375,7 @@ const Bills = () => {
       invoiceDate,
       clientName,
       clientContact,
-      rows: rows.map((row, index) => ({
+      items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
         subtotal: subtotals[index],
@@ -447,6 +447,7 @@ const Bills = () => {
             id="invoiceNo"
             value={invoiceNo}
             onChange={(e) => setInvoiceNo(e.target.value)}
+            readOnly
           />
         </div>
         <div className="input-group">
@@ -459,7 +460,7 @@ const Bills = () => {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="clientName">Client Name:</label>
+          <label htmlFor="clientName">Customer Name:</label>
           <input
             type="text"
             id="clientName"
@@ -468,7 +469,7 @@ const Bills = () => {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="clientContact">Client Contact No:</label>
+          <label htmlFor="clientContact">Customer Contact No:</label>
           <input
             type="tel"
             pattern="[0-9]*"

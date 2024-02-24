@@ -36,7 +36,7 @@ const billingSchema = new mongoose.Schema({
   },
   clientName: String,
   clientContact: String,
-  rows: [{
+  items: [{
     item: String,
     quantity: Number,
     subtotal: Number,
