@@ -37,18 +37,29 @@ const PreviousBills = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [selectedServiceCus, setselectedServiceCus] = useState(null);
   const [isAddPopupOpenCus, setAddPopupOpenCus] = useState(false);
-  const [selectedServiceIds, setSelectedServiceIds] = useState({});
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [allData, setAllData] = useState([]);
 
   const fetchcustomerServicesCus = async () => {
     try {
       console.log("Fetching Customer Details");
       const response = await axios.get(`${BASE_URL}/invoice`);
       setcustomerServicesCus(response.data);
+      setAllData(response.data); 
       console.log(customerServicesCus);
     } catch (error) {
       console.error("Error fetching Customer Details:", error);
     }
   };
+  const handleFromDateChange = (e) => {
+    setFromDate(e.target.value);
+  };
+
+  const handleToDateChange = (e) => {
+    setToDate(e.target.value);
+  };
+
 
   const handleCancelCus = () => {
     setselectedServiceCus(null);
@@ -87,6 +98,8 @@ const PreviousBills = () => {
       console.error("Error adding/updating Customer Details:", error);
     }
   };
+  
+  
 
   const handlesearchTextCusChange = (newValue) => {
     setsearchTextCus(newValue);
@@ -230,7 +243,32 @@ const PreviousBills = () => {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
+  const handleFilterByDate = () => {
+    console.log("Filtering by date...");
+    console.log("fromDate:", fromDate);
+    console.log("toDate:", toDate);
 
+    // const filteredData = allData.filter((item) => {
+    //   const currentDate = new Date(item.currentDate).getTime();
+    //   const fromTimestamp = fromDate ? new Date(fromDate).getTime() : 0;
+    //   const toTimestamp = toDate ? new Date(toDate).getTime() : Infinity;
+
+    //   return currentDate >= fromTimestamp && currentDate <= toTimestamp;
+    // });
+    const filteredData = allData.filter((item) => {
+      const currentDate = new Date(item.currentDate).getTime();
+      const fromTimestamp = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : 0;
+      const toTimestamp = toDate ? new Date(toDate).setHours(23, 59, 59, 999) : Infinity;
+    
+      return currentDate >= fromTimestamp && currentDate <= toTimestamp;
+    });
+    
+    console.log("Filtered Data:", filteredData);
+
+    setcustomerServicesCus(filteredData);
+  };
+
+  
   return (
     <>
       <Navbar />
@@ -255,6 +293,17 @@ const PreviousBills = () => {
               />
             </div>
           </div>
+          <div className="date-filter">
+            <label>From Date:</label>
+            <input type="date" value={fromDate} onChange={handleFromDateChange} />
+
+            <label>To Date:</label>
+            <input type="date" value={toDate} onChange={handleToDateChange} />
+
+            <button onClick={handleFilterByDate}>Filter</button>
+          </div>
+
+         
         </div>
         <table className="lab-service-table_5">
           <thead>
@@ -280,8 +329,12 @@ const PreviousBills = () => {
               .map((service) => (
                 <tr key={service._id}>
                   <td>{service.currentDate}</td>
-                  <td>{service.invoiceNumber}</td>
-                  <td>{service.customerName}</td>
+                  <td>
+                    {service.invoiceNumber}
+                  </td>
+                  <td>
+                    {service.customerName}
+                  </td>
                   <td>{service.phoneNumber}</td>
                   <td>{service.Email}</td>
                   <td>{service.total}</td>

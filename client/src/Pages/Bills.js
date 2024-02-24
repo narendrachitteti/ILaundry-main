@@ -334,7 +334,7 @@ const Bills = () => {
       invoiceDate,
       clientName,
       clientContact,
-      rows: rows.map((row, index) => ({
+      items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
         price:price[index],
@@ -396,20 +396,12 @@ const Bills = () => {
       <div className="invoice-form">
         <div className="input-group">
           <label htmlFor="invoiceNo">Invoice No:</label>
-          {/* <input
+           <input
             type="text"
             id="invoiceNo"
             value={invoiceNo}
             onChange={(e) => setInvoiceNo(e.target.value)}
-          /> */}
-          <input
-            type="text"
-            id="invoiceNo"
-            value={`INV${invoiceNumber.toString().padStart(5, '0')}`}
-            readOnly
           />
-
-          {/* <p className="input-invoice-data">{`INV${invoiceNumber.toString().padStart(3, '0')}`}</p> */}
         </div>
         <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
@@ -421,7 +413,7 @@ const Bills = () => {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="clientName">Client Name:</label>
+          <label htmlFor="clientName">Customer Name:</label>
           <input
             type="text"
             id="clientName"
@@ -430,7 +422,7 @@ const Bills = () => {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="clientContact">Client Contact No:</label>
+          <label htmlFor="clientContact">Customer Contact No:</label>
           <input
             type="tel"
             pattern="[0-9]*"

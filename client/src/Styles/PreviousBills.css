@@ -79,7 +79,44 @@
      position: relative;
      cursor: pointer;
    }
-   
+
+   /* Container styling */
+.date-filter-container {
+  margin-bottom: 20px;
+}
+
+/* Label styling */
+.date-label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+/* Input styling */
+.date-input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Start date input specific styling */
+.start-date-input {
+  margin-right: 10px; /* Add margin between start date and end date inputs */
+}
+
+/* Filter button styling */
+.filter-button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Filter button hover effect */
+.filter-button:hover {
+  background-color: #0056b3;
+}   
    .add-button_5container
    
    {
@@ -657,3 +694,33 @@
 .upload-dialogpopup button:hover {
   background-color: #0056b3;
 }
+/* Add this CSS code to your existing stylesheet or create a new one */
+
+.date-filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.date-filter label {
+  margin-right: 10px;
+}
+
+.date-filter input {
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.date-filter button {
+  padding: 8px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.date-filter button:hover {
+  background-color: #45a049;
+}
+
+

@@ -1,8 +1,11 @@
 import { facebook, instagram, shieldTick, support, truckFast, twitter } from "../assets/icons";
-import { bigShoe1, bigShoe2,customer1, customer2, shoe4, shoe5, shoe6, shoe7, thumbnailShoe1, thumbnailShoe2, thumbnailShoe3, bigshoe3s } from "../assets/images";
+import { customer1, customer2, shoe4, shoe5, shoe6, shoe7, thumbnailShoe1, thumbnailShoe2, thumbnailShoe3, bigshoe3s } from "../assets/images";
 import bigShoe4 from "../assets/images/big-shoe4.png"
 import bigShoe5 from "../assets/images/big-shoe5.png"
-import iron1 from "../assets/images/iron1.jpeg"
+import wash1 from '../assets/images/wash1.jpg'
+import ironing from '../assets/images/ironing.jpg'
+import dd1 from '../assets/images/dd1.jpg'
+
 
 export const navLinks = [
     { href: "#home", label: "Home" },
@@ -14,16 +17,16 @@ export const navLinks = [
 
 export const shoes = [
     {
-        thumbnail: bigShoe1,
-        bigShoe: bigShoe1,
+        thumbnail: wash1,
+        bigShoe: wash1,
     },
     {
-        thumbnail: bigShoe2,
-        bigShoe: bigShoe2,
+        thumbnail: dd1,
+        bigShoe: dd1,
     },
     {
-        thumbnail: iron1,
-        bigShoe: iron1,
+        thumbnail: ironing,
+        bigShoe: ironing,
     },
 ];
 
@@ -35,17 +38,17 @@ export const statistics = [
 
 export const products = [
     {
-        imgURL: bigShoe1,
+        imgURL: wash1,
         name: "Wash & Fold",
         price: "₹60.00",
     },
     {
-        imgURL: iron1,
+        imgURL: ironing,
         name: "Wash & Iron",
         price: "₹99.00",
     },
     {
-        imgURL: bigShoe2,
+        imgURL: dd1,
         name: "Premium Laundry",
         price: "₹79.00",
     },
