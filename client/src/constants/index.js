@@ -5,6 +5,8 @@ import bigShoe5 from "../assets/images/big-shoe5.png"
 import wash1 from '../assets/images/wash1.jpg'
 import ironing from '../assets/images/ironing.jpg'
 import dd1 from '../assets/images/dd1.jpg'
+import steam from '../assets/images/steam.jpg'
+
 
 
 export const navLinks = [
@@ -53,7 +55,7 @@ export const products = [
         price: "₹79.00",
     },
     {
-        imgURL: bigShoe5,
+        imgURL: steam,
         name: "Steam Ironing",
         price: "₹24.00",
     },
