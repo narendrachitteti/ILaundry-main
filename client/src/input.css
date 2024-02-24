@@ -33,10 +33,10 @@
     padding-right: 2rem;
 }
 #products {
-  padding-top: 100px; /* Adjust the value as needed */
+  padding-top: 100px; 
 }
 #about-us {
-  padding-top: 100px; /* Adjust the value as needed */
+  padding-top: 100px; 
 }
 
 
@@ -84,4 +84,8 @@
   .info-text {
     @apply font-montserrat text-slate-gray text-lg leading-7;
   }
+  .text-8xl {
+    font-size: 87px;
+    line-height: 106px;
+}
 }
