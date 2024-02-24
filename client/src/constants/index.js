@@ -4,7 +4,7 @@ import bigShoe4 from "../assets/images/big-shoe4.png"
 import bigShoe5 from "../assets/images/big-shoe5.png"
 import wash1 from '../assets/images/wash1.jpg'
 import ironing from '../assets/images/ironing.jpg'
-import pp1 from '../assets/images/pp1.jpg'
+import dd1 from '../assets/images/dd1.jpg'
 
 
 export const navLinks = [
@@ -21,8 +21,8 @@ export const shoes = [
         bigShoe: wash1,
     },
     {
-        thumbnail: pp1,
-        bigShoe: pp1,
+        thumbnail: dd1,
+        bigShoe: dd1,
     },
     {
         thumbnail: ironing,
@@ -48,7 +48,7 @@ export const products = [
         price: "₹99.00",
     },
     {
-        imgURL: pp1,
+        imgURL: dd1,
         name: "Premium Laundry",
         price: "₹79.00",
     },
