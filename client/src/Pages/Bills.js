@@ -375,7 +375,7 @@ const Bills = () => {
       invoiceDate,
       clientName,
       clientContact,
-      rows: rows.map((row, index) => ({
+      items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
         subtotal: subtotals[index],
