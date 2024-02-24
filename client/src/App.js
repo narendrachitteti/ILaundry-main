@@ -9,6 +9,7 @@ import PreviousBills from "./Pages/PreviousBills.js";
 import { useEffect, useState } from "react";
 import Bills from "./Pages/Bills.js";
 import PrivateRoute from "./ProtectedRoute/ProtectedRoute.js";
+import Register from "./components/Register/Register.jsx";
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -32,6 +33,7 @@ function App() {
               <Route path="/InvoiceForm" element={<InvoiceForm />} />
               <Route path="/PreviousBills" element={<PreviousBills />} />
               <Route path="/Bills" element={<Bills />} />
+              <Route path="/Register" element={<Register />} />
             </Route>
           </Routes>
         </Router>
