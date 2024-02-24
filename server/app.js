@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const invoiceRoutes = require('./routes/invoiceRoutes');
+
+const billRoutes = require("./routes/billsRoutes");
 const userRoutes = require('./routes/userRoutes');
 const dotenv = require('dotenv'); 
 const app = express();
@@ -24,6 +26,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Use Routes
 app.use('/', invoiceRoutes);
 app.use('/', userRoutes);
+
+app.use("/api", billRoutes);
 
 
 const PORT = 5000; 

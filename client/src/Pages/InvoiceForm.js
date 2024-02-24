@@ -19,7 +19,7 @@ import Navbar from '../components/Navbar';
 import { GiFastBackwardButton } from "react-icons/gi";
 import { Link } from 'react-router-dom';
 import Backbutton from './Backbutton';
-import {BASE_URL} from "../Helper/Helper.js"
+import { BASE_URL } from "../Helper/Helper.js"
 import { GiClothes } from "react-icons/gi";
 const styles = {
   section2: {
@@ -75,7 +75,7 @@ class InvoiceForm extends React.Component {
       this.handleCalculateTotal();
     });
   }
-  
+
   handleAddEvent(evt) {
     const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
     const newItem = {
@@ -84,19 +84,17 @@ class InvoiceForm extends React.Component {
       price: "1.00",
       description: "",
       quantity: 1,
-      selectedService:"",
+      selectedService: "",
     };
     const updatedItems = [...this.state.items, newItem];
     this.setState({ items: updatedItems }, () => {
       this.handleCalculateTotal();
     });
   }
-  
+
   generateInvoiceDataMessage = () => {
     // Assuming 'this.state' contains the necessary data
     const invoiceData = this.state;
-
-    // Customize this part according to your invoice structure
     const message = `
       Invoice Number: ${invoiceData.invoiceNumber || ''}
       Customer Name: ${invoiceData.customerName || ''}
@@ -117,25 +115,25 @@ class InvoiceForm extends React.Component {
   handleBackButtonClick = () => {
     this.navigate(-1);
   };
-handleCalculateTotal() {
-  const items = this.state.items;
-  let subTotal = 0;
+  handleCalculateTotal() {
+    const items = this.state.items;
+    let subTotal = 0;
 
-  items.forEach((item) => {
-    subTotal += parseFloat((item.price * item.quantity).toFixed(2));
-  });
+    items.forEach((item) => {
+      subTotal += parseFloat((item.price * item.quantity).toFixed(2));
+    });
 
-  const taxAmount = this.state.taxRate !== null ? parseFloat(subTotal * (this.state.taxRate / 100)).toFixed(2) : "0.00";
-  const discountAmount = this.state.discountRate !== null ? parseFloat(subTotal * (this.state.discountRate / 100)).toFixed(2) : "0.00";
-  const total = (subTotal - discountAmount + parseFloat(taxAmount)).toFixed(2);
+    const taxAmount = this.state.taxRate !== null ? parseFloat(subTotal * (this.state.taxRate / 100)).toFixed(2) : "0.00";
+    const discountAmount = this.state.discountRate !== null ? parseFloat(subTotal * (this.state.discountRate / 100)).toFixed(2) : "0.00";
+    const total = (subTotal - discountAmount + parseFloat(taxAmount)).toFixed(2);
 
-  this.setState({
-    subTotal: subTotal.toFixed(2),
-    taxAmount: taxAmount,
-    discountAmount: discountAmount,
-    total: total,
-  });
-}
+    this.setState({
+      subTotal: subTotal.toFixed(2),
+      taxAmount: taxAmount,
+      discountAmount: discountAmount,
+      total: total,
+    });
+  }
 
 
   onItemizedItemEdit(evt) {
@@ -165,7 +163,7 @@ handleCalculateTotal() {
   onCurrencyChange = (selectedOption) => {
     this.setState(selectedOption);
   };
- 
+
   handleTaxRateChange = (event) => {
     const taxRate = event.target.value;
     this.setState({ taxRate }, () => {
@@ -183,9 +181,9 @@ handleCalculateTotal() {
       console.error(`Item at index ${index} does not exist.`);
     }
   }
-  
-  
-  
+
+
+
   handleDiscountRateChange = (event) => {
     const discountRate = event.target.value;
     this.setState({ discountRate }, () => {
@@ -244,256 +242,256 @@ handleCalculateTotal() {
           description: "",
           price: "1.00",
           quantity: 1,
-          selectedService:"",
+          selectedService: "",
         },
       ],
     });
 
   };
-  
-  
+
+
 
   render() {
     return (
       <div className='total89'
         style={{
           // backgroundImage: "url('https://img.freepik.com/free-vector/laundry-room-with-clean-dirty-clothes-equipment-furniture-bathroom-with-stuff-washing-machine-basket-with-dirty-stained-linen-shelf-towels-detergents-cartoon-illustration_107791-5925.jpg?w=996&t=st=1707891326~exp=1707891926~hmac=4f693f542f3b43d2da2d24745187576df77b1a7919e232414a1b5d1ba9fd4a70')",
-          backgroundSize:`100% 100%`,
-       
+          backgroundSize: `100% 100%`,
+
           backgroundImage: `url(${image13})`
         }}>
-           
- <Navbar/>
- 
-      <section style={styles.section2}>
-        <div className="login-box" style={styles.loginBox2}>
-          <Form onSubmit={this.openModal}>
-         
-          <div className='flexs87'><Backbutton />
-        <h3 className='tct'>Customer Billing</h3>
-        </div>
-            <Row >
 
-              <Col md={8} lg={9}>
-                <Card className="p-4 p-xl-5 my-3 my-xl-4" style={{background:"rgba(255, 255, 255, 0.349)",backdropFilter:'blur(20px)',boxShadow:'0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19'}}>
-                  <div className="d-flex flex-row align-items-start justify-content-between mb-3">
-                    <div class="d-flex flex-column">
-                      <div className="d-flex flex-column">
-                        <div class="mb-2">
-                          <span className="fw-bold">
-                            Current&nbsp;Date:&nbsp;
-                          </span>
-                          <span className="currentdate">
-                            {new Date().toLocaleDateString()}
-                          </span>
+        <Navbar />
+
+        <section style={styles.section2}>
+          <div className="login-box" style={styles.loginBox2}>
+            <Form onSubmit={this.openModal}>
+
+              <div className='flexs87'><Backbutton />
+                <h3 className='tct'>Customer Billing</h3>
+              </div>
+              <Row >
+
+                <Col md={8} lg={9}>
+                  <Card className="p-4 p-xl-5 my-3 my-xl-4" style={{ background: "rgba(255, 255, 255, 0.349)", backdropFilter: 'blur(20px)', boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19' }}>
+                    <div className="d-flex flex-row align-items-start justify-content-between mb-3">
+                      <div class="d-flex flex-column">
+                        <div className="d-flex flex-column">
+                          <div class="mb-2">
+                            <span className="fw-bold">
+                              Current&nbsp;Date:&nbsp;
+                            </span>
+                            <span className="currentdate">
+                              {new Date().toLocaleDateString()}
+                            </span>
+                          </div>
                         </div>
                       </div>
+                      <div className="d-flex flex-row align-items-center">
+                        <span className="fw-bold me-2">
+                          Invoice&nbsp;Number:&nbsp;
+                        </span>
+                        <Form.Control
+                          type="number"
+                          value={this.state.invoiceNumber}
+                          name={"invoicenumber"}
+                          onChange={(event) => this.editField(event)}
+                          min="1"
+                          style={{
+                            maxWidth: "70px",
+                          }}
+                          required="required"
+                        />
+                      </div>
                     </div>
-                    <div className="d-flex flex-row align-items-center">
-                      <span className="fw-bold me-2">
-                        Invoice&nbsp;Number:&nbsp;
-                      </span>
-                      <Form.Control
-                        type="number"
-                        value={this.state.invoiceNumber}
-                        name={"invoicenumber"}
-                        onChange={(event) => this.editField(event)}
-                        min="1"
-                        style={{
-                          maxWidth: "70px",
-                        }}
-                        required="required"
-                      />
-                    </div>
-                  </div>
-                  <hr className="my-4" />
-                  <Row className="mb-5">
-                    <Col>
-                      <Form.Label className="fw-bold">Bill to:</Form.Label>
-                      <div className='billflex' >
-                      <Form.Control
-                        placeholder={"Customer Name?"}
-                        rows={3}
-                        value={this.state.customerName}
-                        type="text"
-                        name="customerName"
-                        className="my-2"
-                        onChange={(event) => this.editField(event)}
-                        autoComplete="name"
-                        required="required"
-                      />
-                      <Form.Control
-                        placeholder={"Email address"}
-                        value={this.state.Email}
-                        type="email"
-                        name="Email"
-                        className="my-2"
-                        onChange={(event) => this.editField(event)}
-                        autoComplete="email"
-                        required="required"
-                      />
-                      <Form.Control
-                        placeholder={"Phone number"}
-                        value={this.state.phoneNumber}
-                        type="number"
-                        name="phoneNumber"
-                        className="my-2"
-                        autoComplete="address"
-                        onChange={(event) => this.editField(event)}
-                        required="required"
-                      />
-                      </div>
-                    </Col>
-                  </Row>
-                  <InvoiceItem
-                    onItemizedItemEdit={this.onItemizedItemEdit.bind(this)}
-                    onRowAdd={this.handleAddEvent.bind(this)}
-                    onServiceChange={this.onServiceChange}
-                    onRowDel={this.handleRowDel.bind(this)}
-                    currency={this.state.currency}
-                    items={this.state.items}
-                  />
-                  <Row className="mt-4 justify-content-end">
-                    <Col lg={6}>
-                      <div className="d-flex flex-row align-items-start justify-content-between">
-                        <span className="fw-bold">Subtotal:</span>
-                        <span>
-                          {this.state.currency}
-                          {this.state.subTotal}
-                        </span>
-                      </div>
-                      <div className="d-flex flex-row align-items-start justify-content-between mt-2">
-                        <span className="fw-bold">Discount:</span>
-                        <span>
-                          <span className="small ">
-                            ({this.state.discountRate || 0}%)
+                    <hr className="my-4" />
+                    <Row className="mb-5">
+                      <Col>
+                        <Form.Label className="fw-bold">Bill to:</Form.Label>
+                        <div className='billflex' >
+                          <Form.Control
+                            placeholder={"Customer Name?"}
+                            rows={3}
+                            value={this.state.customerName}
+                            type="text"
+                            name="customerName"
+                            className="my-2"
+                            onChange={(event) => this.editField(event)}
+                            autoComplete="name"
+                            required="required"
+                          />
+                          <Form.Control
+                            placeholder={"Email address"}
+                            value={this.state.Email}
+                            type="email"
+                            name="Email"
+                            className="my-2"
+                            onChange={(event) => this.editField(event)}
+                            autoComplete="email"
+                            required="required"
+                          />
+                          <Form.Control
+                            placeholder={"Phone number"}
+                            value={this.state.phoneNumber}
+                            type="number"
+                            name="phoneNumber"
+                            className="my-2"
+                            autoComplete="address"
+                            onChange={(event) => this.editField(event)}
+                            required="required"
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                    <InvoiceItem
+                      onItemizedItemEdit={this.onItemizedItemEdit.bind(this)}
+                      onRowAdd={this.handleAddEvent.bind(this)}
+                      onServiceChange={this.onServiceChange}
+                      onRowDel={this.handleRowDel.bind(this)}
+                      currency={this.state.currency}
+                      items={this.state.items}
+                    />
+                    <Row className="mt-4 justify-content-end">
+                      <Col lg={6}>
+                        <div className="d-flex flex-row align-items-start justify-content-between">
+                          <span className="fw-bold">Subtotal:</span>
+                          <span>
+                            {this.state.currency}
+                            {this.state.subTotal}
                           </span>
-                          {this.state.currency}
-                          {this.state.discountAmount || 0}
-                        </span>
-                      </div>
-                      <div className="d-flex flex-row align-items-start justify-content-between mt-2">
-                        <span className="fw-bold">Tax:</span>
-                        <span>
-                          <span className="small ">
-                            ({this.state.taxRate || 0}%)
+                        </div>
+                        <div className="d-flex flex-row align-items-start justify-content-between mt-2">
+                          <span className="fw-bold">Discount:</span>
+                          <span>
+                            <span className="small ">
+                              ({this.state.discountRate || 0}%)
+                            </span>
+                            {this.state.currency}
+                            {this.state.discountAmount || 0}
                           </span>
-                          {this.state.currency}
-                          {this.state.taxAmount || 0}
-                        </span>
-                      </div>
-                      <hr />
-                      <div
-                        className="d-flex flex-row align-items-start justify-content-between"
-                        style={{
-                          fontSize: "1.125rem",
-                        }}
-                      >
-                        <span className="fw-bold">Total:</span>
-                        <span className="fw-bold">
-                          {this.state.currency}
-                          {this.state.total || 0}
-                        </span>
-                      </div>
-                    </Col>
-                  </Row>
-                  <hr className="my-4" />
-                  <Form.Label className="fw-bold">Notes:</Form.Label>
-                  <Form.Control
-                    placeholder="Thanks for your business!"
-                    name="notes"
-                    value={this.state.notes}
-                    onChange={(event) => this.editField(event)}
-                    as="textarea"
-                    className="my-2"
-                    rows={1}
-                  />
-                </Card>
-              </Col>
-              <Col md={4} lg={3}>
-                <div className="sticky-top pt-md-3 pt-xl-4" style={{background:"rgba(255, 255, 255, 0.349)",backdropFilter:'blur(20px)',marginTop:"1.5rem",padding:"2rem",borderRadius:"0.5rem",boxShadow:'0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',zIndex:'4'}}>
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    className="d-block w-100"
-                  >
-                    Review Invoice
-                  </Button>
-                  <InvoiceModal
-                    showModal={this.state.isOpen}
-                    closeModal={this.closeModal}
-                    info={this.state}
-                    items={this.state.items}
-                    currency={this.state.currency}
-                    subTotal={this.state.subTotal}
-                    taxAmount={this.state.taxAmount}
-                    discountAmount={this.state.discountAmount}
-                    total={this.state.total}
-                  />
-                  <Form.Group className="mb-3">
-                    <Form.Label className="fw-bold"><span style={{color:'#000',}}>Currency:</span></Form.Label>
-                    <Form.Select
-                      onChange={(event) =>
-                        this.onCurrencyChange({ currency: event.target.value })
-                      }
-                      className="btn btn-light my-1"
-                      aria-label="Change Currency"
+                        </div>
+                        <div className="d-flex flex-row align-items-start justify-content-between mt-2">
+                          <span className="fw-bold">Tax:</span>
+                          <span>
+                            <span className="small ">
+                              ({this.state.taxRate || 0}%)
+                            </span>
+                            {this.state.currency}
+                            {this.state.taxAmount || 0}
+                          </span>
+                        </div>
+                        <hr />
+                        <div
+                          className="d-flex flex-row align-items-start justify-content-between"
+                          style={{
+                            fontSize: "1.125rem",
+                          }}
+                        >
+                          <span className="fw-bold">Total:</span>
+                          <span className="fw-bold">
+                            {this.state.currency}
+                            {this.state.total || 0}
+                          </span>
+                        </div>
+                      </Col>
+                    </Row>
+                    <hr className="my-4" />
+                    <Form.Label className="fw-bold">Notes:</Form.Label>
+                    <Form.Control
+                      placeholder="Thanks for your business!"
+                      name="notes"
+                      value={this.state.notes}
+                      onChange={(event) => this.editField(event)}
+                      as="textarea"
+                      className="my-2"
+                      rows={1}
+                    />
+                  </Card>
+                </Col>
+                <Col md={4} lg={3}>
+                  <div className="sticky-top pt-md-3 pt-xl-4" style={{ background: "rgba(255, 255, 255, 0.349)", backdropFilter: 'blur(20px)', marginTop: "1.5rem", padding: "2rem", borderRadius: "0.5rem", boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)', zIndex: '4' }}>
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className="d-block w-100"
                     >
-                      <option value="₹">Rs (Indian Rupees)</option>
-                      <option value="$">USD (United States Dollar)</option>
-                      <option value="£">GBP (British Pound Sterling)</option>
-                      <option value="¥">JPY (Japanese Yen)</option>
-                      <option value="$">CAD (Canadian Dollar)</option>
-                      <option value="$">AUD (Australian Dollar)</option>
-                      <option value="$">SGD (Signapore Dollar)</option>
-                      <option value="¥">CNY (Chinese Renminbi)</option>
-                      <option value="₿">BTC (Bitcoin)</option>
-                    </Form.Select>
-                  </Form.Group>
-                  <Form.Group className="my-3">
-                  <Form.Label className="fw-bold"><span style={{color:'black'}}>Tax rate:</span></Form.Label>
-          <InputGroup className="my-1 flex-nowrap">
-            <Form.Control
-              name="taxRate"
-              type="number"
-              value={this.state.taxRate}
-              onChange={this.handleTaxRateChange}
-              className="bg-white border"
-              placeholder="0.0"
-              min="0.00"
-              step="0.01"
-              max="100.00"
-            />
-            <InputGroup.Text className="bg-light fw-bold text-secondary small">
-              %
-            </InputGroup.Text>
-          </InputGroup>
-        </Form.Group>
-        <Form.Group className="my-3">
-          <Form.Label className="fw-bold"><span style={{color:'black'}}>Discount rate:</span></Form.Label>
-          <InputGroup className="my-1 flex-nowrap">
-            <Form.Control
-              name="discountRate"
-              type="number"
-              value={this.state.discountRate}
-              onChange={this.handleDiscountRateChange}
-              className="bg-white border"
-              placeholder="0.0"
-              min="0.00"
-              step="0.01"
-              max="100.00"
-            />
-            <InputGroup.Text className="bg-light fw-bold text-secondary small">
-              %
-            </InputGroup.Text>
-          </InputGroup>
-                  </Form.Group>
-                </div>
-              </Col>
-            </Row>
-          </Form>{" "}
-        </div>
-      </section>
+                      Review Invoice
+                    </Button>
+                    <InvoiceModal
+                      showModal={this.state.isOpen}
+                      closeModal={this.closeModal}
+                      info={this.state}
+                      items={this.state.items}
+                      currency={this.state.currency}
+                      subTotal={this.state.subTotal}
+                      taxAmount={this.state.taxAmount}
+                      discountAmount={this.state.discountAmount}
+                      total={this.state.total}
+                    />
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-bold"><span style={{ color: '#000', }}>Currency:</span></Form.Label>
+                      <Form.Select
+                        onChange={(event) =>
+                          this.onCurrencyChange({ currency: event.target.value })
+                        }
+                        className="btn btn-light my-1"
+                        aria-label="Change Currency"
+                      >
+                        <option value="₹">Rs (Indian Rupees)</option>
+                        <option value="$">USD (United States Dollar)</option>
+                        <option value="£">GBP (British Pound Sterling)</option>
+                        <option value="¥">JPY (Japanese Yen)</option>
+                        <option value="$">CAD (Canadian Dollar)</option>
+                        <option value="$">AUD (Australian Dollar)</option>
+                        <option value="$">SGD (Signapore Dollar)</option>
+                        <option value="¥">CNY (Chinese Renminbi)</option>
+                        <option value="₿">BTC (Bitcoin)</option>
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="my-3">
+                      <Form.Label className="fw-bold"><span style={{ color: 'black' }}>Tax rate:</span></Form.Label>
+                      <InputGroup className="my-1 flex-nowrap">
+                        <Form.Control
+                          name="taxRate"
+                          type="number"
+                          value={this.state.taxRate}
+                          onChange={this.handleTaxRateChange}
+                          className="bg-white border"
+                          placeholder="0.0"
+                          min="0.00"
+                          step="0.01"
+                          max="100.00"
+                        />
+                        <InputGroup.Text className="bg-light fw-bold text-secondary small">
+                          %
+                        </InputGroup.Text>
+                      </InputGroup>
+                    </Form.Group>
+                    <Form.Group className="my-3">
+                      <Form.Label className="fw-bold"><span style={{ color: 'black' }}>Discount rate:</span></Form.Label>
+                      <InputGroup className="my-1 flex-nowrap">
+                        <Form.Control
+                          name="discountRate"
+                          type="number"
+                          value={this.state.discountRate}
+                          onChange={this.handleDiscountRateChange}
+                          className="bg-white border"
+                          placeholder="0.0"
+                          min="0.00"
+                          step="0.01"
+                          max="100.00"
+                        />
+                        <InputGroup.Text className="bg-light fw-bold text-secondary small">
+                          %
+                        </InputGroup.Text>
+                      </InputGroup>
+                    </Form.Group>
+                  </div>
+                </Col>
+              </Row>
+            </Form>{" "}
+          </div>
+        </section>
       </div>
     );
   }
@@ -510,19 +508,19 @@ class InvoiceItem extends React.Component {
       return (
         <ItemRow
           onItemizedItemEdit={onItemizedItemEdit}
-          onServiceChange={(event) => onServiceChange(event, index)} 
+          onServiceChange={(event) => onServiceChange(event, index)}
           item={item}
           onDelEvent={rowDel.bind(this)}
           key={item.id}
           currency={currency}
-          index={index} 
+          index={index}
         />
       );
     });
-    
-    
+
+
     return (
-      <div style={{backgroundColor:'none'}}>
+      <div style={{ backgroundColor: 'none' }}>
         <Table >
           <thead className='table-header' >
             <tr>
@@ -539,8 +537,8 @@ class InvoiceItem extends React.Component {
         </Button> */}
         <button class="itembtn" onClick={this.props.onRowAdd}>
           <span>Add Item</span>
-          
-          <GiClothes className='svg' style={{fontSize:'2rem'}}/>
+
+          <GiClothes className='svg' style={{ fontSize: '2rem' }} />
 
         </button>
       </div>
@@ -551,9 +549,9 @@ class ItemRow extends React.Component {
   onDelEvent() {
     this.props.onDelEvent(this.props.item);
   }
-  
+
   render() {
-    const { item, onItemizedItemEdit, onServiceChange, currency,index } = this.props;
+    const { item, onItemizedItemEdit, onServiceChange, currency, index } = this.props;
     return (
       <tr>
         <td style={{ width: "100%" }}>
@@ -569,9 +567,9 @@ class ItemRow extends React.Component {
           />
           <Form.Label className="fw-bold"><span style={{ color: '#000' }}> Select Service:</span></Form.Label>
           <select
-            id={`selectedService-${index}`} 
+            id={`selectedService-${index}`}
             // value={item.selectedService}
-            onChange={(event) => onServiceChange(event, index)} 
+            onChange={(event) => onServiceChange(event, index)}
             className="form-select my-1"
             aria-label={`Service for item ${item.id}`}
             value={item.selectedService || ""}
@@ -593,7 +591,7 @@ class ItemRow extends React.Component {
               id: item.id,
             }}
           />
-          
+
         </td>
         <td style={{ minWidth: "70px" }}>
           <EditableField
@@ -742,7 +740,7 @@ class InvoiceModal extends React.Component {
           <div id="invoiceCapture">
             <div className="d-flex flex-row justify-content-between align-items-start bg-light w-100 p-4">
               <div className="w-100">
-              <h4 className="fw-bold my-2">
+                <h4 className="fw-bold my-2">
                   {this.props.info.billFrom || "I-Laundry"}
                 </h4>
                 <h4 className="fw-bold my-2">
@@ -770,7 +768,7 @@ class InvoiceModal extends React.Component {
                 </Col>
               </Row>
               <Table className="mb-0">
-                <thead style={{backgroundColor:'none'}}>
+                <thead style={{ backgroundColor: 'none' }}>
                   <tr >
                     <th >QTY</th>
                     <th>ITEM - DESCRIPTION</th>
@@ -814,27 +812,27 @@ class InvoiceModal extends React.Component {
                     </td>
                   </tr>
                   {this.props.taxAmount !== null && parseFloat(this.props.taxAmount) !== 0 && (
-                      <tr className="text-end">
-                        <td></td>
-                        <td className="fw-bold" style={{ width: "100px" }}>
-                          TAX
-                        </td>
-                        <td className="text-end" style={{ width: "100px" }}>
-                          {this.props.currency} {this.props.taxAmount}
-                        </td>
-                      </tr>
-                    )}
-                    {this.props.discountAmount !== null && parseFloat(this.props.discountAmount) !== 0 && (
-                      <tr className="text-end">
-                        <td></td>
-                        <td className="fw-bold" style={{ width: "100px" }}>
-                          DISCOUNT
-                        </td>
-                        <td className="text-end" style={{ width: "100px" }}>
-                          {this.props.currency} {this.props.discountAmount}
-                        </td>
-                      </tr>
-                    )}
+                    <tr className="text-end">
+                      <td></td>
+                      <td className="fw-bold" style={{ width: "100px" }}>
+                        TAX
+                      </td>
+                      <td className="text-end" style={{ width: "100px" }}>
+                        {this.props.currency} {this.props.taxAmount}
+                      </td>
+                    </tr>
+                  )}
+                  {this.props.discountAmount !== null && parseFloat(this.props.discountAmount) !== 0 && (
+                    <tr className="text-end">
+                      <td></td>
+                      <td className="fw-bold" style={{ width: "100px" }}>
+                        DISCOUNT
+                      </td>
+                      <td className="text-end" style={{ width: "100px" }}>
+                        {this.props.currency} {this.props.discountAmount}
+                      </td>
+                    </tr>
+                  )}
 
                   <tr className="text-end">
                     <td></td>
@@ -887,9 +885,9 @@ class InvoiceModal extends React.Component {
         </Modal>
         <hr className="mt-4 mb-3" />
       </div>
-      
+
     );
-    
+
   }
 }
 export default InvoiceForm;
