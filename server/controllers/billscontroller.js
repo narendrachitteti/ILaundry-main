@@ -17,16 +17,36 @@
 
 const Billing = require("../models/billsModel");
 
+// const billsInvoice = async (req, res) => {
+//   try {
+//     const newBilling = new Billing(req.body);
+//     await newBilling.save();
+//     res.status(201).json(newBilling);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Failed to save billing data" });
+//   }
+// };
 const billsInvoice = async (req, res) => {
   try {
-    const newBilling = new Billing(req.body);
+    // const { postData } = req.body;
+
+    // Generate a 4-digit unique ID for the invoice number in serial format like INV-001
+    const count = await Billing.countDocuments();
+    const invoiceNumber = `INV${(count + 1).toString().padStart(5, '0')}`;
+
+    const newBilling = new Billing({ ...req.body, invoiceNo: invoiceNumber });
     await newBilling.save();
-    res.status(201).json(newBilling);
+
+    console.log('Billing saved successfully:', newBilling);
+    res.status(201).json({ message: 'Billing submitted successfully!', invoiceNo: invoiceNumber });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to save billing data" });
+    console.error('Error adding billing:', error);
+    console.error(error.stack);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };
+
 
 
 
