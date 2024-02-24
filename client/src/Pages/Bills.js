@@ -447,6 +447,7 @@ const Bills = () => {
             id="invoiceNo"
             value={invoiceNo}
             onChange={(e) => setInvoiceNo(e.target.value)}
+            readOnly
           />
         </div>
         <div className="input-group">
