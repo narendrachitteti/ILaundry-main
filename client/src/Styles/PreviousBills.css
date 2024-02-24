@@ -694,3 +694,33 @@
 .upload-dialogpopup button:hover {
   background-color: #0056b3;
 }
+/* Add this CSS code to your existing stylesheet or create a new one */
+
+.date-filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.date-filter label {
+  margin-right: 10px;
+}
+
+.date-filter input {
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.date-filter button {
+  padding: 8px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.date-filter button:hover {
+  background-color: #45a049;
+}
+
+
