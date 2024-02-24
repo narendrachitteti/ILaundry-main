@@ -8,6 +8,7 @@ import Navbar from "../components/Navbar";
 
 const currencies = currencyCodes.data;
 
+
 const Bills = () => {
   const [invoiceNo, setInvoiceNo] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
@@ -326,11 +327,112 @@ const Bills = () => {
     }
   };
 
+  // const handleReviewInvoice = () => {
+  //   const total = calculateTotal();
+  //   // Handle review invoice logic here
+  //   console.log("Review Invoice clicked");
+  // };
+  // const handleReviewInvoice = () => {
+  //   const data = {
+  //     invoiceNo,
+  //     invoiceDate,
+  //     clientName,
+  //     clientContact,
+  //     rows: rows.map((row, index) => ({
+  //       item: selectedItems[index],
+  //       quantity: quantities[index],
+  //       subtotal: subtotals[index],
+  //     })),
+  //     subTotal,
+  //     discountRate,
+  //     discountAmount,
+  //     taxRate,
+  //     taxAmount,
+  //     total,
+  //     selectedCurrency,
+  //   };
+  //   fetch("http://localhost:5000/api/billing", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log("Success:", data);
+  //       // Handle success response
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       // Handle error
+  //     });
+  // };
+
   const handleReviewInvoice = () => {
-    const total = calculateTotal();
-    // Handle review invoice logic here
-    console.log("Review Invoice clicked");
+    const data = {
+      invoiceNo,
+      invoiceDate,
+      clientName,
+      clientContact,
+      rows: rows.map((row, index) => ({
+        item: selectedItems[index],
+        quantity: quantities[index],
+        subtotal: subtotals[index],
+      })),
+      subTotal,
+      discountRate,
+      discountAmount,
+      taxRate,
+      taxAmount,
+      total,
+      selectedCurrency,
+    };
+  
+    // Open a popup window
+    const popup = window.open("", "popup", "width=600,height=400");
+  
+    // Send the POST request
+    fetch("http://localhost:5000/api/billing", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        popup.document.body.innerHTML = `
+          <h1>Invoice Review</h1>
+          <p>Invoice No: ${data.invoiceNo}</p>
+          <p>Invoice Date: ${data.invoiceDate}</p>
+          <p>Client Name: ${data.clientName}</p>
+          <p>clientContact: ${data.clientContact}</p>
+          <p>quantity: ${data.quantity}</p>
+          <p>Total: ${data.total}</p>
+        `;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle error
+      });
   };
+  
+  
+  // useEffect(() => {
+  //   if (invoiceNo === "") {
+  //     // Fetch the next invoice number from the server
+  //     fetch("http://localhost:5000/api/next-invoice-no")
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setInvoiceNo(data.nextInvoiceNo);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching next invoice number:", error);
+  //       });
+  //   }
+  // }, [invoiceNo , setInvoiceNo]);
 
   return (
     <div className="billtotal">
@@ -577,8 +679,10 @@ const Bills = () => {
           <button className="review-button" onClick={handleReviewInvoice}>
             Review Invoice
           </button>
+         
         </div>
       </center>
+      
     </div>
   );
 };
