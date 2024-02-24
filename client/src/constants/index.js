@@ -2,8 +2,9 @@ import { facebook, instagram, shieldTick, support, truckFast, twitter } from "..
 import {  bigShoe2,customer1, customer2, shoe4, shoe5, shoe6, shoe7, thumbnailShoe1, thumbnailShoe2, thumbnailShoe3, bigshoe3s } from "../assets/images";
 import bigShoe4 from "../assets/images/big-shoe4.png"
 import bigShoe5 from "../assets/images/big-shoe5.png"
-import iron1 from "../assets/images/iron1.jpeg"
 import wash1 from '../assets/images/wash1.jpg'
+import ironing from '../assets/images/ironing.jpg'
+
 
 export const navLinks = [
     { href: "#home", label: "Home" },
@@ -23,8 +24,8 @@ export const shoes = [
         bigShoe: bigShoe2,
     },
     {
-        thumbnail: iron1,
-        bigShoe: iron1,
+        thumbnail: ironing,
+        bigShoe: ironing,
     },
 ];
 
@@ -41,7 +42,7 @@ export const products = [
         price: "₹60.00",
     },
     {
-        imgURL: iron1,
+        imgURL: ironing,
         name: "Wash & Iron",
         price: "₹99.00",
     },
