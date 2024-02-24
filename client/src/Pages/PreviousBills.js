@@ -37,7 +37,6 @@ const PreviousBills = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [selectedServiceCus, setselectedServiceCus] = useState(null);
   const [isAddPopupOpenCus, setAddPopupOpenCus] = useState(false);
-  const [selectedServiceIds, setSelectedServiceIds] = useState({});
 
   const fetchcustomerServicesCus = async () => {
     try {
@@ -87,6 +86,8 @@ const PreviousBills = () => {
       console.error("Error adding/updating Customer Details:", error);
     }
   };
+  
+  
 
   const handlesearchTextCusChange = (newValue) => {
     setsearchTextCus(newValue);
@@ -255,6 +256,8 @@ const PreviousBills = () => {
               />
             </div>
           </div>
+
+         
         </div>
         <table className="lab-service-table_5">
           <thead>
@@ -280,8 +283,12 @@ const PreviousBills = () => {
               .map((service) => (
                 <tr key={service._id}>
                   <td>{service.currentDate}</td>
-                  <td>{service.invoiceNumber}</td>
-                  <td>{service.customerName}</td>
+                  <td>
+                    {service.invoiceNumber}
+                  </td>
+                  <td>
+                    {service.customerName}
+                  </td>
                   <td>{service.phoneNumber}</td>
                   <td>{service.Email}</td>
                   <td>{service.total}</td>
