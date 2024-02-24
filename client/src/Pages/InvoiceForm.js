@@ -95,8 +95,6 @@ class InvoiceForm extends React.Component {
   generateInvoiceDataMessage = () => {
     // Assuming 'this.state' contains the necessary data
     const invoiceData = this.state;
-
-    // Customize this part according to your invoice structure
     const message = `
       Invoice Number: ${invoiceData.invoiceNumber || ''}
       Customer Name: ${invoiceData.customerName || ''}
