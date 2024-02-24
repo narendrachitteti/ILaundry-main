@@ -290,21 +290,17 @@ const Bills = () => {
     let subtotal = 0;
     let discount = 0;
     let tax = 0;
-
     // Loop through rows to calculate subtotal, discount, and tax
     rows.forEach((row, index) => {
       const item = selectedItems[index];
       const quantity = quantities[index];
       const price = itemPrices[item] || 0;
-
       subtotal += price * quantity;
       discount += (price * quantity * discountRate) / 100;
       tax += (price * quantity * taxRate) / 100;
     });
-
     // Calculate total
     const totalAmount = subtotal - discount + tax;
-
     // Update state
     setSubTotal(subtotal);
     setDiscountAmount(discount);
@@ -327,6 +323,7 @@ const Bills = () => {
         return "";
     }
   };
+
 
   const handleReviewInvoice = () => {
     const data = {
@@ -377,7 +374,7 @@ const Bills = () => {
     doc.text("Total: " + total, 10, 50);
     doc.text("Selected Item: " + selectedPopupItem, 10, 60);
 
-    doc.save("invoice.pdf");
+    doc.save("Laundry Invoice.pdf");
   };
 
   const [showPopup, setShowPopup] = useState(false);
@@ -396,10 +393,10 @@ const Bills = () => {
       <div className="invoice-form">
         <div className="input-group">
           <label htmlFor="invoiceNo">Invoice No:</label>
-           <input
+          <input
             type="text"
             id="invoiceNo"
-            value={invoiceNo}
+            value={`INV${invoiceNumber.toString().padStart(5, '0')}`}
             onChange={(e) => setInvoiceNo(e.target.value)}
           />
         </div>

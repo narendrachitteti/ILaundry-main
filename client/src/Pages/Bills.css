@@ -143,18 +143,17 @@
     width: 95%;
 }
 
-
-
 .popup {
     position: fixed;
-    top: 254px;
-      left: 23%;
+    top: 312px;
+    left: 23%;
     transform: translate(57%, -50%);
     background-color: white;
     padding: 20px;
     z-index: 1000;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    max-width: 336px;
+    width: 40%;
+    height: 71vh;
   }
 
   .popup-1{
@@ -203,7 +202,7 @@
     padding: 10px;
     background-color: #007bff;
     margin-top: 2%;
-    
+
   }
   .merge-karthik-bill{
     display: flex;
