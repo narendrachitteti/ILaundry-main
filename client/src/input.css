@@ -26,6 +26,19 @@
   border: 3px solid transparent;
   background-clip: padding-box;
 }
+.py-8 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 2rem;
+    padding-right: 2rem;
+}
+#products {
+  padding-top: 100px; /* Adjust the value as needed */
+}
+#about-us {
+  padding-top: 100px; /* Adjust the value as needed */
+}
+
 
 @layer components {
   .max-container {
