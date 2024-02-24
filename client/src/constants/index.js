@@ -1,8 +1,9 @@
 import { facebook, instagram, shieldTick, support, truckFast, twitter } from "../assets/icons";
-import { bigShoe1, bigShoe2,customer1, customer2, shoe4, shoe5, shoe6, shoe7, thumbnailShoe1, thumbnailShoe2, thumbnailShoe3, bigshoe3s } from "../assets/images";
+import {  bigShoe2,customer1, customer2, shoe4, shoe5, shoe6, shoe7, thumbnailShoe1, thumbnailShoe2, thumbnailShoe3, bigshoe3s } from "../assets/images";
 import bigShoe4 from "../assets/images/big-shoe4.png"
 import bigShoe5 from "../assets/images/big-shoe5.png"
 import iron1 from "../assets/images/iron1.jpeg"
+import wash1 from '../assets/images/wash1.jpg'
 
 export const navLinks = [
     { href: "#home", label: "Home" },
@@ -14,8 +15,8 @@ export const navLinks = [
 
 export const shoes = [
     {
-        thumbnail: bigShoe1,
-        bigShoe: bigShoe1,
+        thumbnail: wash1,
+        bigShoe: wash1,
     },
     {
         thumbnail: bigShoe2,
@@ -35,7 +36,7 @@ export const statistics = [
 
 export const products = [
     {
-        imgURL: bigShoe1,
+        imgURL: wash1,
         name: "Wash & Fold",
         price: "₹60.00",
     },
