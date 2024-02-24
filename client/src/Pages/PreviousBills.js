@@ -38,6 +38,12 @@ const PreviousBills = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [selectedServiceCus, setselectedServiceCus] = useState(null);
   const [isAddPopupOpenCus, setAddPopupOpenCus] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  
+  // const [filtered, setFilteredData] = useState([]);
+  // const [filteredInvoices, setFilteredInvoices] = useState([]);
+
 
   const fetchcustomerServicesCus = async () => {
     try {
@@ -87,6 +93,48 @@ const PreviousBills = () => {
       console.error("Error adding/updating Customer Details:", error);
     }
   };
+  
+   // Function to handle start date change
+   const handleStartDateChange = (e) => {
+    setStartDate(e.target.value);
+  };
+
+  // Function to handle end date change
+  const handleEndDateChange = (e) => {
+    setEndDate(e.target.value);
+  };
+
+const handleFilterByDate = () => {
+  // Convert start and end dates to Date objects
+  const startDateObj = startDate ? new Date(startDate) : null;
+  const endDateObj = endDate ? new Date(endDate) : null;
+
+  // Filter data based on date range
+  const filteredData = customerServicesCus.filter((service) => {
+    // Convert service date to a Date object
+    const serviceDate = new Date(service.currentDate);
+
+    // Check if both start and end dates are specified
+    if (startDateObj && endDateObj) {
+      // Include both start and end dates in the filtering
+      return serviceDate >= startDateObj && serviceDate <= endDateObj;
+    } else if (startDateObj && !endDateObj) {
+      // Include only the start date if the end date is not specified
+      return serviceDate >= startDateObj;
+    } else if (!startDateObj && endDateObj) {
+      // Include only the end date if the start date is not specified
+      return serviceDate <= endDateObj;
+    } else {
+      // If neither start nor end date is specified, include all data
+      return true;
+    }
+  });
+
+  // Update state with filtered data
+  setcustomerServicesCus(filteredData);
+};
+
+  
   
   
 
@@ -269,7 +317,27 @@ const PreviousBills = () => {
                 className="input-field_1"
               />
             </div>
-          </div>
+                  </div>
+                  <div className="date-filter-container">
+  <label htmlFor="start-date" className="date-label">Start Date:</label>
+  <input
+    type="date"
+    id="start-date"
+    value={startDate}
+    onChange={handleStartDateChange}
+    className="date-input start-date-input"
+  />
+  <label htmlFor="end-date" className="date-label">End Date:</label>
+  <input
+    type="date"
+    id="end-date"
+    value={endDate}
+    onChange={handleEndDateChange}
+    className="date-input end-date-input"
+  />
+  <button onClick={handleFilterByDate} className="filter-button">Filter</button>
+</div>
+
 
          
         </div>
@@ -298,12 +366,9 @@ const PreviousBills = () => {
               .map((service) => (
                 <tr key={service._id}>
                   <td>{service.currentDate}</td>
-                  <td>
-                    {service.invoiceNumber}
-                  </td>
-                  <td>
-                    {service.customerName}
-                  </td>
+                  <td>{service.invoiceNumber}</td>
+                  <td>{service.customerName} </td>
+                 
                   <td>{service.phoneNumber}</td>
                   <td>{service.Email}</td>
                   <td>{service.total}</td>
