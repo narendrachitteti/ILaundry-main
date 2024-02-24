@@ -1,9 +1,10 @@
 import { facebook, instagram, shieldTick, support, truckFast, twitter } from "../assets/icons";
-import {  bigShoe2,customer1, customer2, shoe4, shoe5, shoe6, shoe7, thumbnailShoe1, thumbnailShoe2, thumbnailShoe3, bigshoe3s } from "../assets/images";
+import { customer1, customer2, shoe4, shoe5, shoe6, shoe7, thumbnailShoe1, thumbnailShoe2, thumbnailShoe3, bigshoe3s } from "../assets/images";
 import bigShoe4 from "../assets/images/big-shoe4.png"
 import bigShoe5 from "../assets/images/big-shoe5.png"
 import wash1 from '../assets/images/wash1.jpg'
 import ironing from '../assets/images/ironing.jpg'
+import pp1 from '../assets/images/pp1.jpg'
 
 
 export const navLinks = [
@@ -20,8 +21,8 @@ export const shoes = [
         bigShoe: wash1,
     },
     {
-        thumbnail: bigShoe2,
-        bigShoe: bigShoe2,
+        thumbnail: pp1,
+        bigShoe: pp1,
     },
     {
         thumbnail: ironing,
@@ -47,7 +48,7 @@ export const products = [
         price: "₹99.00",
     },
     {
-        imgURL: bigShoe2,
+        imgURL: pp1,
         name: "Premium Laundry",
         price: "₹79.00",
     },
