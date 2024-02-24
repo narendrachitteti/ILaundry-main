@@ -8,9 +8,9 @@ function Login() {
   const [user, setUser] = useState(null);
   const [signIn, setSignIn] = React.useState(true);
 
- useEffect(()=>{
-  localStorage.removeItem("mail")
- })
+  useEffect(() => {
+    localStorage.removeItem("mail");
+  });
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -132,7 +132,7 @@ function Login() {
         {signIn ? (
           <Components.SignInContainer signingIn={signIn}>
             <Components.Form onSubmit={handleLogin}>
-              <Components.Title>Login</Components.Title>
+              <Components.Title>Master Login</Components.Title>
               <Components.Input
                 name="email"
                 type="email"

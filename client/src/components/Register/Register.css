@@ -1,0 +1,80 @@
+/* registerForm.css */
+
+.container-abed23s {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container-abed23s::before {
+  content: "";
+  position: absolute;
+  /* top: 80px; */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("../Register/Laundry-img.jpg") center/cover;
+  filter: blur(3px); /* Example: Apply grayscale filter */
+}
+
+.Inner-container-abed23s {
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  text-align: center;
+  z-index: 1;
+  margin-top: 50px;
+  h1 {
+    font-family: "Times New Roman", Times, serif;
+    margin: 10px 0px;
+    font-weight: bold;
+  }
+}
+.formContainerabcd123 {
+  max-width: 400px;
+  margin: 0 auto;
+  padding-bottom: 15px;
+}
+.inputabcd123[type="text"],
+.inputabcd123[type="email"],
+.selectabcd123,
+.inputabcd123[type="password"] {
+  width: 70%;
+  padding: 8px;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.selectabcd123 {
+  appearance: none; /* Removes default dropdown arrow */
+}
+
+.buttonabcd123 {
+  width: 60%;
+  padding: 10px;
+  background-color: #ffa600;
+  color: #ffffff;
+  border: none;
+  font-size: large;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buttonabcd123:hover {
+  background-color: #0056b3;
+}
+
+.buttonabcd123:focus {
+  outline: none;
+}
+.already-registered {
+  font-size: medium;
+  margin-top: 8px;
+}
