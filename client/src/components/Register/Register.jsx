@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../Register/Register.css";
 import { Link } from "react-router-dom";
-import { Navbar } from "react-bootstrap";
 import Navbar from "../Navbar";
 
 function Register() {
@@ -55,7 +54,7 @@ function Register() {
 
   return (
     <>
-      <Navbar />
+      <Navbar/>
       <div className="container-abed23s">
         <div className="Inner-container-abed23s">
           <h1>Registration</h1>
