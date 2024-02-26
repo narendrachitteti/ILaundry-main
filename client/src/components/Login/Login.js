@@ -5,59 +5,11 @@ import { useNavigate } from "react-router";
 
 function Login() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [signIn, setSignIn] = React.useState(true);
 
   useEffect(() => {
     localStorage.removeItem("mail");
   });
-
-  const handleRegister = async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const password = formData.get("password");
-    const confirmPassword = formData.get("confirmPassword");
-
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    const userData = {
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
-      email: formData.get("email"),
-      password: password,
-      confirmPassword: confirmPassword,
-    };
-
-    try {
-      const response = await fetch("http://localhost:5000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        // navigate("/SignInContainer");
-        alert("Registration successful");
-        setSignIn(true);
-      } else {
-        const errorData = await response.json();
-        if (errorData.message.includes("already exists")) {
-          alert("You already have an account. Please login instead.");
-        } else {
-          alert(errorData.message);
-        }
-      }
-    } catch (error) {
-      console.error("Error registering user:", error);
-      alert("An error occurred while registering. Please try again later.");
-    }
-  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -96,6 +48,45 @@ function Login() {
 
   const handleBackButtonClick = () => {
     navigate(-1);
+  };
+
+  // const navigate = useNavigate();
+  const [staffEmail, setStaffEmail] = useState("");
+  const [staffPassword, setStaffPassword] = useState("");
+  const [staffError, setStaffError] = useState("");
+
+  const handleLogin1 = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:5000/login/staff", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: staffEmail, password: staffPassword }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Navigate to the relevant page based on the response message
+        if (data.message === "Staff login successful") {
+          navigate("/InvoiceForm");
+        } else {
+          setStaffError("You are not authorized to access this page.");
+        }
+      } else if (response.status === 403) {
+        setStaffError("You are not authorized to access this page.");
+      } else {
+        setStaffError(data.message || "Invalid email or password");
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      setStaffError(
+        "An error occurred while logging in. Please try again later."
+      );
+    }
   };
 
   return (
@@ -153,60 +144,48 @@ function Login() {
           </Components.SignInContainer>
         ) : (
           <Components.SignUpContainer signingIn={signIn}>
-            <Components.Form onSubmit={handleRegister}>
-              <Components.Title>Register</Components.Title>
-              <Components.Input
-                name="firstName"
-                type="text"
-                placeholder="First Name"
-                required
-              />
-              <Components.Input
-                name="lastName"
-                type="text"
-                placeholder="Last Name"
-                required
-              />
+            <Components.Form onSubmit={handleLogin1}>
+              <Components.Title>Staff Login</Components.Title>
               <Components.Input
                 name="email"
                 type="email"
                 placeholder="Email"
+                value={staffEmail}
+                onChange={(e) => setStaffEmail(e.target.value)}
                 required
               />
               <Components.Input
                 name="password"
                 type="password"
                 placeholder="Password"
+                value={staffPassword}
+                onChange={(e) => setStaffPassword(e.target.value)}
                 required
               />
-              <Components.Input
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm Password"
-                required
-              />
-              <Components.Button type="submit">Submit</Components.Button>
+              <Components.Button type="submit">Login</Components.Button>
+              {staffError && <div className="error-message">{staffError}</div>}
             </Components.Form>
           </Components.SignUpContainer>
         )}
         <Components.OverlayContainer signingIn={signIn}>
           <Components.Overlay signingIn={signIn}>
             <Components.LeftOverlayPanel signingIn={signIn}>
-              <Components.Title>Login</Components.Title>
+              <Components.Title>Staff Login</Components.Title>
               <Components.Paragraph>
                 To keep connected with us please login with your personal info
               </Components.Paragraph>
               <Components.GhostButton onClick={() => setSignIn(true)}>
-                Login
+                slide right
               </Components.GhostButton>
             </Components.LeftOverlayPanel>
             <Components.RightOverlayPanel signingIn={signIn}>
-              <Components.Title>Hello!</Components.Title>
+              <Components.Title>Master Login</Components.Title>
               <Components.Paragraph>
-                Enter your personal details and start journey with us
+                Enter your personal details and start journey with us. slide
+                left to staff Login
               </Components.Paragraph>
               <Components.GhostButton onClick={() => setSignIn(false)}>
-                Register
+                slide left
               </Components.GhostButton>
             </Components.RightOverlayPanel>
           </Components.Overlay>

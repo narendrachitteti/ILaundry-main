@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import moment from "moment";
+import { BASE_URL } from "../Helper/Helper.js";
+import "../Styles/PreviousBills.css";
 import Popup from "reactjs-popup";
 import CustomerForm from "./CustomerForm.js";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
-import "../Styles/PreviousBills.css";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaDownload } from "react-icons/fa6";
 import { IoLogoWhatsapp } from "react-icons/io";
@@ -21,7 +23,6 @@ import KeyboardDoubleArrowRight from "@mui/icons-material/KeyboardDoubleArrowRig
 import image13 from "../components/images/background.jpg";
 import Navbar from "../components/Navbar.js";
 import Backbutton from "./Backbutton.js";
-import { BASE_URL } from "../Helper/Helper.js";
 
 const PreviousBills = () => {
   const [customerServicesCus, setcustomerServicesCus] = useState([]);
@@ -44,7 +45,7 @@ const PreviousBills = () => {
   const fetchcustomerServicesCus = async () => {
     try {
       console.log("Fetching Customer Details");
-      const response = await axios.get(`${BASE_URL}/invoice`);
+      const response = await axios.get(`${BASE_URL}/api/get-bills`);
       setcustomerServicesCus(response.data);
       setAllData(response.data); 
       console.log(customerServicesCus);
@@ -126,20 +127,20 @@ const PreviousBills = () => {
 
   const filteredData = customerServicesCus.filter((item) => {
     return (
-      filterByField(item, "currentDate", searchTextCus) ||
-      filterByField(item, "customerName", searchTextCus) ||
-      filterByField(item, "phoneNumber", searchTextCus) ||
-      filterByField(item, "Email", searchTextCus) ||
-      filterByField(item, "notes", searchTextCus) ||
-      filterByField(item, "total", searchTextCus) ||
+      filterByField(item, "invoiceNo", searchTextCus) ||
+      filterByField(item, "invoiceDate", searchTextCus) ||
+      filterByField(item, "clientName", searchTextCus) ||
+      filterByField(item, "clientContact", searchTextCus) ||
       filterByField(item, "subTotal", searchTextCus) ||
-      filterByField(item, "taxRate", searchTextCus) ||
-      filterByField(item, "taxAmount", searchTextCus) ||
       filterByField(item, "discountRate", searchTextCus) ||
       filterByField(item, "discountAmount", searchTextCus) ||
-      filterByField(item, "items", searchTextCus)
+      filterByField(item, "taxRate", searchTextCus) ||
+      filterByField(item, "taxAmount", searchTextCus) ||
+      filterByField(item, "total", searchTextCus) ||
+      filterByField(item, "selectedCurrency", searchTextCus)
     );
   });
+  
 
   const handleDownloadPDF = (service) => {
     const pdf = new jsPDF();
@@ -168,15 +169,17 @@ const PreviousBills = () => {
     pdf.setFont("helvetica", "normal");
 
     const tableRows = [
-      ["Customer Name:", service.customerName],
-      ["Phone Number:", service.phoneNumber],
-      ["Email :", service.Email],
-      ["total:", service.total],
-      ["subTotal:", service.subTotal],
-      ["taxRate:", service.taxRate],
-      ["taxAmount:", service.taxAmount],
-      ["discountRate:", service.discountRate],
-      ["items:", service.items],
+      ["Invoice No:", service.invoiceNo],
+      ["Invoice Date:", service.invoiceDate],
+      ["Client Name:", service.clientName],
+      ["Client Contact:", service.clientContact],
+      ["Subtotal :", service.subTotal],
+      ["Discount Rate:", service.discountRate],
+      ["Discount Amount:", service.discountAmount],
+      ["Tax Rate:", service.taxRate],
+      ["Tax Amount:", service.taxAmount],
+      ["Total:", service.total],
+      ["Currency:", service.selectedCurrency],
     ];
 
     let yPos = 65;
@@ -210,22 +213,75 @@ const PreviousBills = () => {
     pdf.save(`customer_details_${service._id}.pdf`);
   };
 
+  // const generateWhatsappMessage = (service) => {
+    
+  //   return `
+  //   Invoice No: ${service.prefix}${service.invoiceNo}
+  //   Invoice Date: ${service.invoiceDate}
+  //   Client Name: ${service.clientName}
+  //   Client Contact: ${service.clientContact}
+  //   Subtotal: ${service.subTotal}
+  //   Discount Rate: ${service.discountRate}
+  //   Discount Amount: ${service.discountAmount}
+  //   Tax Rate: ${service.taxRate}
+  //   Tax Amount: ${service.taxAmount}
+  //   Total: ${service.total}
+  //   Currency: ${service.selectedCurrency}
+  //   `
+  // };
   const generateWhatsappMessage = (service) => {
-    return `
-      Customer Name: ${service.prefix}${service.customerName}
-      Customer Phone Number: ${service.phoneNumber}
-      Email: ${service.Email}
-      Notes: ${service.notes}
-      Total: ${service.total}
-      Sub Total: ${service.subTotal}
-      Tax Rate: ${service.taxRate}
-      Tax Amount: ${service.taxAmount}
-      Discount Rate: ${service.discountRate}
-      Discount Amount: ${service.discountAmount}
-      Items: ${service.items}
-    `;
+    const {
+      prefix,
+      invoiceNo,
+      invoiceDate,
+      clientName,
+      clientContact,
+      subTotal,
+      discountRate,
+      discountAmount,
+      taxRate,
+      taxAmount,
+      total,
+      selectedCurrency,
+      phoneNumber,
+    } = service;
+  
+    // Check if all required properties are defined
+    if (
+      prefix &&
+      invoiceNo &&
+      invoiceDate &&
+      clientName &&
+      clientContact &&
+      subTotal &&
+      discountRate &&
+      discountAmount &&
+      taxRate &&
+      taxAmount &&
+      total &&
+      selectedCurrency &&
+      phoneNumber
+    ) {
+      return `
+        Invoice No: ${prefix}${invoiceNo}
+        Invoice Date: ${invoiceDate}
+        Client Name: ${clientName}
+        Client Contact: ${clientContact}
+        Subtotal: ${subTotal}
+        Discount Rate: ${discountRate}
+        Discount Amount: ${discountAmount}
+        Tax Rate: ${taxRate}
+        Tax Amount: ${taxAmount}
+        Total: ${total}
+        Currency: ${selectedCurrency}
+      `;
+    } else {
+      // Handle the case where some properties are undefined
+      console.error("Some properties are undefined in generateWhatsappMessage");
+      return "";
+    }
   };
-
+  
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
   };
@@ -247,27 +303,20 @@ const PreviousBills = () => {
     console.log("Filtering by date...");
     console.log("fromDate:", fromDate);
     console.log("toDate:", toDate);
-
-    // const filteredData = allData.filter((item) => {
-    //   const currentDate = new Date(item.currentDate).getTime();
-    //   const fromTimestamp = fromDate ? new Date(fromDate).getTime() : 0;
-    //   const toTimestamp = toDate ? new Date(toDate).getTime() : Infinity;
-
-    //   return currentDate >= fromTimestamp && currentDate <= toTimestamp;
-    // });
+  
     const filteredData = allData.filter((item) => {
-      const currentDate = new Date(item.currentDate).getTime();
+      const currentDate = new Date(item.invoiceDate).getTime();
       const fromTimestamp = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : 0;
       const toTimestamp = toDate ? new Date(toDate).setHours(23, 59, 59, 999) : Infinity;
-    
+  
       return currentDate >= fromTimestamp && currentDate <= toTimestamp;
     });
-    
+  
     console.log("Filtered Data:", filteredData);
-
+  
     setcustomerServicesCus(filteredData);
   };
-
+  
   
   return (
     <>
@@ -308,19 +357,22 @@ const PreviousBills = () => {
         <table className="lab-service-table_5">
           <thead>
             <tr className="product-ooi">
-              <th className="product-ooi">Date</th>
               <th className="product-ooi">Invoice No</th>
-              <th className="product-ooi">Customer Name</th>
-              <th className="product-ooi">Phone Number</th>
-              <th className="product-ooi">Email </th>
-              <th className="product-ooi">Total </th>
-              <th className="product-ooi">SubTotal</th>
-              <th className="product-ooi">TaxRate</th>
-              <th className="product-ooi">Tax Amount</th>
+              <th className="product-ooi">Invoice Date</th>
+              <th className="product-ooi">Client Name</th>
+              <th className="product-ooi">Client Contact </th>
+             
               <th className="product-ooi">Discount Rate</th>
               <th className="product-ooi">Discount Amount</th>
+              <th className="product-ooi">Tax Rate</th>
+              <th className="product-ooi">Tax Amount</th>
+              <th className="product-ooi">Total</th>
+              <th className="product-ooi">Subtotal </th>
+              <th className="product-ooi">Currency</th>
               <th className="product-ooi">Items</th>
               <th className="product-ooi">Actions</th>
+              {/* <th className="product-ooi">Whatsapp</th> */}
+              
             </tr>
           </thead>
           <tbody>
@@ -328,21 +380,25 @@ const PreviousBills = () => {
               .slice(indexOfFirstItem, indexOfLastItem)
               .map((service) => (
                 <tr key={service._id}>
-                  <td>{service.currentDate}</td>
                   <td>
-                    {service.invoiceNumber}
+                    {service.invoiceNo}
                   </td>
                   <td>
-                    {service.customerName}
-                  </td>
-                  <td>{service.phoneNumber}</td>
-                  <td>{service.Email}</td>
-                  <td>{service.total}</td>
-                  <td>{service.subTotal}</td>
-                  <td>{service.taxRate}</td>
-                  <td>{service.taxAmount}</td>
+                {service.invoiceDate
+                  ? moment(service.invoiceDate).format("YYYY-MM-DD")
+                  : ""}
+              </td>{" "}
+              <td>{service.clientName}</td>
+                  <td>{service.clientContact}</td>
+                 
                   <td>{service.discountRate}</td>
                   <td>{service.discountAmount}</td>
+                  <td>{service.taxRate}</td>
+                  <td>{service.taxAmount}</td>
+                  <td>{service.total}</td>
+                  <td>{service.subTotal}</td>
+                  <td>{service.selectedCurrency}</td>
+
                   <td>
                     <button
                       className="edit-button_5"
@@ -362,17 +418,15 @@ const PreviousBills = () => {
                                 <th>Item Name</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
-                                <th>Description</th>
                               </tr>
                             </thead>
                             <tbody>
                               {service.items.map((item) => (
                                 <tr key={item.id}>
                                 
-                                  <td>{item.name}</td>
+                                  <td>{item.item}</td>
                                   <td>{item.price}</td>
                                   <td>{item.quantity}</td>
-                                  <td>{item.description}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -397,7 +451,7 @@ const PreviousBills = () => {
                         <FaDownload title="download" />
                       </button>
                       <ReactWhatsapp
-                        number={service.phoneNumber}
+                        number={service.clientContact}
                         message={generateWhatsappMessage(service)}
                         className="edit-button_5"
                         style={{
