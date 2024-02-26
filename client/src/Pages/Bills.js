@@ -271,7 +271,7 @@ const Bills = () => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
-    const defaultQuantity = ""; 
+    const defaultQuantity = "";
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
@@ -435,13 +435,13 @@ const Bills = () => {
       </div>
       <div className="invoice-form">
         <div className="input-group">
-        <label htmlFor="invoiceNo">Invoice No:</label>
-<input
-  type="text"
-  id="invoiceNo"
-  value={invoiceNumber}
-  onChange={(e) => setInvoiceNo(e.target.value)}
-/>
+          <label htmlFor="invoiceNo">Invoice No:</label>
+          <input
+            type="text"
+            id="invoiceNo"
+            value={invoiceNumber}
+            onChange={(e) => setInvoiceNo(e.target.value)}
+          />
 
         </div>
         <div className="input-group">
@@ -597,12 +597,10 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-                disabled
-              >
+                disabled >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
             </div>
-
             <div className="input-group">
               <label htmlFor="taxRate">Tax Rate:</label>
               <input
@@ -627,8 +625,7 @@ const Bills = () => {
               <select
                 className="selectpaymentmode"
                 value={selectedPaymentMode}
-                onChange={(e) => setSelectedPaymentMode(e.target.value)}
-              >
+                onChange={(e) => setSelectedPaymentMode(e.target.value)}>
                 <option value="">Select Payment Mode</option>
                 <option value="upi">UPI</option>
                 <option value="phonepay">PhonePe</option>
@@ -638,37 +635,27 @@ const Bills = () => {
           </div>
           <Row className="row09">
             <Col style={{ width: "100%" }} lg={6}>
-              {/* Subtotal */}
               <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                 <span className="fw-bold">Subtotal:</span>
                 <span>
                   {getCurrencySymbol(selectedCurrency)} {subTotal.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with subtotal */}
                 </span>
               </div>
-
-              {/* Discount */}
               <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                 <span className="fw-bold">Discount:</span>
                 <span>
                   <span className="small ">({discountRate || 0}%)</span>
                   {getCurrencySymbol(selectedCurrency)}{" "}
                   {discountAmount.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with discount amount */}  
                 </span>
               </div>
-
-              {/* Tax */}
               <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                 <span className="fw-bold">Tax:</span>
                 <span>
                   <span className="small ">({taxRate || 0}%)</span>
                   {getCurrencySymbol(selectedCurrency)} {taxAmount.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with tax amount */}
                 </span>
               </div>
-
-              {/* Total */}
               <div
                 className="d-flex flex-row align-items-start justify-content-between"
                 style={{
@@ -678,7 +665,6 @@ const Bills = () => {
                 <span className="fw-bold">Total:</span>
                 <span className="fw-bold">
                   {getCurrencySymbol(selectedCurrency)} {total.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with total */}
                 </span>
               </div>
             </Col>
@@ -689,18 +675,13 @@ const Bills = () => {
           <button className="review-button" onClick={() => { togglePopup(false); handleReviewInvoice(); }}>
             Review Invoice
           </button>
-
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
                 Add Stockists
-                {/* <button className="close-button" onClick={togglePopup}>
-                  X
-                </button> */}
-                <button className="close-button" onClick={() =>  {togglePopup(true); resetFields();}}>
+                <button className="close-button" onClick={() => { togglePopup(true); resetFields(); }}>
                   X
                 </button>
-
               </div>
               <hr />
               <div className="popup-content">
@@ -715,28 +696,26 @@ const Bills = () => {
                   <label className='nameclass-label'>InvoiceDate:</label>
                   <input
                     type="text"
-                    // placeholder="Invoice Date"
+                    placeholder="Invoice Date"
                     value={invoiceDate}
-
                   />
                   <label className='nameclass-label'>clientName:</label>
                   <input
                     type="text"
-                    // placeholder="clientName"
+                    placeholder="clientName"
                     value={clientName}
                   />
                   <label className='nameclass-label'>clientContact:</label>
                   <input
                     type="text"
-                    // placeholder="clientContact"
+                    placeholder="clientContact"
                     value={clientContact}
                   />
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-                    // placeholder="Added Date"
+                    placeholder="Added Date"
                     value={total}
-
                   />
                   <label className='nameclass-label'>item:</label>
                   <input
@@ -753,10 +732,8 @@ const Bills = () => {
               </div>
             </div>
           )}
-
         </div>
       </center>
-
     </div>
   );
 };
