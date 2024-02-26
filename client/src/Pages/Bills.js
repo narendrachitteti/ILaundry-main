@@ -37,6 +37,22 @@ const Bills = () => {
   const [quantities, setQuantities] = useState(Array(rows.length).fill(0));
 
 
+  useEffect(() => {
+    fetchLastInvoiceNumber();
+  }, []);
+
+  const fetchLastInvoiceNumber = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/last-invoice-number");
+      const data = await response.json();
+      console.log(data);
+      setInvoiceNumber(data.lastInvoiceNumber);
+    } catch (error) {
+      console.error("Error fetching last invoice number:", error);
+    }
+  };
+
+
   const services = [
     "Select a service",
     "Wash & Fold",
@@ -345,7 +361,7 @@ const Bills = () => {
       selectedPopupItem,
     };
     // setSelectedInvoice(data); // Set the selected invoice data
-    setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
+    // setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
     togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
@@ -357,6 +373,7 @@ const Bills = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        setInvoiceNumber(data.invoiceNo);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -398,9 +415,10 @@ const Bills = () => {
 
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
-    if (!isCancel) {
-      resetFields(); // Reset fields when closing the popup
-    }
+    // if (!isCancel) {
+    //   handleReviewInvoice();
+    //   resetFields(); // Reset fields when closing the popup
+    // }
   };
 
 
@@ -417,13 +435,14 @@ const Bills = () => {
       </div>
       <div className="invoice-form">
         <div className="input-group">
-          <label htmlFor="invoiceNo">Invoice No:</label>
-          <input
-            type="text"
-            id="invoiceNo"
-            value={`INV${invoiceNumber.toString().padStart(5, '0')}`}
-            onChange={(e) => setInvoiceNo(e.target.value)}
-          />
+        <label htmlFor="invoiceNo">Invoice No:</label>
+<input
+  type="text"
+  id="invoiceNo"
+  value={invoiceNumber}
+  onChange={(e) => setInvoiceNo(e.target.value)}
+/>
+
         </div>
         <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
@@ -635,7 +654,7 @@ const Bills = () => {
                   <span className="small ">({discountRate || 0}%)</span>
                   {getCurrencySymbol(selectedCurrency)}{" "}
                   {discountAmount.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with discount amount */}
+                  {/* Concatenate currency symbol with discount amount */}  
                 </span>
               </div>
 
@@ -678,7 +697,7 @@ const Bills = () => {
                 {/* <button className="close-button" onClick={togglePopup}>
                   X
                 </button> */}
-                <button className="close-button" onClick={() => togglePopup(true)}>
+                <button className="close-button" onClick={() =>  {togglePopup(true); resetFields();}}>
                   X
                 </button>
 
@@ -690,7 +709,7 @@ const Bills = () => {
                   <input
                     type="text"
                     placeholder="Invoice No"
-                    value={`INV${invoiceNumber.toString().padStart(5, '0')}`}
+                    value={invoiceNumber}
                     readOnly
                   />
                   <label className='nameclass-label'>InvoiceDate:</label>
