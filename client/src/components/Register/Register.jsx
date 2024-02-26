@@ -157,6 +157,7 @@ import React, { useState } from "react";
 import axios from "axios"; // Import Axios library
 import "../Register/Register.css";
 import { Link } from "react-router-dom";
+import Navbar from "../Navbar";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -207,6 +208,7 @@ function Register() {
 
   return (
     <>
+    <Navbar/>
       <div className="container-abed23s">
         <div className="Inner-container-abed23s">
           <h1>Register</h1>
