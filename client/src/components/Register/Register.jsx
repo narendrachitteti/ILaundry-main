@@ -54,7 +54,7 @@ function Register() {
 
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <div className="container-abed23s">
         <div className="Inner-container-abed23s">
           <h1>Registration</h1>
@@ -111,10 +111,10 @@ function Register() {
             <button type="submit" className="buttonabcd123">
               Register
             </button>
-            <p className="already-registered">
+            {/* <p className="already-registered">
               Already Registered..? &nbsp;&nbsp;
               <Link to="/Login">Login Here..</Link>
-            </p>
+            </p> */}
           </form>
         </div>
       </div>
