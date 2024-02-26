@@ -35,7 +35,7 @@ function Login() {
         // Store entered email in localStorage
         localStorage.setItem("mail", enteredEmail);
         // Redirect user to InvoiceForm or any desired location
-        navigate("/InvoiceForm");
+        navigate("/Bills");
       } else {
         const errorData = await response.json();
         alert(errorData.message);
