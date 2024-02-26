@@ -4,5 +4,6 @@ const billscontroller = require("../controllers/billscontroller");
 
 router.post("/billing", billscontroller.billsInvoice);
 router.get("/next-invoice-no", billscontroller.getAll);
+router.get("/get-bills", billscontroller.getBills);
 
 module.exports = router;
