@@ -5,11 +5,17 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
+import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
+import jsPDF from 'jspdf';
+
 
 const currencies = currencyCodes.data;
 
 
 const Bills = () => {
+  const [selectedInvoice, setSelectedInvoice] = useState({});
+  const [selectedPopupItem, setSelectedPopupItem] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState(1);
   const [invoiceNo, setInvoiceNo] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
   const [clientName, setClientName] = useState("");
@@ -21,12 +27,31 @@ const Bills = () => {
   const [taxRate, setTaxRate] = useState(0);
   const [taxAmount, setTaxAmount] = useState(0);
   const [total, setTotal] = useState(0);
+  const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
+  const [price, setprice] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
   );
   const [subtotals, setSubtotals] = useState(Array(rows.length).fill(0));
   const [quantities, setQuantities] = useState(Array(rows.length).fill(0));
+
+
+  useEffect(() => {
+    fetchLastInvoiceNumber();
+  }, []);
+
+  const fetchLastInvoiceNumber = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/last-invoice-number");
+      const data = await response.json();
+      console.log(data);
+      setInvoiceNumber(data.lastInvoiceNumber);
+    } catch (error) {
+      console.error("Error fetching last invoice number:", error);
+    }
+  };
+
 
   const services = [
     "Select a service",
@@ -223,7 +248,6 @@ const Bills = () => {
   }, [quantities, discountRate, taxRate]);
 
   const handleDeleteRow = (index) => {
-    // Filter rows to remove the row at the given index
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
     console.log("Deleting row at index:", index);
@@ -247,25 +271,15 @@ const Bills = () => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
-
-    // Set a default quantity when an item is selected
-    const defaultQuantity = ""; // You can set any default quantity you prefer
+    const defaultQuantity = "";
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
 
+    // Update selected item for the popup
+    setSelectedPopupItem(value);
     updateSubtotal(index, value, defaultQuantity);
   };
-
-  // const handleQuantityChange = (index, value) => {
-  //     const updatedQuantities = [...quantities];
-  //     updatedQuantities[index] = value;
-  //     setQuantities(updatedQuantities);
-
-  //     updateSubtotal(index, selectedItems[index], value);
-
-  //     calculateTotal();
-  // };
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
@@ -289,21 +303,17 @@ const Bills = () => {
     let subtotal = 0;
     let discount = 0;
     let tax = 0;
-
     // Loop through rows to calculate subtotal, discount, and tax
     rows.forEach((row, index) => {
       const item = selectedItems[index];
       const quantity = quantities[index];
       const price = itemPrices[item] || 0;
-
       subtotal += price * quantity;
       discount += (price * quantity * discountRate) / 100;
       tax += (price * quantity * taxRate) / 100;
     });
-
     // Calculate total
     const totalAmount = subtotal - discount + tax;
-
     // Update state
     setSubTotal(subtotal);
     setDiscountAmount(discount);
@@ -327,47 +337,6 @@ const Bills = () => {
     }
   };
 
-  // const handleReviewInvoice = () => {
-  //   const total = calculateTotal();
-  //   // Handle review invoice logic here
-  //   console.log("Review Invoice clicked");
-  // };
-  // const handleReviewInvoice = () => {
-  //   const data = {
-  //     invoiceNo,
-  //     invoiceDate,
-  //     clientName,
-  //     clientContact,
-  //     rows: rows.map((row, index) => ({
-  //       item: selectedItems[index],
-  //       quantity: quantities[index],
-  //       subtotal: subtotals[index],
-  //     })),
-  //     subTotal,
-  //     discountRate,
-  //     discountAmount,
-  //     taxRate,
-  //     taxAmount,
-  //     total,
-  //     selectedCurrency,
-  //   };
-  //   fetch("http://localhost:5000/api/billing", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("Success:", data);
-  //       // Handle success response
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle error
-  //     });
-  // };
 
   const handleReviewInvoice = () => {
     const data = {
@@ -378,6 +347,7 @@ const Bills = () => {
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
+        price: price[index],
         subtotal: subtotals[index],
       })),
       subTotal,
@@ -387,12 +357,12 @@ const Bills = () => {
       taxAmount,
       total,
       selectedCurrency,
+      selectedPaymentMode,
+      selectedPopupItem,
     };
-  
-    // Open a popup window
-    const popup = window.open("", "popup", "width=600,height=400");
-  
-    // Send the POST request
+    // setSelectedInvoice(data); // Set the selected invoice data
+    // setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
+    togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
       headers: {
@@ -403,36 +373,60 @@ const Bills = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        popup.document.body.innerHTML = `
-          <h1>Invoice Review</h1>
-          <p>Invoice No: ${data.invoiceNo}</p>
-          <p>Invoice Date: ${data.invoiceDate}</p>
-          <p>Client Name: ${data.clientName}</p>
-          <p>clientContact: ${data.clientContact}</p>
-          <p>quantity: ${data.quantity}</p>
-          <p>Total: ${data.total}</p>
-        `;
+        setInvoiceNumber(data.invoiceNo);
       })
       .catch((error) => {
         console.error("Error:", error);
         // Handle error
       });
   };
-  
-  
-  // useEffect(() => {
-  //   if (invoiceNo === "") {
-  //     // Fetch the next invoice number from the server
-  //     fetch("http://localhost:5000/api/next-invoice-no")
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setInvoiceNo(data.nextInvoiceNo);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching next invoice number:", error);
-  //       });
-  //   }
-  // }, [invoiceNo , setInvoiceNo]);
+
+  const handledownloadcopy = () => {
+    const doc = new jsPDF();
+    doc.text("Invoice No: " + invoiceNo, 10, 10);
+    doc.text("Invoice Date: " + invoiceDate, 10, 20);
+    doc.text("Client Name: " + clientName, 10, 30);
+    doc.text("Client Contact: " + clientContact, 10, 40);
+    doc.text("Total: " + total, 10, 50);
+    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+
+    doc.save("Laundry Invoice.pdf");
+  };
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const resetFields = () => {
+    // setInvoiceNo("");
+    setInvoiceDate("");
+    setClientName("");
+    setClientContact("");
+    setRows([{ id: 1 }]);
+    setSelectedItems(Array(rows.length).fill(""));
+    setQuantities(Array(rows.length).fill(0));
+    setSubtotals(Array(rows.length).fill(0));
+    setSubTotal(0);
+    setDiscountRate(0);
+    setDiscountAmount(0);
+    setTaxRate(0);
+    setTaxAmount(0);
+    setTotal(0);
+    setSelectedPaymentMode("");
+  };
+
+  const togglePopup = (isCancel) => {
+    setShowPopup(!showPopup);
+    // if (!isCancel) {
+    //   handleReviewInvoice();
+    //   resetFields(); // Reset fields when closing the popup
+    // }
+  };
+
+
+
+  // const togglePopup = (value) => {
+  //   setSelectedPopupItem(value);
+  // };
+
 
   return (
     <div className="billtotal">
@@ -445,10 +439,10 @@ const Bills = () => {
           <input
             type="text"
             id="invoiceNo"
-            value={invoiceNo}
+            value={invoiceNumber}
             onChange={(e) => setInvoiceNo(e.target.value)}
-            readOnly
           />
+
         </div>
         <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
@@ -603,12 +597,10 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-                disabled
-              >
+                disabled >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
             </div>
-
             <div className="input-group">
               <label htmlFor="taxRate">Tax Rate:</label>
               <input
@@ -629,40 +621,41 @@ const Bills = () => {
                 onChange={(e) => setDiscountRate(e.target.value)}
               />
             </div>
+            <div className="input-group">
+              <select
+                className="selectpaymentmode"
+                value={selectedPaymentMode}
+                onChange={(e) => setSelectedPaymentMode(e.target.value)}>
+                <option value="">Select Payment Mode</option>
+                <option value="upi">UPI</option>
+                <option value="phonepay">PhonePe</option>
+                <option value="googlepay">Google Pay</option>
+              </select>
+            </div>
           </div>
           <Row className="row09">
             <Col style={{ width: "100%" }} lg={6}>
-              {/* Subtotal */}
               <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                 <span className="fw-bold">Subtotal:</span>
                 <span>
                   {getCurrencySymbol(selectedCurrency)} {subTotal.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with subtotal */}
                 </span>
               </div>
-
-              {/* Discount */}
               <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                 <span className="fw-bold">Discount:</span>
                 <span>
                   <span className="small ">({discountRate || 0}%)</span>
                   {getCurrencySymbol(selectedCurrency)}{" "}
                   {discountAmount.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with discount amount */}
                 </span>
               </div>
-
-              {/* Tax */}
               <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                 <span className="fw-bold">Tax:</span>
                 <span>
                   <span className="small ">({taxRate || 0}%)</span>
                   {getCurrencySymbol(selectedCurrency)} {taxAmount.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with tax amount */}
                 </span>
               </div>
-
-              {/* Total */}
               <div
                 className="d-flex flex-row align-items-start justify-content-between"
                 style={{
@@ -672,18 +665,75 @@ const Bills = () => {
                 <span className="fw-bold">Total:</span>
                 <span className="fw-bold">
                   {getCurrencySymbol(selectedCurrency)} {total.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with total */}
                 </span>
               </div>
             </Col>
           </Row>
-          <button className="review-button" onClick={handleReviewInvoice}>
+          {/* <button className="review-button" onClick={togglePopup}{handleReviewInvoice}>
+            Review Invoice
+          </button> */}
+          <button className="review-button" onClick={() => { togglePopup(false); handleReviewInvoice(); }}>
             Review Invoice
           </button>
-         
+          {showPopup && (
+            <div className="popup">
+              <div className="popup-header">
+                Add Stockists
+                <button className="close-button" onClick={() => { togglePopup(true); resetFields(); }}>
+                  X
+                </button>
+              </div>
+              <hr />
+              <div className="popup-content">
+                <form>
+                  <label className='nameclass-label'>InvoiceNo:</label>
+                  <input
+                    type="text"
+                    placeholder="Invoice No"
+                    value={invoiceNumber}
+                    readOnly
+                  />
+                  <label className='nameclass-label'>InvoiceDate:</label>
+                  <input
+                    type="text"
+                    placeholder="Invoice Date"
+                    value={invoiceDate}
+                  />
+                  <label className='nameclass-label'>clientName:</label>
+                  <input
+                    type="text"
+                    placeholder="clientName"
+                    value={clientName}
+                  />
+                  <label className='nameclass-label'>clientContact:</label>
+                  <input
+                    type="text"
+                    placeholder="clientContact"
+                    value={clientContact}
+                  />
+                  <label className='nameclass-label'>total:</label>
+                  <input
+                    type="text"
+                    placeholder="Added Date"
+                    value={total}
+                  />
+                  <label className='nameclass-label'>item:</label>
+                  <input
+                    type="text"
+                    placeholder="Selected Item"
+                    value={selectedPopupItem}
+                    readOnly
+                  />
+                  <div className="merge-karthik-bill">
+                    <button className="downloadcopy">send Copy</button>
+                    <button className="downloadcopy" onClick={handledownloadcopy}>Download Copy</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       </center>
-      
     </div>
   );
 };
