@@ -142,3 +142,68 @@
     margin-top: 10px;
     width: 95%;
 }
+
+.popup {
+    position: fixed;
+    top: 312px;
+    left: 23%;
+    transform: translate(57%, -50%);
+    background-color: white;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 40%;
+    height: 71vh;
+  }
+
+  .popup-1{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 75%;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+  }
+
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+  
+  .popup-content-ss {
+    display: flex;
+    flex-direction: column;
+  }
+
+.popup-content{
+    width: 90%;
+    margin-left: 3%;
+  }
+  .nameclass-label{
+    width: 40%;
+    text-align: left;
+  }
+
+  .downloadcopy{
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    margin-top: 2%;
+
+  }
+  .merge-karthik-bill{
+    display: flex;
+  }

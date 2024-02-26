@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { arrowRight } from "../assets/icons";
-import { bigShoe1 } from "../assets/images";
+import  wash1  from "../assets/images/wash1.jpg";
 import Button from "../components/Button";
 import ShoeCard from "../components/ShoeCard";
 import { shoes, statistics } from "../constants";
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 const Hero = () => {
 
-    const [bigShoeImg, setBigShoeImg] = useState(bigShoe1);
+    const [bigShoeImg, setBigShoeImg] = useState(wash1);
 
     return (
         <div>
@@ -46,7 +46,7 @@ const Hero = () => {
 
             <div className="relative flex-1 flex justify-center items-center xl:min-h-screen max-xl:py-40 bg-primary bg-hero bg-cover bg-center">
                 <img
-                    src={bigShoeImg}
+                    src={wash1}
                     alt="Shoe Collection"
                     width={610}
                     height={500}
@@ -59,7 +59,7 @@ const Hero = () => {
                                 <ShoeCard
                                     imgURL={shoe}
                                     changeBigShoeImage={(shoe) => setBigShoeImg(shoe)}
-                                    bigShoeImg={bigShoeImg}
+                                    bigShoeImg={wash1}
                                 />
                             </div>
                         ))

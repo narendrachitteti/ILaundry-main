@@ -5,11 +5,17 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
+import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
+import jsPDF from 'jspdf';
+
 
 const currencies = currencyCodes.data;
 
 
 const Bills = () => {
+  const [selectedInvoice, setSelectedInvoice] = useState({});
+  const [selectedPopupItem, setSelectedPopupItem] = useState("");
+
   const [invoiceNo, setInvoiceNo] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
   const [clientName, setClientName] = useState("");
@@ -21,6 +27,8 @@ const Bills = () => {
   const [taxRate, setTaxRate] = useState(0);
   const [taxAmount, setTaxAmount] = useState(0);
   const [total, setTotal] = useState(0);
+  const [item, setitem] = useState(0);
+  const [price, setprice] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
@@ -254,18 +262,11 @@ const Bills = () => {
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
 
+    // Update selected item for the popup
+    setSelectedPopupItem(value);
+
     updateSubtotal(index, value, defaultQuantity);
   };
-
-  // const handleQuantityChange = (index, value) => {
-  //     const updatedQuantities = [...quantities];
-  //     updatedQuantities[index] = value;
-  //     setQuantities(updatedQuantities);
-
-  //     updateSubtotal(index, selectedItems[index], value);
-
-  //     calculateTotal();
-  // };
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
@@ -289,21 +290,17 @@ const Bills = () => {
     let subtotal = 0;
     let discount = 0;
     let tax = 0;
-
     // Loop through rows to calculate subtotal, discount, and tax
     rows.forEach((row, index) => {
       const item = selectedItems[index];
       const quantity = quantities[index];
       const price = itemPrices[item] || 0;
-
       subtotal += price * quantity;
       discount += (price * quantity * discountRate) / 100;
       tax += (price * quantity * taxRate) / 100;
     });
-
     // Calculate total
     const totalAmount = subtotal - discount + tax;
-
     // Update state
     setSubTotal(subtotal);
     setDiscountAmount(discount);
@@ -327,47 +324,6 @@ const Bills = () => {
     }
   };
 
-  // const handleReviewInvoice = () => {
-  //   const total = calculateTotal();
-  //   // Handle review invoice logic here
-  //   console.log("Review Invoice clicked");
-  // };
-  // const handleReviewInvoice = () => {
-  //   const data = {
-  //     invoiceNo,
-  //     invoiceDate,
-  //     clientName,
-  //     clientContact,
-  //     rows: rows.map((row, index) => ({
-  //       item: selectedItems[index],
-  //       quantity: quantities[index],
-  //       subtotal: subtotals[index],
-  //     })),
-  //     subTotal,
-  //     discountRate,
-  //     discountAmount,
-  //     taxRate,
-  //     taxAmount,
-  //     total,
-  //     selectedCurrency,
-  //   };
-  //   fetch("http://localhost:5000/api/billing", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("Success:", data);
-  //       // Handle success response
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle error
-  //     });
-  // };
 
   const handleReviewInvoice = () => {
     const data = {
@@ -378,6 +334,7 @@ const Bills = () => {
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
+        price:price[index],
         subtotal: subtotals[index],
       })),
       subTotal,
@@ -388,11 +345,9 @@ const Bills = () => {
       total,
       selectedCurrency,
     };
-  
-    // Open a popup window
-    const popup = window.open("", "popup", "width=600,height=400");
-  
-    // Send the POST request
+    // setSelectedInvoice(data); // Set the selected invoice data
+    setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
+    togglePopup();
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
       headers: {
@@ -403,36 +358,32 @@ const Bills = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        popup.document.body.innerHTML = `
-          <h1>Invoice Review</h1>
-          <p>Invoice No: ${data.invoiceNo}</p>
-          <p>Invoice Date: ${data.invoiceDate}</p>
-          <p>Client Name: ${data.clientName}</p>
-          <p>clientContact: ${data.clientContact}</p>
-          <p>quantity: ${data.quantity}</p>
-          <p>Total: ${data.total}</p>
-        `;
       })
       .catch((error) => {
         console.error("Error:", error);
         // Handle error
       });
   };
-  
-  
-  // useEffect(() => {
-  //   if (invoiceNo === "") {
-  //     // Fetch the next invoice number from the server
-  //     fetch("http://localhost:5000/api/next-invoice-no")
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setInvoiceNo(data.nextInvoiceNo);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching next invoice number:", error);
-  //       });
-  //   }
-  // }, [invoiceNo , setInvoiceNo]);
+
+  const handledownloadcopy = () => {
+    const doc = new jsPDF();
+    doc.text("Invoice No: " + invoiceNo, 10, 10);
+    doc.text("Invoice Date: " + invoiceDate, 10, 20);
+    doc.text("Client Name: " + clientName, 10, 30);
+    doc.text("Client Contact: " + clientContact, 10, 40);
+    doc.text("Total: " + total, 10, 50);
+    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+
+    doc.save("Laundry Invoice.pdf");
+  };
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
+
+  const [invoiceNumber, setInvoiceNumber] = useState(1);
 
   return (
     <div className="billtotal">
@@ -445,9 +396,8 @@ const Bills = () => {
           <input
             type="text"
             id="invoiceNo"
-            value={invoiceNo}
+            value={`INV${invoiceNumber.toString().padStart(5, '0')}`}
             onChange={(e) => setInvoiceNo(e.target.value)}
-            readOnly
           />
         </div>
         <div className="input-group">
@@ -677,13 +627,76 @@ const Bills = () => {
               </div>
             </Col>
           </Row>
-          <button className="review-button" onClick={handleReviewInvoice}>
+          {/* <button className="review-button" onClick={togglePopup}{handleReviewInvoice}>
+            Review Invoice
+          </button> */}
+          <button className="review-button" onClick={() => { togglePopup(true); handleReviewInvoice(); }}>
             Review Invoice
           </button>
-         
+
+          {showPopup && (
+            <div className="popup">
+              <div className="popup-header">
+                Add Stockists
+                <button className="close-button" onClick={togglePopup}>
+                  X
+                </button>
+              </div>
+              <hr />
+              <div className="popup-content">
+                <form>
+                  <label className='nameclass-label'>InvoiceNo:</label>
+                  <input
+                    type="text"
+                    placeholder="Invoice No"
+                    value={`INV${invoiceNumber.toString().padStart(5, '0')}`}
+                    readOnly
+                  />
+                  <label className='nameclass-label'>InvoiceDate:</label>
+                  <input
+                    type="text"
+                    placeholder="Invoice Date"
+                    value={invoiceDate}
+
+                  />
+                  <label className='nameclass-label'>clientName:</label>
+                  <input
+                    type="text"
+                    placeholder="clientName"
+                    value={clientName}
+                  />
+                  <label className='nameclass-label'>clientContact:</label>
+                  <input
+                    type="text"
+                    placeholder="clientContact"
+                    value={clientContact}
+                  />
+                  <label className='nameclass-label'>total:</label>
+                  <input
+                    type="text"
+                    placeholder="Added Date"
+                    value={total}
+
+                  />
+                  <label className='nameclass-label'>item:</label>
+                  <input
+                    type="text"
+                    placeholder="Selected Item"
+                    value={selectedPopupItem}
+                    readOnly
+                  />
+                  <div className="merge-karthik-bill">
+                    <button className="downloadcopy">send Copy</button>
+                    <button className="downloadcopy" onClick={handledownloadcopy}>Download Copy</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
         </div>
       </center>
-      
+
     </div>
   );
 };
