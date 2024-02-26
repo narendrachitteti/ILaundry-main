@@ -255,7 +255,6 @@ const Bills = () => {
     console.log("Current selectedItems:", selectedItems);
     console.log("Current quantities:", quantities);
     console.log("Current subtotals:", subtotals);
-    // Remove the corresponding item, quantity, and subtotal at the given index
     setSelectedItems((prevSelectedItems) =>
       prevSelectedItems.filter((_, i) => i !== index)
     );
@@ -275,8 +274,6 @@ const Bills = () => {
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
-
-    // Update selected item for the popup
     setSelectedPopupItem(value);
     updateSubtotal(index, value, defaultQuantity);
   };
@@ -285,10 +282,7 @@ const Bills = () => {
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = value;
     setQuantities(updatedQuantities);
-
     updateSubtotal(index, selectedItems[index], value);
-
-    // Remove the calculateTotal() call from here
   };
 
   const updateSubtotal = (index, item, quantity) => {
@@ -377,7 +371,6 @@ const Bills = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Handle error
       });
   };
 
@@ -389,15 +382,13 @@ const Bills = () => {
     doc.text("Client Contact: " + clientContact, 10, 40);
     doc.text("Total: " + total, 10, 50);
     doc.text("Selected Item: " + selectedPopupItem, 10, 60);
-
     doc.save("Laundry Invoice.pdf");
   };
 
   const [showPopup, setShowPopup] = useState(false);
-
   const resetFields = () => {
     // setInvoiceNo("");
-    setInvoiceDate("");
+    // setInvoiceDate("");
     setClientName("");
     setClientContact("");
     setRows([{ id: 1 }]);
@@ -426,8 +417,6 @@ const Bills = () => {
   // const togglePopup = (value) => {
   //   setSelectedPopupItem(value);
   // };
-
-
   return (
     <div className="billtotal">
       <div className="nav111">

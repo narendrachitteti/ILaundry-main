@@ -75,12 +75,6 @@ const getLastInvoiceNumber = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
 const getAll = async (req, res) => {
     try {
       const users = await Billing.find({});
