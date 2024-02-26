@@ -207,3 +207,7 @@
   .merge-karthik-bill{
     display: flex;
   }
+  .selectpaymentmode{
+    width: 96%;
+    padding: 10px;
+  }

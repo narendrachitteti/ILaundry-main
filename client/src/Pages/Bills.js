@@ -15,7 +15,7 @@ const currencies = currencyCodes.data;
 const Bills = () => {
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [selectedPopupItem, setSelectedPopupItem] = useState("");
-
+  const [invoiceNumber, setInvoiceNumber] = useState(1);
   const [invoiceNo, setInvoiceNo] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
   const [clientName, setClientName] = useState("");
@@ -27,7 +27,7 @@ const Bills = () => {
   const [taxRate, setTaxRate] = useState(0);
   const [taxAmount, setTaxAmount] = useState(0);
   const [total, setTotal] = useState(0);
-  const [item, setitem] = useState(0);
+  const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
@@ -35,6 +35,7 @@ const Bills = () => {
   );
   const [subtotals, setSubtotals] = useState(Array(rows.length).fill(0));
   const [quantities, setQuantities] = useState(Array(rows.length).fill(0));
+
 
   const services = [
     "Select a service",
@@ -231,7 +232,6 @@ const Bills = () => {
   }, [quantities, discountRate, taxRate]);
 
   const handleDeleteRow = (index) => {
-    // Filter rows to remove the row at the given index
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
     console.log("Deleting row at index:", index);
@@ -255,16 +255,13 @@ const Bills = () => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
-
-    // Set a default quantity when an item is selected
-    const defaultQuantity = ""; // You can set any default quantity you prefer
+    const defaultQuantity = ""; 
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
 
     // Update selected item for the popup
     setSelectedPopupItem(value);
-
     updateSubtotal(index, value, defaultQuantity);
   };
 
@@ -334,7 +331,7 @@ const Bills = () => {
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
-        price:price[index],
+        price: price[index],
         subtotal: subtotals[index],
       })),
       subTotal,
@@ -344,10 +341,12 @@ const Bills = () => {
       taxAmount,
       total,
       selectedCurrency,
+      selectedPaymentMode,
+      selectedPopupItem,
     };
     // setSelectedInvoice(data); // Set the selected invoice data
     setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
-    togglePopup();
+    togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
       headers: {
@@ -379,11 +378,37 @@ const Bills = () => {
 
   const [showPopup, setShowPopup] = useState(false);
 
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
+  const resetFields = () => {
+    // setInvoiceNo("");
+    setInvoiceDate("");
+    setClientName("");
+    setClientContact("");
+    setRows([{ id: 1 }]);
+    setSelectedItems(Array(rows.length).fill(""));
+    setQuantities(Array(rows.length).fill(0));
+    setSubtotals(Array(rows.length).fill(0));
+    setSubTotal(0);
+    setDiscountRate(0);
+    setDiscountAmount(0);
+    setTaxRate(0);
+    setTaxAmount(0);
+    setTotal(0);
+    setSelectedPaymentMode("");
   };
 
-  const [invoiceNumber, setInvoiceNumber] = useState(1);
+  const togglePopup = (isCancel) => {
+    setShowPopup(!showPopup);
+    if (!isCancel) {
+      resetFields(); // Reset fields when closing the popup
+    }
+  };
+
+
+
+  // const togglePopup = (value) => {
+  //   setSelectedPopupItem(value);
+  // };
+
 
   return (
     <div className="billtotal">
@@ -579,6 +604,18 @@ const Bills = () => {
                 onChange={(e) => setDiscountRate(e.target.value)}
               />
             </div>
+            <div className="input-group">
+              <select
+                className="selectpaymentmode"
+                value={selectedPaymentMode}
+                onChange={(e) => setSelectedPaymentMode(e.target.value)}
+              >
+                <option value="">Select Payment Mode</option>
+                <option value="upi">UPI</option>
+                <option value="phonepay">PhonePe</option>
+                <option value="googlepay">Google Pay</option>
+              </select>
+            </div>
           </div>
           <Row className="row09">
             <Col style={{ width: "100%" }} lg={6}>
@@ -630,7 +667,7 @@ const Bills = () => {
           {/* <button className="review-button" onClick={togglePopup}{handleReviewInvoice}>
             Review Invoice
           </button> */}
-          <button className="review-button" onClick={() => { togglePopup(true); handleReviewInvoice(); }}>
+          <button className="review-button" onClick={() => { togglePopup(false); handleReviewInvoice(); }}>
             Review Invoice
           </button>
 
@@ -638,9 +675,13 @@ const Bills = () => {
             <div className="popup">
               <div className="popup-header">
                 Add Stockists
-                <button className="close-button" onClick={togglePopup}>
+                {/* <button className="close-button" onClick={togglePopup}>
+                  X
+                </button> */}
+                <button className="close-button" onClick={() => togglePopup(true)}>
                   X
                 </button>
+
               </div>
               <hr />
               <div className="popup-content">
@@ -655,26 +696,26 @@ const Bills = () => {
                   <label className='nameclass-label'>InvoiceDate:</label>
                   <input
                     type="text"
-                    placeholder="Invoice Date"
+                    // placeholder="Invoice Date"
                     value={invoiceDate}
 
                   />
                   <label className='nameclass-label'>clientName:</label>
                   <input
                     type="text"
-                    placeholder="clientName"
+                    // placeholder="clientName"
                     value={clientName}
                   />
                   <label className='nameclass-label'>clientContact:</label>
                   <input
                     type="text"
-                    placeholder="clientContact"
+                    // placeholder="clientContact"
                     value={clientContact}
                   />
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-                    placeholder="Added Date"
+                    // placeholder="Added Date"
                     value={total}
 
                   />

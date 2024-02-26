@@ -45,10 +45,12 @@ const billingSchema = new mongoose.Schema({
   subTotal: Number,
   discountRate: Number,
   discountAmount: Number,
+
   taxRate: Number,
   taxAmount: Number,
   total: Number,
   selectedCurrency: String,
+  selectedPaymentMode: String,
 });
 
 // Pre-save middleware to generate invoice number
