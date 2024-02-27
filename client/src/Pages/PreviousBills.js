@@ -141,72 +141,81 @@ const PreviousBills = () => {
     );
   });
   
-
   const handleDownloadPDF = (service) => {
     const pdf = new jsPDF();
-  
+    pdf.setDrawColor(0, 0, 255);
     pdf.setFontSize(16);
     pdf.setFont("helvetica", "bold");
-  
+
     const imgWidth = 30;
     const imgHeight = 15;
     const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
     const imgY = 15;
     pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
-  
+
     const billingDateTime = new Date().toLocaleString();
     pdf.text(`Customer Details          Date : ${billingDateTime}`, 20, 45);
     pdf.rect(
-      10,
-      10,
-      pdf.internal.pageSize.getWidth() - 20,
-      pdf.internal.pageSize.getHeight() - 20,
-      "S"
+        10,
+        10,
+        pdf.internal.pageSize.getWidth() - 20,
+        pdf.internal.pageSize.getHeight() - 20,
+        "S"
     );
-    pdf.line(20, 55, 190, 55);
-  
+    // pdf.line(20, 55, 190, 55);
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    
+    pdf.rect(0, 0, pageWidth, pageHeight);
+    pdf.line(10, 55, pageWidth - 10, 55); 
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
-  
+
     // Ensure tableRows is an array of objects
     const tableRows = [
-      { label: "Invoice No:", value: service.invoiceNo },
-      { label: "Invoice Date:", value: service.invoiceDate },
-      { label: "Client Name:", value: service.clientName },
-      { label: "Client Contact:", value: service.clientContact },
-      { label: "Subtotal:", value: service.subTotal },
-      { label: "Discount Rate:", value: service.discountRate },
-      { label: "Discount Amount:", value: service.discountAmount },
-      { label: "Tax Rate:", value: service.taxRate },
-      { label: "Tax Amount:", value: service.taxAmount },
-      { label: "Total:", value: service.total },
-      { label: "Currency:", value: service.selectedCurrency },
+        { label: "Invoice No:", value: service.invoiceNo },
+        { label: "Invoice Date:", value: service.invoiceDate },
+        { label: "Client Name:", value: service.clientName },
+        { label: "Client Contact:", value: service.clientContact },
+        { label: "Subtotal:", value: service.subTotal },
+        { label: "Discount Rate:", value: service.discountRate },
+        { label: "Discount Amount:", value: service.discountAmount },
+        { label: "Tax Rate:", value: service.taxRate },
+        { label: "Tax Amount:", value: service.taxAmount },
+        { label: "Total:", value: service.total },
+        { label: "Currency:", value: service.selectedCurrency },
     ];
-  
+
     let yPos = 65;
-  
+    const gapBetweenFields = 15;
+    const xPositionLabel = 20;
+    const xPositionValue = 65; // Adjust the value based on your preference
+
     tableRows.forEach(({ label, value }) => {
-      const sanitizedLabel = label.replace(/[^\x20-\x7E]/g, "");
-  
-      console.log("Sanitized Label:", sanitizedLabel);
-      console.log("yPos:", yPos, typeof yPos);
-  
-      try {
-        pdf.text(`${sanitizedLabel} ${value}`, 20, yPos);
-      } catch (error) {
-        console.error("Error adding label:", error);
-      }
-  
-      yPos += 10;
+        const sanitizedLabel = label.replace(/[^\x20-\x7E]/g, "");
+
+        console.log("Sanitized Label:", sanitizedLabel);
+        console.log("yPos:", yPos, typeof yPos);
+
+        try {
+            const labelWithColon = sanitizedLabel.endsWith(":") ? sanitizedLabel : `${sanitizedLabel}:`;
+            pdf.text(labelWithColon, xPositionLabel, yPos);
+            pdf.text(`${value}`, xPositionValue, yPos);
+        } catch (error) {
+            console.error("Error adding label:", error);
+        }
+
+        yPos += gapBetweenFields; // Increase yPos by the gap value
     });
-  
+
     const signature = "Signature Or Stamp";
     const signatureX = 150;
     const signatureY = yPos + 20;
     pdf.text(signature, signatureX, signatureY);
-  
+
     pdf.save(`customer_details_${service._id}.pdf`);
-  };
+};
+
   
   // const generateWhatsappMessage = (service) => {
     
