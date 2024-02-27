@@ -144,16 +144,16 @@ const PreviousBills = () => {
 
   const handleDownloadPDF = (service) => {
     const pdf = new jsPDF();
-
+  
     pdf.setFontSize(16);
     pdf.setFont("helvetica", "bold");
-
+  
     const imgWidth = 30;
     const imgHeight = 15;
     const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
     const imgY = 15;
     pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
-
+  
     const billingDateTime = new Date().toLocaleString();
     pdf.text(`Customer Details          Date : ${billingDateTime}`, 20, 45);
     pdf.rect(
@@ -164,55 +164,50 @@ const PreviousBills = () => {
       "S"
     );
     pdf.line(20, 55, 190, 55);
-
+  
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
-
+  
+    // Ensure tableRows is an array of objects
     const tableRows = [
-      ["Invoice No:", service.invoiceNo],
-      ["Invoice Date:", service.invoiceDate],
-      ["Client Name:", service.clientName],
-      ["Client Contact:", service.clientContact],
-      ["Subtotal :", service.subTotal],
-      ["Discount Rate:", service.discountRate],
-      ["Discount Amount:", service.discountAmount],
-      ["Tax Rate:", service.taxRate],
-      ["Tax Amount:", service.taxAmount],
-      ["Total:", service.total],
-      ["Currency:", service.selectedCurrency],
+      { label: "Invoice No:", value: service.invoiceNo },
+      { label: "Invoice Date:", value: service.invoiceDate },
+      { label: "Client Name:", value: service.clientName },
+      { label: "Client Contact:", value: service.clientContact },
+      { label: "Subtotal:", value: service.subTotal },
+      { label: "Discount Rate:", value: service.discountRate },
+      { label: "Discount Amount:", value: service.discountAmount },
+      { label: "Tax Rate:", value: service.taxRate },
+      { label: "Tax Amount:", value: service.taxAmount },
+      { label: "Total:", value: service.total },
+      { label: "Currency:", value: service.selectedCurrency },
     ];
-
+  
     let yPos = 65;
-
-    tableRows.forEach(([label, value]) => {
+  
+    tableRows.forEach(({ label, value }) => {
       const sanitizedLabel = label.replace(/[^\x20-\x7E]/g, "");
-
+  
       console.log("Sanitized Label:", sanitizedLabel);
       console.log("yPos:", yPos, typeof yPos);
-
+  
       try {
-        pdf.text(sanitizedLabel, 20, yPos);
+        pdf.text(`${sanitizedLabel} ${value}`, 20, yPos);
       } catch (error) {
         console.error("Error adding label:", error);
       }
-
-      try {
-        pdf.text(value, 80, yPos);
-      } catch (error) {
-        console.error("Error adding value:", error);
-      }
-
+  
       yPos += 10;
     });
-
+  
     const signature = "Signature Or Stamp";
     const signatureX = 150;
     const signatureY = yPos + 20;
     pdf.text(signature, signatureX, signatureY);
-
+  
     pdf.save(`customer_details_${service._id}.pdf`);
   };
-
+  
   // const generateWhatsappMessage = (service) => {
     
   //   return `
