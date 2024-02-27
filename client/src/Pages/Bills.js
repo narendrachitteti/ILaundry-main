@@ -5,12 +5,18 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
-import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
-import jsPDF from 'jspdf';
 
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  pdf,
+} from "@react-pdf/renderer";
+import jsPDF from "jspdf";
 
 const currencies = currencyCodes.data;
-
 
 const Bills = () => {
   const [selectedInvoice, setSelectedInvoice] = useState({});
@@ -29,7 +35,6 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
-  // const [ services , setservices] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
@@ -37,14 +42,15 @@ const Bills = () => {
   const [subtotals, setSubtotals] = useState(Array(rows.length).fill(0));
   const [quantities, setQuantities] = useState(Array(rows.length).fill(0));
 
-
   useEffect(() => {
     fetchLastInvoiceNumber();
   }, []);
 
   const fetchLastInvoiceNumber = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/last-invoice-number");
+      const response = await fetch(
+        "http://localhost:5000/api/last-invoice-number"
+      );
       const data = await response.json();
       console.log(data);
       setInvoiceNumber(data.lastInvoiceNumber);
@@ -52,7 +58,6 @@ const Bills = () => {
       console.error("Error fetching last invoice number:", error);
     }
   };
-
 
   const services = [
     "Select a service",
@@ -342,6 +347,48 @@ const Bills = () => {
     }
   };
 
+
+  // const handleReviewInvoice = () => {
+  //   const data = {
+  //     invoiceNo,
+  //     invoiceDate,
+  //     clientName,
+  //     clientContact,
+  //     items: rows.map((row, index) => ({
+  //       item: selectedItems[index],
+  //       quantity: quantities[index],
+  //       price: price[index],
+  //       subtotal: subtotals[index],
+  //     })),
+  //     subTotal,
+  //     discountRate,
+  //     discountAmount,
+  //     taxRate,
+  //     taxAmount,
+  //     total,
+  //     selectedCurrency,
+  //     selectedPaymentMode,
+  //     selectedPopupItem,
+  //   };
+  //   // setSelectedInvoice(data); // Set the selected invoice data
+  //   setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
+  //   togglePopup(true);
+  //   fetch("http://localhost:5000/api/billing", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log("Success:", data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       // Handle error
+  //     });
+  // };
   const handleReviewInvoice = () => {
     const data = {
       invoiceNo,
@@ -425,6 +472,11 @@ const Bills = () => {
     setShowPopup(!showPopup);
   };
 
+
+
+  // const togglePopup = (value) => {
+  //   setSelectedPopupItem(value);
+  // };
   return (
     <div className="billtotal">
       <div className="nav111">
@@ -439,7 +491,6 @@ const Bills = () => {
             value={invoiceNumber}
             onChange={(e) => setInvoiceNo(e.target.value)}
           />
-
         </div>
         <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
@@ -597,7 +648,7 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-            <div className="input-group">
+            {/* <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
                 className="input009"
@@ -605,6 +656,18 @@ const Bills = () => {
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
                 disabled >
+                <option value="INR">INR - Indian Rupee</option>
+              </select>
+            </div> */}
+            <div className="input-group">
+              <label htmlFor="currency">Currency:</label>
+              <select
+                className="input009"
+                id="currency"
+                value={selectedCurrency}
+                onChange={(e) => setSelectedCurrency(e.target.value)}
+               
+              >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
             </div>
@@ -632,7 +695,8 @@ const Bills = () => {
               <select
                 className="selectpaymentmode"
                 value={selectedPaymentMode}
-                onChange={(e) => setSelectedPaymentMode(e.target.value)}>
+                onChange={(e) => setSelectedPaymentMode(e.target.value)}
+              >
                 <option value="">Select Payment Mode</option>
                 <option value="upi">UPI</option>
                 <option value="phonepay">PhonePe</option>
@@ -679,37 +743,49 @@ const Bills = () => {
           {/* <button className="review-button" onClick={togglePopup}{handleReviewInvoice}>
             Review Invoice
           </button> */}
-          <button className="review-button" onClick={() => { togglePopup(false); handleReviewInvoice(); }}>
+          <button
+            className="review-button"
+            onClick={() => {
+              togglePopup(false);
+              handleReviewInvoice();
+            }}
+          >
             Review Invoice
           </button>
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
                 Add Stockists
-                <button className="close-button" onClick={() => { togglePopup(true); resetFields(); }}>
+                <button
+                  className="close-button"
+                  onClick={() => {
+                    togglePopup(true);
+                    resetFields();
+                  }}
+                >
                   X
                 </button>
               </div>
               <hr />
               <div className="popup-content">
                 <form>
-                  <label className='nameclass-label'>InvoiceNo:</label>
+                  <label className="nameclass-label">InvoiceNo:</label>
                   <input
                     type="text"
                     value={invoiceNumber}
                     readOnly
                   />
-                  <label className='nameclass-label'>InvoiceDate:</label>
+                  <label className="nameclass-label">InvoiceDate:</label>
                   <input
                     type="text"
                     value={invoiceDate}
                   />
-                  <label className='nameclass-label'>clientName:</label>
+                  <label className="nameclass-label">clientName:</label>
                   <input
                     type="text"
                     value={clientName}
                   />
-                  <label className='nameclass-label'>clientContact:</label>
+                  <label className="nameclass-label">clientContact:</label>
                   <input
                     type="text"
                     value={clientContact}
@@ -717,6 +793,7 @@ const Bills = () => {
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
+                    placeholder="Added Date"
                     value={total}
                   />
                   <label className='nameclass-label'>item:</label>
@@ -775,7 +852,12 @@ const Bills = () => {
                   />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">send Copy</button>
-                    <button className="downloadcopy" onClick={handledownloadcopy}>Download Copy</button>
+                    <button
+                      className="downloadcopy"
+                      onClick={handledownloadcopy}
+                    >
+                      Download Copy
+                    </button>
                   </div>
                 </form>
               </div>
