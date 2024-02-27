@@ -4,7 +4,7 @@ const billscontroller = require("../controllers/billscontroller");
 
 router.post("/billing", billscontroller.billsInvoice);
 router.get("/next-invoice-no", billscontroller.getAll);
-router.get("/get-bills", billscontroller.getBills);
+router.get("/billing/all", billscontroller.getAll);
 router.get("/billing", billscontroller.getAll);
 router.get("/last-invoice-number", billscontroller.getLastInvoiceNumber);
 
