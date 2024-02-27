@@ -72,7 +72,7 @@ function Login() {
       if (response.ok) {
         // Navigate to the relevant page based on the response message
         if (data.message === "Staff login successful") {
-          navigate("/InvoiceForm");
+          navigate("/Bills");
         } else {
           setStaffError("You are not authorized to access this page.");
         }
@@ -170,7 +170,7 @@ function Login() {
         <Components.OverlayContainer signingIn={signIn}>
           <Components.Overlay signingIn={signIn}>
             <Components.LeftOverlayPanel signingIn={signIn}>
-              <Components.Title>Staff Login</Components.Title>
+              <Components.Title>Master Login</Components.Title>
               <Components.Paragraph>
                 To keep connected with us please login with your personal info
               </Components.Paragraph>
@@ -179,7 +179,7 @@ function Login() {
               </Components.GhostButton>
             </Components.LeftOverlayPanel>
             <Components.RightOverlayPanel signingIn={signIn}>
-              <Components.Title>Master Login</Components.Title>
+              <Components.Title>Staff Login</Components.Title>
               <Components.Paragraph>
                 Enter your personal details and start journey with us. slide
                 left to staff Login

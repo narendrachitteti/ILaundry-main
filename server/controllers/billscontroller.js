@@ -85,9 +85,20 @@ const getAll = async (req, res) => {
     }
   }
 
+  const getBills = async (req, res) => {
+    try {
+      const bills = await Billing.find({});
+      res.status(200).json(bills);
+    } catch (error) {
+      console.error('Error fetching bills:', error);
+      res.status(500).json({ message: 'An error occurred while fetching bills. Please try again later.' });
+    }
+  }
+
 module.exports = {
     billsInvoice,
     getAll,
+    getBills,
     getLastInvoiceNumber,
 };
 
