@@ -35,6 +35,7 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
+  const [selectedService, setSelectedService] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
@@ -400,7 +401,7 @@ const Bills = () => {
         quantity: quantities[index],
         price: price[index],
         subtotal: subtotals[index],
-        services:services[index],
+        services: selectedService,
       })),
       subTotal,
       discountRate,
@@ -466,13 +467,12 @@ const Bills = () => {
     setTaxAmount(0);
     setTotal(0);
     setSelectedPaymentMode("");
+    setSelectedService("");
   };
 
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
   };
-
-
 
   // const togglePopup = (value) => {
   //   setSelectedPopupItem(value);
@@ -550,23 +550,13 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-                  <select>
-                    {services.map((service, index) => (
-                      <option key={index} value={service}>
+                  <select value={selectedService} onChange={(e) => setSelectedService(e.target.value)}>
+                    {services.map((service) => (
+                      <option key={service} value={service}>
                         {service}
                       </option>
                     ))}
                   </select>
-                  {/* <select>
-                    <option>
-                      Wash & Fold
-                    </option>
-                    <option>Wash & Fold</option>
-                    <option>Dry Cleaning</option>
-                    <option>Express Laundry Services</option>
-                    <option>Premium Laundry</option>
-                    <option>Steam Ironing</option>
-                  </select> */}
                 </td>
                 <td>
                   <input
@@ -666,7 +656,7 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-               
+
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
@@ -805,49 +795,49 @@ const Bills = () => {
                   <label className='nameclass-label'>Services:</label>
                   <input
                     type="text"
-                    
-                    value={services}
+
+                    value={selectedService}
                   />
                   <label className='nameclass-label'>quantity:</label>
                   <input
                     type="text"
-                    
+
                     value={quantities}
                   />
                   <label className='nameclass-label'>TaxRate:</label>
                   <input
                     type="text"
-                    
+
                     value={taxRate}
                   />
                   <label className='nameclass-label'>discountRate:</label>
                   <input
                     type="text"
-                    
+
                     value={discountRate}
                   />
                   <label className='nameclass-label'>subTotal:</label>
                   <input
                     type="text"
-                    
+
                     value={subTotal}
                   />
                   <label className='nameclass-label'>taxAmount:</label>
                   <input
                     type="text"
-                    
+
                     value={taxAmount}
                   />
                   <label className='nameclass-label'>discountAmount:</label>
                   <input
                     type="text"
-                    
+
                     value={discountAmount}
                   />
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-                    
+
                     value={total}
                   />
                   <div className="merge-karthik-bill">
