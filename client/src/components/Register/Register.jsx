@@ -111,10 +111,10 @@ function Register() {
             <button type="submit" className="buttonabcd123">
               Register
             </button>
-            <p className="already-registered">
+            {/* <p className="already-registered">
               Already Registered..? &nbsp;&nbsp;
               <Link to="/Login">Login Here..</Link>
-            </p>
+            </p> */}
           </form>
         </div>
       </div>

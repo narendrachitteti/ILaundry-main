@@ -317,12 +317,6 @@ const Bills = () => {
 
   const getCurrencySymbol = (currencyCode) => {
     switch (currencyCode) {
-      case "USD":
-        return "$";
-      case "EUR":
-        return "€";
-      case "GBP":
-        return "£";
       case "INR":
         return "₹";
       // Add more cases for other currencies as needed
@@ -332,6 +326,47 @@ const Bills = () => {
   };
 
 
+  // const handleReviewInvoice = () => {
+  //   const data = {
+  //     invoiceNo,
+  //     invoiceDate,
+  //     clientName,
+  //     clientContact,
+  //     items: rows.map((row, index) => ({
+  //       item: selectedItems[index],
+  //       quantity: quantities[index],
+  //       price: price[index],
+  //       subtotal: subtotals[index],
+  //     })),
+  //     subTotal,
+  //     discountRate,
+  //     discountAmount,
+  //     taxRate,
+  //     taxAmount,
+  //     total,
+  //     selectedCurrency,
+  //     selectedPaymentMode,
+  //     selectedPopupItem,
+  //   };
+  //   // setSelectedInvoice(data); // Set the selected invoice data
+  //   setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
+  //   togglePopup(true);
+  //   fetch("http://localhost:5000/api/billing", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log("Success:", data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       // Handle error
+  //     });
+  // };
   const handleReviewInvoice = () => {
     const data = {
       invoiceNo,
@@ -373,7 +408,7 @@ const Bills = () => {
         console.error("Error:", error);
       });
   };
-
+  
   const handledownloadcopy = () => {
     const doc = new jsPDF();
     doc.text("Invoice No: " + invoiceNo, 10, 10);
