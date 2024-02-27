@@ -98,6 +98,7 @@ const getAll = async (req, res) => {
 module.exports = {
     billsInvoice,
     getAll,
+    getBills,
     getLastInvoiceNumber,
 };
 

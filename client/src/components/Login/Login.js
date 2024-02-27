@@ -72,7 +72,7 @@ function Login() {
       if (response.ok) {
         // Navigate to the relevant page based on the response message
         if (data.message === "Staff login successful") {
-          navigate("/InvoiceForm");
+          navigate("/Bills");
         } else {
           setStaffError("You are not authorized to access this page.");
         }
