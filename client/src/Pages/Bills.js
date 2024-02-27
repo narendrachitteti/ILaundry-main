@@ -243,6 +243,7 @@ const Bills = () => {
     setSubtotals([...subtotals, 0]);
     setSelectedService([...selectedService , ""]);
   };
+  
   useEffect(() => {
     calculateTotal();
   }, [quantities, discountRate, taxRate]);
