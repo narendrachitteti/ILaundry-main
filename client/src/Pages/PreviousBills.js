@@ -216,7 +216,7 @@ const PreviousBills = () => {
     const signatureY = pdf.lastAutoTable.finalY + 20;
     pdf.text(signature, signatureX, signatureY);
 
-    const systemGeneratedText = "*This is a system generated bill*";
+    const systemGeneratedText = "****This is a system generated bill****";
 const systemGeneratedTextX = pdf.internal.pageSize.getWidth() / 2;
 const systemGeneratedTextY = pdf.internal.pageSize.getHeight() - 15;  // Adjust the Y coordinate
 

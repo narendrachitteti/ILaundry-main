@@ -39,6 +39,7 @@ const billingSchema = new mongoose.Schema({
   items: [{
     item: String,
     quantity: Number,
+    services:String,
     price:Number,
   }],
   subTotal: Number,

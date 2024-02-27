@@ -35,9 +35,7 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
-  const [selectedCurrency, setSelectedCurrency] = useState("INR");
-
-  // const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
+  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
   );
@@ -70,6 +68,7 @@ const Bills = () => {
     "Premium Laundry",
     "Steam Ironing",
   ];
+
   const itemsList = [
     "Select a Item",
     "Handkerchief",
@@ -274,17 +273,32 @@ const Bills = () => {
     );
   };
 
+  // const handleItemChange = (index, value) => {
+  //   const updatedItems = [...selectedItems];
+  //   updatedItems[index] = value;
+  //   setSelectedItems(updatedItems);
+  //   const defaultQuantity = "";
+  //   const updatedQuantities = [...quantities];
+  //   updatedQuantities[index] = defaultQuantity;
+  //   setQuantities(updatedQuantities);
+  //   setSelectedPopupItem(value);
+  //   updateSubtotal(index, value, defaultQuantity);
+  // };
+
   const handleItemChange = (index, value) => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
+    setSelectedPopupItem(value);
     const defaultQuantity = "";
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
-    setSelectedPopupItem(value);
     updateSubtotal(index, value, defaultQuantity);
   };
+
+
+
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
@@ -332,6 +346,7 @@ const Bills = () => {
         return "";
     }
   };
+
 
   // const handleReviewInvoice = () => {
   //   const data = {
@@ -385,6 +400,7 @@ const Bills = () => {
         quantity: quantities[index],
         price: price[index],
         subtotal: subtotals[index],
+        services:services[index],
       })),
       subTotal,
       discountRate,
@@ -395,6 +411,9 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
+      // services: rows.map((row, index) => ({
+      //   service: services[index],
+      // })),
     };
     // setSelectedInvoice(data); // Set the selected invoice data
     // setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
@@ -424,6 +443,9 @@ const Bills = () => {
     doc.text("Client Contact: " + clientContact, 10, 40);
     doc.text("Total: " + total, 10, 50);
     doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+    doc.text("TaxAmount: " + taxAmount, 10, 60);
     doc.save("Laundry Invoice.pdf");
   };
 
@@ -448,11 +470,9 @@ const Bills = () => {
 
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
-    // if (!isCancel) {
-    //   handleReviewInvoice();
-    //   resetFields(); // Reset fields when closing the popup
-    // }
   };
+
+
 
   // const togglePopup = (value) => {
   //   setSelectedPopupItem(value);
@@ -537,6 +557,16 @@ const Bills = () => {
                       </option>
                     ))}
                   </select>
+                  {/* <select>
+                    <option>
+                      Wash & Fold
+                    </option>
+                    <option>Wash & Fold</option>
+                    <option>Dry Cleaning</option>
+                    <option>Express Laundry Services</option>
+                    <option>Premium Laundry</option>
+                    <option>Steam Ironing</option>
+                  </select> */}
                 </td>
                 <td>
                   <input
@@ -742,36 +772,83 @@ const Bills = () => {
                   <label className="nameclass-label">InvoiceNo:</label>
                   <input
                     type="text"
-                    placeholder="Invoice No"
                     value={invoiceNumber}
                     readOnly
                   />
                   <label className="nameclass-label">InvoiceDate:</label>
                   <input
                     type="text"
-                    placeholder="Invoice Date"
                     value={invoiceDate}
                   />
                   <label className="nameclass-label">clientName:</label>
                   <input
                     type="text"
-                    placeholder="clientName"
                     value={clientName}
                   />
                   <label className="nameclass-label">clientContact:</label>
                   <input
                     type="text"
-                    placeholder="clientContact"
                     value={clientContact}
                   />
-                  <label className="nameclass-label">total:</label>
-                  <input type="text" placeholder="Added Date" value={total} />
-                  <label className="nameclass-label">item:</label>
+                  <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-                    placeholder="Selected Item"
+                    placeholder="Added Date"
+                    value={total}
+                  />
+                  <label className='nameclass-label'>item:</label>
+                  <input
+                    type="text"
                     value={selectedPopupItem}
                     readOnly
+                  />
+                  <label className='nameclass-label'>Services:</label>
+                  <input
+                    type="text"
+                    
+                    value={services}
+                  />
+                  <label className='nameclass-label'>quantity:</label>
+                  <input
+                    type="text"
+                    
+                    value={quantities}
+                  />
+                  <label className='nameclass-label'>TaxRate:</label>
+                  <input
+                    type="text"
+                    
+                    value={taxRate}
+                  />
+                  <label className='nameclass-label'>discountRate:</label>
+                  <input
+                    type="text"
+                    
+                    value={discountRate}
+                  />
+                  <label className='nameclass-label'>subTotal:</label>
+                  <input
+                    type="text"
+                    
+                    value={subTotal}
+                  />
+                  <label className='nameclass-label'>taxAmount:</label>
+                  <input
+                    type="text"
+                    
+                    value={taxAmount}
+                  />
+                  <label className='nameclass-label'>discountAmount:</label>
+                  <input
+                    type="text"
+                    
+                    value={discountAmount}
+                  />
+                  <label className='nameclass-label'>total:</label>
+                  <input
+                    type="text"
+                    
+                    value={total}
                   />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">send Copy</button>
