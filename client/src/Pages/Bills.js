@@ -5,12 +5,18 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
-import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
-import jsPDF from 'jspdf';
 
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  pdf,
+} from "@react-pdf/renderer";
+import jsPDF from "jspdf";
 
 const currencies = currencyCodes.data;
-
 
 const Bills = () => {
   const [selectedInvoice, setSelectedInvoice] = useState({});
@@ -28,14 +34,15 @@ const Bills = () => {
   const [taxAmount, setTaxAmount] = useState(0);
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
-  const [price, setPrice] = useState(Array(rows.length).fill(0));
-  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
+  const [price, setprice] = useState(0);
+  const [selectedCurrency, setSelectedCurrency] = useState("INR");
+
+  // const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
   );
   const [subtotals, setSubtotals] = useState(Array(rows.length).fill(0));
   const [quantities, setQuantities] = useState(Array(rows.length).fill(0));
-
 
   useEffect(() => {
     fetchLastInvoiceNumber();
@@ -43,7 +50,9 @@ const Bills = () => {
 
   const fetchLastInvoiceNumber = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/last-invoice-number");
+      const response = await fetch(
+        "http://localhost:5000/api/last-invoice-number"
+      );
       const data = await response.json();
       console.log(data);
       setInvoiceNumber(data.lastInvoiceNumber);
@@ -51,7 +60,6 @@ const Bills = () => {
       console.error("Error fetching last invoice number:", error);
     }
   };
-
 
   const services = [
     "Select a service",
@@ -245,8 +253,7 @@ const Bills = () => {
   };
   useEffect(() => {
     calculateTotal();
-  }, [price, quantities, discountRate, taxRate]);
-  
+  }, [quantities, discountRate, taxRate]);
 
   const handleDeleteRow = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
@@ -271,14 +278,6 @@ const Bills = () => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
-  
-    // Set the price for the selected item
-    const itemPrice = itemPrices[value] || 0;
-    const updatedPrices = [...price];
-    updatedPrices[index] = itemPrice;
-  
-    setPrice(updatedPrices);
-  
     const defaultQuantity = "";
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
@@ -286,10 +285,6 @@ const Bills = () => {
     setSelectedPopupItem(value);
     updateSubtotal(index, value, defaultQuantity);
   };
-  
-  
-
-
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
@@ -301,15 +296,11 @@ const Bills = () => {
   const updateSubtotal = (index, item, quantity) => {
     const price = itemPrices[item] || 0;
     const subtotal = price * quantity;
-  
-    // Update price state here
-    setPrice(price);
-  
     const updatedSubtotals = [...subtotals];
     updatedSubtotals[index] = subtotal;
     setSubtotals(updatedSubtotals);
   };
-  
+
   const calculateTotal = () => {
     let subtotal = 0;
     let discount = 0;
@@ -336,11 +327,11 @@ const Bills = () => {
     switch (currencyCode) {
       case "INR":
         return "₹";
+      // Add more cases for other currencies as needed
       default:
         return "";
     }
   };
-
 
   // const handleReviewInvoice = () => {
   //   const data = {
@@ -405,7 +396,6 @@ const Bills = () => {
       selectedPaymentMode,
       selectedPopupItem,
     };
-    console.log("data",data);
     // setSelectedInvoice(data); // Set the selected invoice data
     // setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
     togglePopup(true);
@@ -416,7 +406,6 @@ const Bills = () => {
       },
       body: JSON.stringify(data),
     })
-    
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
@@ -426,7 +415,7 @@ const Bills = () => {
         console.error("Error:", error);
       });
   };
-  
+
   const handledownloadcopy = () => {
     const doc = new jsPDF();
     doc.text("Invoice No: " + invoiceNo, 10, 10);
@@ -465,8 +454,6 @@ const Bills = () => {
     // }
   };
 
-
-
   // const togglePopup = (value) => {
   //   setSelectedPopupItem(value);
   // };
@@ -484,7 +471,6 @@ const Bills = () => {
             value={invoiceNumber}
             onChange={(e) => setInvoiceNo(e.target.value)}
           />
-
         </div>
         <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
@@ -632,7 +618,7 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-            <div className="input-group">
+            {/* <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
                 className="input009"
@@ -640,6 +626,18 @@ const Bills = () => {
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
                 disabled >
+                <option value="INR">INR - Indian Rupee</option>
+              </select>
+            </div> */}
+            <div className="input-group">
+              <label htmlFor="currency">Currency:</label>
+              <select
+                className="input009"
+                id="currency"
+                value={selectedCurrency}
+                onChange={(e) => setSelectedCurrency(e.target.value)}
+               
+              >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
             </div>
@@ -667,7 +665,8 @@ const Bills = () => {
               <select
                 className="selectpaymentmode"
                 value={selectedPaymentMode}
-                onChange={(e) => setSelectedPaymentMode(e.target.value)}>
+                onChange={(e) => setSelectedPaymentMode(e.target.value)}
+              >
                 <option value="">Select Payment Mode</option>
                 <option value="upi">UPI</option>
                 <option value="phonepay">PhonePe</option>
@@ -714,52 +713,60 @@ const Bills = () => {
           {/* <button className="review-button" onClick={togglePopup}{handleReviewInvoice}>
             Review Invoice
           </button> */}
-          <button className="review-button" onClick={() => { togglePopup(false); handleReviewInvoice(); }}>
+          <button
+            className="review-button"
+            onClick={() => {
+              togglePopup(false);
+              handleReviewInvoice();
+            }}
+          >
             Review Invoice
           </button>
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
                 Add Stockists
-                <button className="close-button" onClick={() => { togglePopup(true); resetFields(); }}>
+                <button
+                  className="close-button"
+                  onClick={() => {
+                    togglePopup(true);
+                    resetFields();
+                  }}
+                >
                   X
                 </button>
               </div>
               <hr />
               <div className="popup-content">
                 <form>
-                  <label className='nameclass-label'>InvoiceNo:</label>
+                  <label className="nameclass-label">InvoiceNo:</label>
                   <input
                     type="text"
                     placeholder="Invoice No"
                     value={invoiceNumber}
                     readOnly
                   />
-                  <label className='nameclass-label'>InvoiceDate:</label>
+                  <label className="nameclass-label">InvoiceDate:</label>
                   <input
                     type="text"
                     placeholder="Invoice Date"
                     value={invoiceDate}
                   />
-                  <label className='nameclass-label'>clientName:</label>
+                  <label className="nameclass-label">clientName:</label>
                   <input
                     type="text"
                     placeholder="clientName"
                     value={clientName}
                   />
-                  <label className='nameclass-label'>clientContact:</label>
+                  <label className="nameclass-label">clientContact:</label>
                   <input
                     type="text"
                     placeholder="clientContact"
                     value={clientContact}
                   />
-                  <label className='nameclass-label'>total:</label>
-                  <input
-                    type="text"
-                    placeholder="Added Date"
-                    value={total}
-                  />
-                  <label className='nameclass-label'>item:</label>
+                  <label className="nameclass-label">total:</label>
+                  <input type="text" placeholder="Added Date" value={total} />
+                  <label className="nameclass-label">item:</label>
                   <input
                     type="text"
                     placeholder="Selected Item"
@@ -768,7 +775,12 @@ const Bills = () => {
                   />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">send Copy</button>
-                    <button className="downloadcopy" onClick={handledownloadcopy}>Download Copy</button>
+                    <button
+                      className="downloadcopy"
+                      onClick={handledownloadcopy}
+                    >
+                      Download Copy
+                    </button>
                   </div>
                 </form>
               </div>
