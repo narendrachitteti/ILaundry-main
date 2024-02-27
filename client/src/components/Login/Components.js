@@ -150,7 +150,9 @@ export const Overlay = styled.div`
   transition: transform 0.6s ease-in-out;
   ${props => (props.signingIn !== true ? `transform: translateX(50%);` : null)}
 `;
+
 // ...................................................................................
+
 export const OverlayPanel = styled.div`
   position: absolute;
   display: flex;

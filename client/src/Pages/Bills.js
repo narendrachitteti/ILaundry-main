@@ -282,7 +282,7 @@ const Bills = () => {
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
   
-    setSelectedPopupItem(value); // Update selectedPopupItem here
+    setSelectedPopupItem(value); 
   
     const defaultQuantity = "";
     const updatedQuantities = [...quantities];
@@ -339,48 +339,6 @@ const Bills = () => {
     }
   };
 
-
-  // const handleReviewInvoice = () => {
-  //   const data = {
-  //     invoiceNo,
-  //     invoiceDate,
-  //     clientName,
-  //     clientContact,
-  //     items: rows.map((row, index) => ({
-  //       item: selectedItems[index],
-  //       quantity: quantities[index],
-  //       price: price[index],
-  //       subtotal: subtotals[index],
-  //     })),
-  //     subTotal,
-  //     discountRate,
-  //     discountAmount,
-  //     taxRate,
-  //     taxAmount,
-  //     total,
-  //     selectedCurrency,
-  //     selectedPaymentMode,
-  //     selectedPopupItem,
-  //   };
-  //   // setSelectedInvoice(data); // Set the selected invoice data
-  //   setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
-  //   togglePopup(true);
-  //   fetch("http://localhost:5000/api/billing", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("Success:", data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle error
-  //     });
-  // };
   const handleReviewInvoice = () => {
     const data = {
       invoiceNo,
@@ -455,17 +413,8 @@ const Bills = () => {
 
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
-    // if (!isCancel) {
-    //   handleReviewInvoice();
-    //   resetFields(); // Reset fields when closing the popup
-    // }
   };
 
-
-
-  // const togglePopup = (value) => {
-  //   setSelectedPopupItem(value);
-  // };
   return (
     <div className="billtotal">
       <div className="nav111">
@@ -727,40 +676,52 @@ const Bills = () => {
                   <label className='nameclass-label'>InvoiceNo:</label>
                   <input
                     type="text"
-                    placeholder="Invoice No"
                     value={invoiceNumber}
                     readOnly
                   />
                   <label className='nameclass-label'>InvoiceDate:</label>
                   <input
                     type="text"
-                    placeholder="Invoice Date"
                     value={invoiceDate}
                   />
                   <label className='nameclass-label'>clientName:</label>
                   <input
                     type="text"
-                    placeholder="clientName"
                     value={clientName}
                   />
                   <label className='nameclass-label'>clientContact:</label>
                   <input
                     type="text"
-                    placeholder="clientContact"
                     value={clientContact}
                   />
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-                    placeholder="Added Date"
                     value={total}
                   />
                   <label className='nameclass-label'>item:</label>
                   <input
                     type="text"
-                    placeholder="Selected Item"
                     value={selectedPopupItem}
                     readOnly
+                  />
+                   <label className='nameclass-label'>Services:</label>
+                  <input
+                    type="text"
+                    placeholder="clientName"
+                    value={clientName}
+                  />
+                   <label className='nameclass-label'>quantity:</label>
+                  <input
+                    type="text"
+                    placeholder="clientName"
+                    value={quantities}
+                  />
+                   <label className='nameclass-label'>clientName:</label>
+                  <input
+                    type="text"
+                    placeholder="clientName"
+                    value={clientName}
                   />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">send Copy</button>
