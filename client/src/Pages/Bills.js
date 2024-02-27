@@ -29,6 +29,7 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
+  // const [ services , setservices] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
@@ -62,6 +63,7 @@ const Bills = () => {
     "Premium Laundry",
     "Steam Ironing",
   ];
+
   const itemsList = [
     "Select a Item",
     "Handkerchief",
@@ -277,20 +279,21 @@ const Bills = () => {
   //   setSelectedPopupItem(value);
   //   updateSubtotal(index, value, defaultQuantity);
   // };
+
   const handleItemChange = (index, value) => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
-  
-    setSelectedPopupItem(value); 
-  
+    setSelectedPopupItem(value);
     const defaultQuantity = "";
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
     updateSubtotal(index, value, defaultQuantity);
   };
-  
+
+
+
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
@@ -350,6 +353,7 @@ const Bills = () => {
         quantity: quantities[index],
         price: price[index],
         subtotal: subtotals[index],
+        services:services[index],
       })),
       subTotal,
       discountRate,
@@ -360,6 +364,9 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
+      // services: rows.map((row, index) => ({
+      //   service: services[index],
+      // })),
     };
     // setSelectedInvoice(data); // Set the selected invoice data
     // setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
@@ -380,7 +387,7 @@ const Bills = () => {
         console.error("Error:", error);
       });
   };
-  
+
   const handledownloadcopy = () => {
     const doc = new jsPDF();
     doc.text("Invoice No: " + invoiceNo, 10, 10);
@@ -389,6 +396,9 @@ const Bills = () => {
     doc.text("Client Contact: " + clientContact, 10, 40);
     doc.text("Total: " + total, 10, 50);
     doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+    doc.text("TaxAmount: " + taxAmount, 10, 60);
     doc.save("Laundry Invoice.pdf");
   };
 
@@ -496,6 +506,16 @@ const Bills = () => {
                       </option>
                     ))}
                   </select>
+                  {/* <select>
+                    <option>
+                      Wash & Fold
+                    </option>
+                    <option>Wash & Fold</option>
+                    <option>Dry Cleaning</option>
+                    <option>Express Laundry Services</option>
+                    <option>Premium Laundry</option>
+                    <option>Steam Ironing</option>
+                  </select> */}
                 </td>
                 <td>
                   <input
@@ -705,23 +725,53 @@ const Bills = () => {
                     value={selectedPopupItem}
                     readOnly
                   />
-                   <label className='nameclass-label'>Services:</label>
+                  <label className='nameclass-label'>Services:</label>
                   <input
                     type="text"
-                    placeholder="clientName"
-                    value={clientName}
+                    
+                    value={services}
                   />
-                   <label className='nameclass-label'>quantity:</label>
+                  <label className='nameclass-label'>quantity:</label>
                   <input
                     type="text"
-                    placeholder="clientName"
+                    
                     value={quantities}
                   />
-                   <label className='nameclass-label'>clientName:</label>
+                  <label className='nameclass-label'>TaxRate:</label>
                   <input
                     type="text"
-                    placeholder="clientName"
-                    value={clientName}
+                    
+                    value={taxRate}
+                  />
+                  <label className='nameclass-label'>discountRate:</label>
+                  <input
+                    type="text"
+                    
+                    value={discountRate}
+                  />
+                  <label className='nameclass-label'>subTotal:</label>
+                  <input
+                    type="text"
+                    
+                    value={subTotal}
+                  />
+                  <label className='nameclass-label'>taxAmount:</label>
+                  <input
+                    type="text"
+                    
+                    value={taxAmount}
+                  />
+                  <label className='nameclass-label'>discountAmount:</label>
+                  <input
+                    type="text"
+                    
+                    value={discountAmount}
+                  />
+                  <label className='nameclass-label'>total:</label>
+                  <input
+                    type="text"
+                    
+                    value={total}
                   />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">send Copy</button>
