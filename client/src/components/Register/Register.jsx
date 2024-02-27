@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../Register/Register.css";
 import { Link } from "react-router-dom";
 import { Navbar } from "react-bootstrap";
-import Navbar from "../Navbar";
+// import Navbar from "../Navbar";
 
 function Register() {
   const [error, setError] = useState("");

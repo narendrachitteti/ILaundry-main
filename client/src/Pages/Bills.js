@@ -266,17 +266,31 @@ const Bills = () => {
     );
   };
 
+  // const handleItemChange = (index, value) => {
+  //   const updatedItems = [...selectedItems];
+  //   updatedItems[index] = value;
+  //   setSelectedItems(updatedItems);
+  //   const defaultQuantity = "";
+  //   const updatedQuantities = [...quantities];
+  //   updatedQuantities[index] = defaultQuantity;
+  //   setQuantities(updatedQuantities);
+  //   setSelectedPopupItem(value);
+  //   updateSubtotal(index, value, defaultQuantity);
+  // };
   const handleItemChange = (index, value) => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
+  
+    setSelectedPopupItem(value); // Update selectedPopupItem here
+  
     const defaultQuantity = "";
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
-    setSelectedPopupItem(value);
     updateSubtotal(index, value, defaultQuantity);
   };
+  
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
