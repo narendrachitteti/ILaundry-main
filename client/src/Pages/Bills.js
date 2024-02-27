@@ -5,15 +5,6 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
-
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  pdf,
-} from "@react-pdf/renderer";
 import jsPDF from "jspdf";
 
 const currencies = currencyCodes.data;
@@ -250,6 +241,7 @@ const Bills = () => {
     setSelectedItems([...selectedItems, ""]);
     setQuantities([...quantities, 0]);
     setSubtotals([...subtotals, 0]);
+    setSelectedService([...selectedService , ""]);
   };
   useEffect(() => {
     calculateTotal();
@@ -274,18 +266,6 @@ const Bills = () => {
     );
   };
 
-  // const handleItemChange = (index, value) => {
-  //   const updatedItems = [...selectedItems];
-  //   updatedItems[index] = value;
-  //   setSelectedItems(updatedItems);
-  //   const defaultQuantity = "";
-  //   const updatedQuantities = [...quantities];
-  //   updatedQuantities[index] = defaultQuantity;
-  //   setQuantities(updatedQuantities);
-  //   setSelectedPopupItem(value);
-  //   updateSubtotal(index, value, defaultQuantity);
-  // };
-
   const handleItemChange = (index, value) => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
@@ -297,9 +277,6 @@ const Bills = () => {
     setQuantities(updatedQuantities);
     updateSubtotal(index, value, defaultQuantity);
   };
-
-
-
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
@@ -320,7 +297,6 @@ const Bills = () => {
     let subtotal = 0;
     let discount = 0;
     let tax = 0;
-    // Loop through rows to calculate subtotal, discount, and tax
     rows.forEach((row, index) => {
       const item = selectedItems[index];
       const quantity = quantities[index];
@@ -331,7 +307,6 @@ const Bills = () => {
     });
     // Calculate total
     const totalAmount = subtotal - discount + tax;
-    // Update state
     setSubTotal(subtotal);
     setDiscountAmount(discount);
     setTaxAmount(tax);
@@ -342,54 +317,11 @@ const Bills = () => {
     switch (currencyCode) {
       case "INR":
         return "₹";
-      // Add more cases for other currencies as needed
       default:
         return "";
     }
   };
 
-
-  // const handleReviewInvoice = () => {
-  //   const data = {
-  //     invoiceNo,
-  //     invoiceDate,
-  //     clientName,
-  //     clientContact,
-  //     items: rows.map((row, index) => ({
-  //       item: selectedItems[index],
-  //       quantity: quantities[index],
-  //       price: price[index],
-  //       subtotal: subtotals[index],
-  //     })),
-  //     subTotal,
-  //     discountRate,
-  //     discountAmount,
-  //     taxRate,
-  //     taxAmount,
-  //     total,
-  //     selectedCurrency,
-  //     selectedPaymentMode,
-  //     selectedPopupItem,
-  //   };
-  //   // setSelectedInvoice(data); // Set the selected invoice data
-  //   setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
-  //   togglePopup(true);
-  //   fetch("http://localhost:5000/api/billing", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("Success:", data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle error
-  //     });
-  // };
   const handleReviewInvoice = () => {
     const data = {
       invoiceNo,
@@ -412,12 +344,7 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
-      // services: rows.map((row, index) => ({
-      //   service: services[index],
-      // })),
     };
-    // setSelectedInvoice(data); // Set the selected invoice data
-    // setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
     togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
@@ -745,7 +672,7 @@ const Bills = () => {
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
-                Add Stockists
+                Billing Data
                 <button
                   className="close-button"
                   onClick={() => {
