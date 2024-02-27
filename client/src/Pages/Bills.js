@@ -583,7 +583,7 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-
+            
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
