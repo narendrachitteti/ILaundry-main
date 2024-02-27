@@ -91,7 +91,7 @@ const PreviousBills = () => {
           formData
         );
       } else {
-        await axios.post(`${BASE_URL}/invoice/`, formData);
+        await axios.post(`${BASE_URL}/invoice/, formData`);
       }
       fetchcustomerServicesCus();
       setselectedServiceCus(null);
