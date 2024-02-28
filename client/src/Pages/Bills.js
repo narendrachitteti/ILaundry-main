@@ -488,9 +488,9 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-                  <select value={selectedService} onChange={(e) => setSelectedService(e.target.value)}>
-                    {services.map((service) => (
-                      <option key={service} value={service}>
+                  <select value={selectedService[index]} onChange={(e) => setSelectedService(index, e.target.value)}>
+                    {services.map((service, index) => (
+                      <option key={index} value={service}>
                         {service}
                       </option>
                     ))}
@@ -505,12 +505,11 @@ const Bills = () => {
                     }
                   />
                 </td>
-                {/* <td>{itemPrices[selectedItems[index]] || 0}</td> */}
                 <td>{itemPrices[selectedItems[index]] || 0}</td>
 
                 <td>
                   <div className="iconflex">
-                    {index === rows.length - 1 ? ( // Check if this is the last row
+                    {index === rows.length - 1 ? ( 
                       <button className="itembtn" onClick={handleAddRow}>
                         <span>
                           <FaPlus />
@@ -522,13 +521,11 @@ const Bills = () => {
                       </button>
                     ) : null}
 
-                    {/* <button class="buttonbin" onClick={() => handleDeleteRow(row.id)} disabled={rows.length === 1}> */}
                     <button
                       className="buttonbin"
                       onClick={() => handleDeleteRow(index)}
                       disabled={rows.length === 1}
                     >
-                      {/* Delete button always rendered */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -576,17 +573,6 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-            {/* <div className="input-group">
-              <label htmlFor="currency">Currency:</label>
-              <select
-                className="input009"
-                id="currency"
-                value={selectedCurrency}
-                onChange={(e) => setSelectedCurrency(e.target.value)}
-                disabled >
-                <option value="INR">INR - Indian Rupee</option>
-              </select>
-            </div> */}
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
