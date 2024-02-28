@@ -37,7 +37,7 @@ const Navbar = () => {
   return (
     <div>
       <div className="button-container23">
-        <Link to="/Bills">
+        <Link to="/">
           <img
             src={image14}
             alt=""
@@ -56,14 +56,6 @@ const Navbar = () => {
             <p>Previous Bills</p>
           </div>
         </Link>
-        
-
-        <Link to="/Register">
-          <div className="bills">
-            <img src={register} alt="" style={{ height: "2.5rem" }} />
-            <p>Register</p>
-          </div>
-        </Link>
         <div className="bills">
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
           <p>Profile</p>
@@ -78,6 +70,13 @@ const Navbar = () => {
             </p>
           </div>
         </div>
+
+        <Link to="/Register">
+          <div className="bills">
+            <img src={register} alt="" style={{ height: "2.5rem" }} />
+            <p>Register</p>
+          </div>
+        </Link>
       </div>
     </div>
   );

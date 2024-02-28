@@ -26,6 +26,7 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
+  const [customeraddress , setcustomeraddress] = useState('');
   const [selectedService, setSelectedService] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
@@ -243,7 +244,7 @@ const Bills = () => {
     setSubtotals([...subtotals, 0]);
     setSelectedService([...selectedService , ""]);
   };
-  
+
   useEffect(() => {
     calculateTotal();
   }, [quantities, discountRate, taxRate]);
@@ -371,8 +372,9 @@ const Bills = () => {
       invoiceDate,
       clientName,
       clientContact,
+      customeraddress,
       items: rows.map((row, index) => ({
-        item: selectedItems[index],
+        item: selectedItems[index], 
         quantity: quantities[index],
         price: price[index],
         subtotal: subtotals[index],
@@ -387,6 +389,7 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
+      
     };
     togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
@@ -412,20 +415,18 @@ const Bills = () => {
     doc.text("Invoice Date: " + invoiceDate, 10, 20);
     doc.text("Client Name: " + clientName, 10, 30);
     doc.text("Client Contact: " + clientContact, 10, 40);
+    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
     doc.text("Total: " + total, 10, 50);
-    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
-    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
-    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
     doc.text("TaxAmount: " + taxAmount, 10, 60);
     doc.save("Laundry Invoice.pdf");
   };
 
   const [showPopup, setShowPopup] = useState(false);
   const resetFields = () => {
-    // setInvoiceNo("");
-    // setInvoiceDate("");
+    setInvoiceNo("");
     setClientName("");
     setClientContact("");
+    setcustomeraddress('');
     setRows([{ id: 1 }]);
     setSelectedItems(Array(rows.length).fill(""));
     setQuantities(Array(rows.length).fill(0));
@@ -490,6 +491,15 @@ const Bills = () => {
             id="clientContact"
             value={clientContact}
             onChange={(e) => setClientContact(e.target.value)}
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="clientContact">Customer Address:</label>
+          <input
+            type="text"
+            id="clientName"
+            value={customeraddress}
+            onChange={(e) => setcustomeraddress(e.target.value)}
           />
         </div>
       </div>
