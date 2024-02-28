@@ -136,6 +136,9 @@
     border-radius: 4px;
     box-sizing: border-box;
 }
+.input009{
+  appearance: none;
+}
 .flexxx{
     display: flex;
     gap: 2rem;
