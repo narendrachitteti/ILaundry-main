@@ -26,7 +26,7 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
-  const [customeraddress , setcustomeraddress] = useState('');
+  const [customeraddress, setcustomeraddress] = useState('');
   const [selectedService, setSelectedService] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
@@ -149,6 +149,7 @@ const Bills = () => {
     "Curtain door single panel",
     "Bed protector",
   ];
+
   const itemPrices = {
     Handkerchief: 40.0,
     "Kids frock": 40.0,
@@ -242,7 +243,7 @@ const Bills = () => {
     setSelectedItems([...selectedItems, ""]);
     setQuantities([...quantities, 0]);
     setSubtotals([...subtotals, 0]);
-    setSelectedService([...selectedService , ""]);
+    setSelectedService([...selectedService, ""]);
   };
 
   useEffect(() => {
@@ -332,7 +333,7 @@ const Bills = () => {
       clientContact,
       customeraddress,
       items: rows.map((row, index) => ({
-        item: selectedItems[index], 
+        item: selectedItems[index],
         quantity: quantities[index],
         price: price[index],
         subtotal: subtotals[index],
@@ -347,7 +348,7 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
-      
+
     };
     togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
@@ -594,7 +595,7 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-            
+
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
@@ -718,11 +719,24 @@ const Bills = () => {
                     type="text"
                     value={clientContact}
                   />
-                  <label className='nameclass-label'>total:</label>
+                  {/* <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
                     placeholder="Added Date"
                     value={total}
+                  /> */}
+                    {/* <label htmlFor="clientContact">Customer Address:</label>
+                    <input
+                      type="text"
+                      id="clientName"
+                      value={customeraddress}
+                      // onChange={(e) => setcustomeraddress(e.target.value)}
+                    /> */}
+                  <label className='nameclass-label'>customeraddress:</label>
+                  <input
+                    type="text"
+                    value={customeraddress}
+                    
                   />
                   <label className='nameclass-label'>item:</label>
                   <input
