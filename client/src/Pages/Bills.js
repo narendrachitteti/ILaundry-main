@@ -5,15 +5,6 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
-
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  pdf,
-} from "@react-pdf/renderer";
 import jsPDF from "jspdf";
 
 const currencies = currencyCodes.data;
@@ -35,9 +26,8 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
-  // const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
-  const [selectedCurrency, setSelectedCurrency] = useState("INR");
-
+  const [selectedService, setSelectedService] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
   );
@@ -251,7 +241,9 @@ const Bills = () => {
     setSelectedItems([...selectedItems, ""]);
     setQuantities([...quantities, 0]);
     setSubtotals([...subtotals, 0]);
+    setSelectedService([...selectedService , ""]);
   };
+  
   useEffect(() => {
     calculateTotal();
   }, [quantities, discountRate, taxRate]);
@@ -274,18 +266,6 @@ const Bills = () => {
       prevSubtotals.filter((_, i) => i !== index)
     );
   };
-
-  // const handleItemChange = (index, value) => {
-  //   const updatedItems = [...selectedItems];
-  //   updatedItems[index] = value;
-  //   setSelectedItems(updatedItems);
-  //   const defaultQuantity = "";
-  //   const updatedQuantities = [...quantities];
-  //   updatedQuantities[index] = defaultQuantity;
-  //   setQuantities(updatedQuantities);
-  //   setSelectedPopupItem(value);
-  //   updateSubtotal(index, value, defaultQuantity);
-  // };
 
   const handleItemChange = (index, value) => {
     const updatedItems = [...selectedItems];
@@ -318,7 +298,6 @@ const Bills = () => {
     let subtotal = 0;
     let discount = 0;
     let tax = 0;
-    // Loop through rows to calculate subtotal, discount, and tax
     rows.forEach((row, index) => {
       const item = selectedItems[index];
       const quantity = quantities[index];
@@ -329,7 +308,6 @@ const Bills = () => {
     });
     // Calculate total
     const totalAmount = subtotal - discount + tax;
-    // Update state
     setSubTotal(subtotal);
     setDiscountAmount(discount);
     setTaxAmount(tax);
@@ -340,11 +318,11 @@ const Bills = () => {
     switch (currencyCode) {
       case "INR":
         return "₹";
-      // Add more cases for other currencies as needed
       default:
         return "";
     }
   };
+
 
   // const handleReviewInvoice = () => {
   //   const data = {
@@ -398,7 +376,7 @@ const Bills = () => {
         quantity: quantities[index],
         price: price[index],
         subtotal: subtotals[index],
-        services: services[index],
+        services:services[index],
       })),
       subTotal,
       discountRate,
@@ -409,12 +387,7 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
-      // services: rows.map((row, index) => ({
-      //   service: services[index],
-      // })),
     };
-    // setSelectedInvoice(data); // Set the selected invoice data
-    // setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
     togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
@@ -464,6 +437,7 @@ const Bills = () => {
     setTaxAmount(0);
     setTotal(0);
     setSelectedPaymentMode("");
+    setSelectedService("");
   };
 
   const togglePopup = (isCancel) => {
@@ -546,23 +520,13 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-                  <select>
-                    {services.map((service, index) => (
-                      <option key={index} value={service}>
+                  <select value={selectedService} onChange={(e) => setSelectedService(e.target.value)}>
+                    {services.map((service) => (
+                      <option key={service} value={service}>
                         {service}
                       </option>
                     ))}
                   </select>
-                  {/* <select>
-                    <option>
-                      Wash & Fold
-                    </option>
-                    <option>Wash & Fold</option>
-                    <option>Dry Cleaning</option>
-                    <option>Express Laundry Services</option>
-                    <option>Premium Laundry</option>
-                    <option>Steam Ironing</option>
-                  </select> */}
                 </td>
                 <td>
                   <input
@@ -662,7 +626,7 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-                disabled
+               
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
@@ -752,7 +716,7 @@ const Bills = () => {
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
-                Add Stockists
+                Billing Data
                 <button
                   className="close-button"
                   onClick={() => {
@@ -773,27 +737,70 @@ const Bills = () => {
                   <label className="nameclass-label">clientName:</label>
                   <input type="text" value={clientName} />
                   <label className="nameclass-label">clientContact:</label>
-                  <input type="text" value={clientContact} />
-                  <label className="nameclass-label">total:</label>
-                  <input type="text" placeholder="Added Date" value={total} />
-                  <label className="nameclass-label">item:</label>
-                  <input type="text" value={selectedPopupItem} readOnly />
-                  <label className="nameclass-label">Services:</label>
-                  <input type="text" value={services} />
-                  <label className="nameclass-label">quantity:</label>
-                  <input type="text" value={quantities} />
-                  <label className="nameclass-label">TaxRate:</label>
-                  <input type="text" value={taxRate} />
-                  <label className="nameclass-label">discountRate:</label>
-                  <input type="text" value={discountRate} />
-                  <label className="nameclass-label">subTotal:</label>
-                  <input type="text" value={subTotal} />
-                  <label className="nameclass-label">taxAmount:</label>
-                  <input type="text" value={taxAmount} />
-                  <label className="nameclass-label">discountAmount:</label>
-                  <input type="text" value={discountAmount} />
-                  <label className="nameclass-label">total:</label>
-                  <input type="text" value={total} />
+                  <input
+                    type="text"
+                    value={clientContact}
+                  />
+                  <label className='nameclass-label'>total:</label>
+                  <input
+                    type="text"
+                    placeholder="Added Date"
+                    value={total}
+                  />
+                  <label className='nameclass-label'>item:</label>
+                  <input
+                    type="text"
+                    value={selectedPopupItem}
+                    readOnly
+                  />
+                  <label className='nameclass-label'>Services:</label>
+                  <input
+                    type="text"
+                    
+                    value={services}
+                  />
+                  <label className='nameclass-label'>quantity:</label>
+                  <input
+                    type="text"
+                    
+                    value={quantities}
+                  />
+                  <label className='nameclass-label'>TaxRate:</label>
+                  <input
+                    type="text"
+                    
+                    value={taxRate}
+                  />
+                  <label className='nameclass-label'>discountRate:</label>
+                  <input
+                    type="text"
+                    
+                    value={discountRate}
+                  />
+                  <label className='nameclass-label'>subTotal:</label>
+                  <input
+                    type="text"
+                    
+                    value={subTotal}
+                  />
+                  <label className='nameclass-label'>taxAmount:</label>
+                  <input
+                    type="text"
+                    
+                    value={taxAmount}
+                  />
+                  <label className='nameclass-label'>discountAmount:</label>
+                  <input
+                    type="text"
+                    
+                    value={discountAmount}
+                  />
+                  <label className='nameclass-label'>total:</label>
+                  <input
+                    type="text"
+                    
+                    value={total}
+                  />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">send Copy</button>
                     <button
