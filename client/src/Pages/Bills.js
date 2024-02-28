@@ -608,17 +608,7 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-            {/* <div className="input-group">
-              <label htmlFor="currency">Currency:</label>
-              <select
-                className="input009"
-                id="currency"
-                value={selectedCurrency}
-                onChange={(e) => setSelectedCurrency(e.target.value)}
-                disabled >
-                <option value="INR">INR - Indian Rupee</option>
-              </select>
-            </div> */}
+            
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
