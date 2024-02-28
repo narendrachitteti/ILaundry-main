@@ -145,85 +145,89 @@ const PreviousBills = () => {
   const handleDownloadPDF = (service) => {
     const pdf = new jsPDF();
     // pdf.setDrawColor(0, 0, 255);
-    pdf.setDrawColor(7, 126, 96);  // RGB values for a shade of green
-
+    pdf.setDrawColor(7, 126, 96); // RGB values for a shade of green
+  
     pdf.setFontSize(16);
     pdf.setFont("helvetica", "bold");
-
+  
     const imgWidth = 30;
     const imgHeight = 15;
     const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
     const imgY = 15;
     pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
-
+  
     const billingDateTime = new Date().toLocaleString();
     const invoiceName = "Invoice";
     const invoiceNameX = pdf.internal.pageSize.getWidth() / 2; // Center of the page
-    const dateX = pdf.internal.pageSize.getWidth() - pdf.getTextWidth(billingDateTime) - 20; // Right side of the page
-
+    const dateX =
+      pdf.internal.pageSize.getWidth() - pdf.getTextWidth(billingDateTime) - 20; // Right side of the page
+  
     pdf.text(invoiceName, invoiceNameX, 45, { align: "center" });
     pdf.setFontSize(10); // Set the font size for the date
     pdf.text(`Date : ${billingDateTime}`, dateX, 45);
-
+  
     pdf.rect(
-        10,
-        10,
-        pdf.internal.pageSize.getWidth() - 20,
-        pdf.internal.pageSize.getHeight() - 20,
-        "S"
+      10,
+      10,
+      pdf.internal.pageSize.getWidth() - 20,
+      pdf.internal.pageSize.getHeight() - 20,
+      "S"
     );
-
+  
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-
-    const lineY = 49;  // Adjust the Y coordinate for the line
-    pdf.line(10, lineY, pageWidth - 10, lineY); 
-
+  
+    const lineY = 48; // Adjust the Y coordinate for the line
+    pdf.line(10, lineY, pageWidth - 10, lineY);
+  
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
-
+  
     const tableRows = [
-        { label: "Invoice No:", value: service.invoiceNo },
-        { label: "Client Name:", value: service.clientName },
-        { label: "Client Contact:", value: service.clientContact },
-        { label: "Invoice Date:", value: service.invoiceDate },
-        { label: "Discount Rate:", value: service.discountRate },
-        { label: "Discount Amount:", value: service.discountAmount },
-        { label: "Tax Rate:", value: service.taxRate },
-        { label: "Tax Amount:", value: service.taxAmount },
-        { label: "Subtotal:", value: service.subTotal },
-        { label: "Total:", value: service.total },
-        { label: "Currency:", value: service.selectedCurrency },
+      { label: "Invoice No:", value: service.invoiceNo },
+      { label: "Client Name:", value: service.clientName },
+      { label: "Client Contact:", value: service.clientContact },
+      { label: "Invoice Date:", value: service.invoiceDate },
+      { label: "Discount Rate:", value: service.discountRate },
+      { label: "Discount Amount:", value: service.discountAmount },
+      { label: "Tax Rate:", value: service.taxRate },
+      { label: "Tax Amount:", value: service.taxAmount },
+      { label: "Subtotal:", value: service.subTotal },
+      { label: "Total:", value: service.total },
+      { label: "Currency:", value: service.selectedCurrency },
     ];
-
-    
-  const headers = ['Particulars', 'Amount'];
-  const data = tableRows.map(({ label, value }) => [label, value]);
-
-  const tableOptions = {
-    startY: lineY + 5,
-    margin: { top: 10 },
-  };
-
-  pdf.autoTable({
-    head: [headers],
-    body: data,
-    theme: 'grid',
-    ...tableOptions,
-  })
+  
+    const headers = ["Particulars", "Amount"];
+    const data = tableRows.map(({ label, value }) => [label.replace(":", ""), value]);
+  
+    const tableOptions = {
+      startY: lineY + 15,
+      margin: { top: 10 },
+    };
+  
+    pdf.autoTable({
+      head: [headers],
+      body: data,
+      theme: "grid",
+      ...tableOptions,
+    });
+  
     const signature = "Signature Or Stamp";
     const signatureX = 150;
     const signatureY = pdf.lastAutoTable.finalY + 20;
     pdf.text(signature, signatureX, signatureY);
-
-    const systemGeneratedText = "****This is a system generated bill****";
-const systemGeneratedTextX = pdf.internal.pageSize.getWidth() / 2;
-const systemGeneratedTextY = pdf.internal.pageSize.getHeight() - 15;  // Adjust the Y coordinate
-
-pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, { align: 'center' });
+  
+    const systemGeneratedText = "****This is a system-generated bill****";
+    const systemGeneratedTextX = pdf.internal.pageSize.getWidth() / 2;
+    const systemGeneratedTextY =
+      pdf.internal.pageSize.getHeight() - 15; // Adjust the Y coordinate
+  
+    pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, {
+      align: "center",
+    });
     pdf.save(`customer_details_${service._id}.pdf`);
-};
-
+  };
+  
   
   // const generateWhatsappMessage = (service) => {
     
