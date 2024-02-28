@@ -27,7 +27,7 @@ const Bills = () => {
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
   const [selectedService, setSelectedService] = useState("");
-  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
+  const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
   );
