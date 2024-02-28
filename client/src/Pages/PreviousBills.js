@@ -371,8 +371,8 @@ pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, { alig
             <tr className="product-ooi">
               <th className="product-ooi">Invoice No</th>
               <th className="product-ooi">Invoice Date</th>
-              <th className="product-ooi">Client Name</th>
-              <th className="product-ooi">Client Contact </th>
+              <th className="product-ooi">Customer Name</th>
+              <th className="product-ooi">Customer Contact</th>
              
               <th className="product-ooi">Discount Rate</th>
               <th className="product-ooi">Discount Amount</th>
@@ -383,7 +383,6 @@ pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, { alig
               <th className="product-ooi">Currency</th>
               <th className="product-ooi">Items</th>
               <th className="product-ooi">Actions</th>
-              {/* <th className="product-ooi">Whatsapp</th> */}
               
             </tr>
           </thead>

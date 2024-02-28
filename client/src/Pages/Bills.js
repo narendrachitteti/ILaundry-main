@@ -28,7 +28,7 @@ const Bills = () => {
   const [price, setprice] = useState(0);
   const [customeraddress , setcustomeraddress] = useState('');
   const [selectedService, setSelectedService] = useState("");
-  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
+  const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
   );
@@ -594,7 +594,7 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-
+            
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
