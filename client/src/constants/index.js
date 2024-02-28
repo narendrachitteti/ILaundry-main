@@ -139,7 +139,7 @@ export const footerLinks = [
         title: "Get in touch",
         links: [
             { name: "customer@ilaundry.in", link: "mailto:customer@ilaundry.in" },
-            { name: "+91-1234567890", link: "tel:+91-0987654321" },
+            { name: "+91 8884403325", link: "tel:+91-0987654321" },
         ],
     },
 ];

@@ -32,7 +32,7 @@ function Login() {
 
       if (response.ok) {
         const enteredEmail = userData.email;
-        // Store entered email in localStorage
+
         localStorage.setItem("mail", enteredEmail);
         // Redirect user to InvoiceForm or any desired location
         navigate("/Bills");
@@ -57,6 +57,12 @@ function Login() {
 
   const handleLogin1 = async (event) => {
     event.preventDefault();
+    const formData = new FormData(event.target);
+
+    const userData = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
 
     try {
       const response = await fetch("http://localhost:5000/login/staff", {
@@ -70,7 +76,9 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // Navigate to the relevant page based on the response message
+        const enteredEmail = userData.email;
+
+        localStorage.setItem("mail", enteredEmail);
         if (data.message === "Staff login successful") {
           navigate("/Bills");
         } else {
