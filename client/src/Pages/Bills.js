@@ -324,6 +324,48 @@ const Bills = () => {
     }
   };
 
+
+  // const handleReviewInvoice = () => {
+  //   const data = {
+  //     invoiceNo,
+  //     invoiceDate,
+  //     clientName,
+  //     clientContact,
+  //     items: rows.map((row, index) => ({
+  //       item: selectedItems[index],
+  //       quantity: quantities[index],
+  //       price: price[index],
+  //       subtotal: subtotals[index],
+  //     })),
+  //     subTotal,
+  //     discountRate,
+  //     discountAmount,
+  //     taxRate,
+  //     taxAmount,
+  //     total,
+  //     selectedCurrency,
+  //     selectedPaymentMode,
+  //     selectedPopupItem,
+  //   };
+  //   // setSelectedInvoice(data); // Set the selected invoice data
+  //   setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
+  //   togglePopup(true);
+  //   fetch("http://localhost:5000/api/billing", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log("Success:", data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       // Handle error
+  //     });
+  // };
   const handleReviewInvoice = () => {
     const data = {
       invoiceNo,
@@ -336,7 +378,7 @@ const Bills = () => {
         quantity: quantities[index],
         price: price[index],
         subtotal: subtotals[index],
-        services: selectedService,
+        services:services[index],
       })),
       subTotal,
       discountRate,
@@ -573,6 +615,7 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
+            
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
@@ -580,11 +623,12 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-            
+               
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
             </div>
+
             <div className="input-group">
               <label htmlFor="taxRate">Tax Rate:</label>
               <input
@@ -684,21 +728,11 @@ const Bills = () => {
               <div className="popup-content">
                 <form>
                   <label className="nameclass-label">InvoiceNo:</label>
-                  <input
-                    type="text"
-                    value={invoiceNumber}
-                    readOnly
-                  />
+                  <input type="text" value={invoiceNumber} readOnly />
                   <label className="nameclass-label">InvoiceDate:</label>
-                  <input
-                    type="text"
-                    value={invoiceDate}
-                  />
+                  <input type="text" value={invoiceDate} />
                   <label className="nameclass-label">clientName:</label>
-                  <input
-                    type="text"
-                    value={clientName}
-                  />
+                  <input type="text" value={clientName} />
                   <label className="nameclass-label">clientContact:</label>
                   <input
                     type="text"
@@ -719,49 +753,49 @@ const Bills = () => {
                   <label className='nameclass-label'>Services:</label>
                   <input
                     type="text"
-
-                    value={selectedService}
+                    
+                    value={services}
                   />
                   <label className='nameclass-label'>quantity:</label>
                   <input
                     type="text"
-
+                    
                     value={quantities}
                   />
                   <label className='nameclass-label'>TaxRate:</label>
                   <input
                     type="text"
-
+                    
                     value={taxRate}
                   />
                   <label className='nameclass-label'>discountRate:</label>
                   <input
                     type="text"
-
+                    
                     value={discountRate}
                   />
                   <label className='nameclass-label'>subTotal:</label>
                   <input
                     type="text"
-
+                    
                     value={subTotal}
                   />
                   <label className='nameclass-label'>taxAmount:</label>
                   <input
                     type="text"
-
+                    
                     value={taxAmount}
                   />
                   <label className='nameclass-label'>discountAmount:</label>
                   <input
                     type="text"
-
+                    
                     value={discountAmount}
                   />
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-
+                    
                     value={total}
                   />
                   <div className="merge-karthik-bill">
