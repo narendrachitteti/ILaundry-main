@@ -188,10 +188,11 @@ const PreviousBills = () => {
       filterByField(item, "items", searchTextCus)
     );
   });
+  
 
   const handleDownloadPDF = (service) => {
     const pdf = new jsPDF();
-
+    pdf.setDrawColor(0, 0, 255);
     pdf.setFontSize(16);
     pdf.setFont("helvetica", "bold");
 
@@ -204,50 +205,56 @@ const PreviousBills = () => {
     const billingDateTime = new Date().toLocaleString();
     pdf.text(`Customer Details          Date : ${billingDateTime}`, 20, 45);
     pdf.rect(
-      10,
-      10,
-      pdf.internal.pageSize.getWidth() - 20,
-      pdf.internal.pageSize.getHeight() - 20,
-      "S"
+        10,
+        10,
+        pdf.internal.pageSize.getWidth() - 20,
+        pdf.internal.pageSize.getHeight() - 20,
+        "S"
     );
-    pdf.line(20, 55, 190, 55);
-
+    // pdf.line(20, 55, 190, 55);
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    
+    pdf.rect(0, 0, pageWidth, pageHeight);
+    pdf.line(10, 55, pageWidth - 10, 55); 
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
 
+    // Ensure tableRows is an array of objects
     const tableRows = [
-      ["Customer Name:", service.customerName],
-      ["Phone Number:", service.phoneNumber],
-      ["Email :", service.Email],
-      ["total:", service.total],
-      ["subTotal:", service.subTotal],
-      ["taxRate:", service.taxRate],
-      ["taxAmount:", service.taxAmount],
-      ["discountRate:", service.discountRate],
-      ["items:", service.items],
+      ["Invoice No:", service.invoiceNo],
+      ["Invoice Date:", service.invoiceDate],
+      ["Client Name:", service.clientName],
+      ["Client Contact:", service.clientContact],
+      ["Subtotal :", service.subTotal],
+      ["Discount Rate:", service.discountRate],
+      ["Discount Amount:", service.discountAmount],
+      ["Tax Rate:", service.taxRate],
+      ["Tax Amount:", service.taxAmount],
+      ["Total:", service.total],
+      ["Currency:", service.selectedCurrency],
     ];
 
     let yPos = 65;
+    const gapBetweenFields = 15;
+    const xPositionLabel = 20;
+    const xPositionValue = 65; // Adjust the value based on your preference
 
-    tableRows.forEach(([label, value]) => {
-      const sanitizedLabel = label.replace(/[^\x20-\x7E]/g, "");
+    tableRows.forEach(({ label, value }) => {
+        const sanitizedLabel = label.replace(/[^\x20-\x7E]/g, "");
 
-      console.log("Sanitized Label:", sanitizedLabel);
-      console.log("yPos:", yPos, typeof yPos);
+        console.log("Sanitized Label:", sanitizedLabel);
+        console.log("yPos:", yPos, typeof yPos);
 
-      try {
-        pdf.text(sanitizedLabel, 20, yPos);
-      } catch (error) {
-        console.error("Error adding label:", error);
-      }
+        try {
+            const labelWithColon = sanitizedLabel.endsWith(":") ? sanitizedLabel : `${sanitizedLabel}:`;
+            pdf.text(labelWithColon, xPositionLabel, yPos);
+            pdf.text(`${value}`, xPositionValue, yPos);
+        } catch (error) {
+            console.error("Error adding label:", error);
+        }
 
-      try {
-        pdf.text(value, 80, yPos);
-      } catch (error) {
-        console.error("Error adding value:", error);
-      }
-
-      yPos += 10;
+        yPos += gapBetweenFields; // Increase yPos by the gap value
     });
 
     const signature = "Signature Or Stamp";
@@ -258,6 +265,22 @@ const PreviousBills = () => {
     pdf.save(`customer_details_${service._id}.pdf`);
   };
 
+  // const generateWhatsappMessage = (service) => {
+    
+  //   return `
+  //   Invoice No: ${service.prefix}${service.invoiceNo}
+  //   Invoice Date: ${service.invoiceDate}
+  //   Client Name: ${service.clientName}
+  //   Client Contact: ${service.clientContact}
+  //   Subtotal: ${service.subTotal}
+  //   Discount Rate: ${service.discountRate}
+  //   Discount Amount: ${service.discountAmount}
+  //   Tax Rate: ${service.taxRate}
+  //   Tax Amount: ${service.taxAmount}
+  //   Total: ${service.total}
+  //   Currency: ${service.selectedCurrency}
+  //   `
+  // };
   const generateWhatsappMessage = (service) => {
     return `
       Customer Name: ${service.prefix}${service.customerName}

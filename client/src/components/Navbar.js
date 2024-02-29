@@ -4,6 +4,7 @@ import image14 from "../assets/images/ilaundry.jpg";
 import image15 from "../components/images/bills.jpg";
 import image16 from "../components/images/profile.jpg";
 import image17 from "../components/images/customer.jpg";
+import register from "../components/images/register.png";
 import { IoLogOutOutline } from "react-icons/io5";
 import "../Styles/Navbar.css";
 import axios from "axios";
@@ -72,7 +73,7 @@ const Navbar = () => {
 
         <Link to="/Register">
           <div className="bills">
-            {/* <img src={image15} alt="" style={{ height: "2.5rem" }} /> */}
+            <img src={register} alt="" style={{ height: "2.5rem" }} />
             <p>Register</p>
           </div>
         </Link>
