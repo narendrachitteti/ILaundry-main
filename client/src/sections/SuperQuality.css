@@ -1,11 +1,12 @@
 .section-down {
-  background-color: #ebeaea;
+  background: rgb(243, 243, 243);
   display: flex;
-  gap: 100px;
+  gap: 180px;
   padding: 15px;
   margin-top: 80px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 50px;
 }
 
 .section-down img {
@@ -21,5 +22,25 @@
   }
   p {
     width: 600px;
+  }
+}
+
+.info-text {
+  /* font-size: 16px; */
+  /* color: #333;
+  margin-top: 6px; */
+  /* list-style-type: decimal-leading-zero; */
+  /* margin-left: 20px;  */
+}
+
+.about-us {
+  text-align: center;
+  p {
+    line-height: 1.5;
+  }
+
+  h2,
+  h3 {
+    color: #ff6452;
   }
 }
