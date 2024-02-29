@@ -154,7 +154,7 @@ const PreviousBills = () => {
     pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
   
     const billingDateTime = new Date().toLocaleString();
-    const invoiceName = "Invoice";
+    const invoiceName = "Payment Invoice";
     const invoiceNameX = pdf.internal.pageSize.getWidth() / 2;
     const dateX =
       pdf.internal.pageSize.getWidth() - pdf.getTextWidth(billingDateTime) - 1;
@@ -180,8 +180,8 @@ const PreviousBills = () => {
     // Section for basic details
     const basicDetailsRows = [
       { label: "Invoice No:", value: service.invoiceNo },
-      { label: "Client Name:", value: service.clientName },
-      { label: "Client Contact:", value: service.clientContact },
+      { label: "Customer Name:", value: service.clientName },
+      { label: "Contact Number:", value: service.clientContact },
       { label: "Invoice Date:", value: service.invoiceDate },
     ];
   
@@ -222,6 +222,7 @@ const PreviousBills = () => {
       { label: "Discount Rate:", value: service.discountRate },
       { label: "Discount Amount:", value: service.discountAmount },
       { label: "Tax(SGST 9%):", value: service.taxRate },
+      {label:"Rate per Unit:",value:service.Rate},
       { label: "Tax Amount:", value: service.taxAmount },
       { label: "Subtotal:", value: service.subTotal },
       { label: "Total:", value: service.total },
@@ -508,6 +509,7 @@ const PreviousBills = () => {
                                   <td>{item.price}</td>
                                   <td>{item.quantity}</td>
                                   <td>{item.services}</td>
+
                                 </tr>
                               ))}
                             </tbody>
