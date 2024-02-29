@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+// import '../constants/Cardslider.css'
 import { facebook, instagram, shieldTick, support, truckFast, twitter } from "../assets/icons";
 import { customer1, customer2, shoe4, shoe5, shoe6, shoe7, thumbnailShoe1, thumbnailShoe2, thumbnailShoe3, bigshoe3s } from "../assets/images";
 import bigShoe4 from "../assets/images/big-shoe4.png"
@@ -10,8 +12,10 @@ import customer6 from '../constants/customer6.jpeg'
 import customer5 from '../constants/customer5.jpeg'
 import customer7 from '../assets/images/customer7.jpeg'
 import customer8 from '../assets/images/customer8.jpeg'
-
-
+import customer9 from '../constants/customer9.jpeg'
+import customer10 from '../constants/customer10.jpeg'
+import customer11 from '../constants/customer11.jpeg'
+import customer12 from '../constants/customer12.jpeg'
 
 export const navLinks = [
     { href: "#home", label: "Home" },
@@ -84,6 +88,21 @@ export const services = [
 ];
 
 export const reviews = [
+
+    {
+        imgURL: customer5,
+        customerName: 'Sanvitha',
+        rating: 4.5,
+        feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room."
+    },
+
+    {
+        imgURL: customer6,
+        customerName: 'Abhishek',
+        rating: 4,
+        feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room."
+    },
+
     {
         imgURL: customer7,
         customerName: 'Shahrukh',
@@ -96,22 +115,37 @@ export const reviews = [
         rating: 5,
         feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room. So convenient!"
     },
+
     {
-        imgURL: customer6,
-        customerName: 'Abhishek',
+        imgURL: customer9,
+        customerName: 'Deepa',
         rating: 4,
         feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room."
     },
 
     {
-        imgURL: customer5,
-        customerName: 'Sanvitha',
-        rating: 4.5,
+        imgURL: customer10,
+        customerName: 'Dilip',
+        rating: 4.2,
         feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room."
-    }
+    },
+
+    {
+        imgURL: customer11,
+        customerName: 'Harsha',
+        rating: 3.5,
+        feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room."
+    },
+
+    {
+        imgURL: customer12,
+        customerName: 'Karishma',
+        rating: 4,
+        feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room."
+    },
+
+    
 ];
-
-
 
 export const footerLinks = [
     {
