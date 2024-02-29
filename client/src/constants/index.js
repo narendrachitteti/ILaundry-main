@@ -35,6 +35,7 @@ import customer9 from "../constants/customer9.jpeg";
 import customer10 from "../constants/customer10.jpeg";
 import customer11 from "../constants/customer11.jpeg";
 import customer12 from "../constants/customer12.jpeg";
+import fold from "../constants/fold.jpeg"
 
 export const navLinks = [
   { href: "#home", label: "Home" },
@@ -65,7 +66,7 @@ export const statistics = [
 
 export const products = [
   {
-    imgURL: washfold,
+    imgURL: fold,
     name: "Wash & Fold",
     price: "₹60.00",
   },
