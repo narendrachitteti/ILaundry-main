@@ -1,0 +1,25 @@
+.section-down {
+  background-color: #ebeaea;
+  display: flex;
+  gap: 100px;
+  padding: 15px;
+  margin-top: 80px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-down img {
+  height: 320px;
+  width: 450px;
+  border-radius: 5px;
+}
+.right-textone {
+  width: 600px;
+  h2 {
+    color: #ff6452;
+    margin: 12px 0px;
+  }
+  p {
+    width: 600px;
+  }
+}
