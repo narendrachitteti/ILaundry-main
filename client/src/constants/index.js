@@ -6,6 +6,10 @@ import wash1 from '../assets/images/wash1.jpg'
 import ironing from '../assets/images/ironing.jpg'
 import dd1 from '../assets/images/dd1.jpg'
 import steam from '../assets/images/steam.jpg'
+import customer6 from '../constants/customer6.jpeg'
+import customer5 from '../constants/customer5.jpeg'
+import customer7 from '../assets/images/customer7.jpeg'
+import customer8 from '../assets/images/customer8.jpeg'
 
 
 
@@ -81,24 +85,32 @@ export const services = [
 
 export const reviews = [
     {
-        imgURL: customer1,
+        imgURL: customer7,
         customerName: 'Shahrukh',
         rating: 4.5,
         feedback: "This laundry service is a huge help during my busy work weeks. They collect my dirty clothes and return everything neatly folded so I can focus on my job."
     },
     {
-        imgURL: customer2,
+        imgURL: customer8,
         customerName: 'Suhasini',
         rating: 5,
         feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room. So convenient!"
     },
-    // {
-    //     imgURL: customer2,
-    //     customerName: 'Suhas',
-    //     rating: 5,
-    //     feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room. So convenient!"
-    // }
+    {
+        imgURL: customer6,
+        customerName: 'Abhishek',
+        rating: 4,
+        feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room."
+    },
+
+    {
+        imgURL: customer5,
+        customerName: 'Sanvitha',
+        rating: 4.5,
+        feedback: "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room."
+    }
 ];
+
 
 
 export const footerLinks = [

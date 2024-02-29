@@ -308,7 +308,6 @@ const Bills = () => {
       discount += (price * quantity * discountRate) / 100;
       tax += (price * quantity * taxRate) / 100;
     });
-    // Calculate total
     const totalAmount = subtotal - discount + tax;
     setSubTotal(subtotal);
     setDiscountAmount(discount);
@@ -337,7 +336,7 @@ const Bills = () => {
         quantity: quantities[index],
         price: price[index],
         subtotal: subtotals[index],
-        services: selectedService,
+        services:services[index],
       })),
       subTotal,
       discountRate,
@@ -489,9 +488,9 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-                  <select value={selectedService} onChange={(e) => setSelectedService(e.target.value)}>
-                    {services.map((service) => (
-                      <option key={service} value={service}>
+                  <select value={selectedService[index]} onChange={(e) => setSelectedService(index, e.target.value)}>
+                    {services.map((service, index) => (
+                      <option key={index} value={service}>
                         {service}
                       </option>
                     ))}
@@ -506,12 +505,11 @@ const Bills = () => {
                     }
                   />
                 </td>
-                {/* <td>{itemPrices[selectedItems[index]] || 0}</td> */}
                 <td>{itemPrices[selectedItems[index]] || 0}</td>
 
                 <td>
                   <div className="iconflex">
-                    {index === rows.length - 1 ? ( // Check if this is the last row
+                    {index === rows.length - 1 ? ( 
                       <button className="itembtn" onClick={handleAddRow}>
                         <span>
                           <FaPlus />
@@ -523,13 +521,11 @@ const Bills = () => {
                       </button>
                     ) : null}
 
-                    {/* <button class="buttonbin" onClick={() => handleDeleteRow(row.id)} disabled={rows.length === 1}> */}
                     <button
                       className="buttonbin"
                       onClick={() => handleDeleteRow(index)}
                       disabled={rows.length === 1}
                     >
-                      {/* Delete button always rendered */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -577,17 +573,7 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-            {/* <div className="input-group">
-              <label htmlFor="currency">Currency:</label>
-              <select
-                className="input009"
-                id="currency"
-                value={selectedCurrency}
-                onChange={(e) => setSelectedCurrency(e.target.value)}
-                disabled >
-                <option value="INR">INR - Indian Rupee</option>
-              </select>
-            </div> */}
+            
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
@@ -595,11 +581,12 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-
+            
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
             </div>
+
             <div className="input-group">
               <label htmlFor="taxRate">Tax Rate:</label>
               <input
@@ -699,21 +686,11 @@ const Bills = () => {
               <div className="popup-content">
                 <form>
                   <label className="nameclass-label">InvoiceNo:</label>
-                  <input
-                    type="text"
-                    value={invoiceNumber}
-                    readOnly
-                  />
+                  <input type="text" value={invoiceNumber} readOnly />
                   <label className="nameclass-label">InvoiceDate:</label>
-                  <input
-                    type="text"
-                    value={invoiceDate}
-                  />
+                  <input type="text" value={invoiceDate} />
                   <label className="nameclass-label">clientName:</label>
-                  <input
-                    type="text"
-                    value={clientName}
-                  />
+                  <input type="text" value={clientName} />
                   <label className="nameclass-label">clientContact:</label>
                   <input
                     type="text"
@@ -747,49 +724,49 @@ const Bills = () => {
                   <label className='nameclass-label'>Services:</label>
                   <input
                     type="text"
-
-                    value={selectedService}
+                    
+                    value={services}
                   />
                   <label className='nameclass-label'>quantity:</label>
                   <input
                     type="text"
-
+                    
                     value={quantities}
                   />
                   <label className='nameclass-label'>TaxRate:</label>
                   <input
                     type="text"
-
+                    
                     value={taxRate}
                   />
                   <label className='nameclass-label'>discountRate:</label>
                   <input
                     type="text"
-
+                    
                     value={discountRate}
                   />
                   <label className='nameclass-label'>subTotal:</label>
                   <input
                     type="text"
-
+                    
                     value={subTotal}
                   />
                   <label className='nameclass-label'>taxAmount:</label>
                   <input
                     type="text"
-
+                    
                     value={taxAmount}
                   />
                   <label className='nameclass-label'>discountAmount:</label>
                   <input
                     type="text"
-
+                    
                     value={discountAmount}
                   />
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-
+                    
                     value={total}
                   />
                   <div className="merge-karthik-bill">
