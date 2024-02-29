@@ -87,7 +87,7 @@ export const Input = styled.input`
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
-`;
+`;  
 
 export const Button = styled.button`
   border-radius: 20px;
@@ -150,7 +150,9 @@ export const Overlay = styled.div`
   transition: transform 0.6s ease-in-out;
   ${props => (props.signingIn !== true ? `transform: translateX(50%);` : null)}
 `;
+
 // ...................................................................................
+
 export const OverlayPanel = styled.div`
   position: absolute;
   display: flex;

@@ -5,15 +5,6 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
-
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  pdf,
-} from "@react-pdf/renderer";
 import jsPDF from "jspdf";
 
 const currencies = currencyCodes.data;
@@ -35,9 +26,9 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
+  const [customeraddress, setcustomeraddress] = useState('');
+  const [selectedService, setSelectedService] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
-
-  // const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
   );
@@ -70,6 +61,7 @@ const Bills = () => {
     "Premium Laundry",
     "Steam Ironing",
   ];
+
   const itemsList = [
     "Select a Item",
     "Handkerchief",
@@ -157,6 +149,7 @@ const Bills = () => {
     "Curtain door single panel",
     "Bed protector",
   ];
+
   const itemPrices = {
     Handkerchief: 40.0,
     "Kids frock": 40.0,
@@ -250,7 +243,9 @@ const Bills = () => {
     setSelectedItems([...selectedItems, ""]);
     setQuantities([...quantities, 0]);
     setSubtotals([...subtotals, 0]);
+    setSelectedService([...selectedService, ""]);
   };
+
   useEffect(() => {
     calculateTotal();
   }, [quantities, discountRate, taxRate]);
@@ -278,11 +273,11 @@ const Bills = () => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
+    setSelectedPopupItem(value);
     const defaultQuantity = "";
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
-    setSelectedPopupItem(value);
     updateSubtotal(index, value, defaultQuantity);
   };
 
@@ -305,7 +300,6 @@ const Bills = () => {
     let subtotal = 0;
     let discount = 0;
     let tax = 0;
-    // Loop through rows to calculate subtotal, discount, and tax
     rows.forEach((row, index) => {
       const item = selectedItems[index];
       const quantity = quantities[index];
@@ -316,7 +310,6 @@ const Bills = () => {
     });
     // Calculate total
     const totalAmount = subtotal - discount + tax;
-    // Update state
     setSubTotal(subtotal);
     setDiscountAmount(discount);
     setTaxAmount(tax);
@@ -327,11 +320,11 @@ const Bills = () => {
     switch (currencyCode) {
       case "INR":
         return "₹";
-      // Add more cases for other currencies as needed
       default:
         return "";
     }
   };
+
 
   // const handleReviewInvoice = () => {
   //   const data = {
@@ -380,11 +373,13 @@ const Bills = () => {
       invoiceDate,
       clientName,
       clientContact,
+      customeraddress,
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
         price: price[index],
         subtotal: subtotals[index],
+        services:services[index],
       })),
       subTotal,
       discountRate,
@@ -395,9 +390,8 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
+
     };
-    // setSelectedInvoice(data); // Set the selected invoice data
-    // setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
     togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
@@ -422,17 +416,18 @@ const Bills = () => {
     doc.text("Invoice Date: " + invoiceDate, 10, 20);
     doc.text("Client Name: " + clientName, 10, 30);
     doc.text("Client Contact: " + clientContact, 10, 40);
-    doc.text("Total: " + total, 10, 50);
     doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+    doc.text("Total: " + total, 10, 50);
+    doc.text("TaxAmount: " + taxAmount, 10, 60);
     doc.save("Laundry Invoice.pdf");
   };
 
   const [showPopup, setShowPopup] = useState(false);
   const resetFields = () => {
-    // setInvoiceNo("");
-    // setInvoiceDate("");
+    setInvoiceNo("");
     setClientName("");
     setClientContact("");
+    setcustomeraddress('');
     setRows([{ id: 1 }]);
     setSelectedItems(Array(rows.length).fill(""));
     setQuantities(Array(rows.length).fill(0));
@@ -444,14 +439,11 @@ const Bills = () => {
     setTaxAmount(0);
     setTotal(0);
     setSelectedPaymentMode("");
+    setSelectedService("");
   };
 
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
-    // if (!isCancel) {
-    //   handleReviewInvoice();
-    //   resetFields(); // Reset fields when closing the popup
-    // }
   };
 
   // const togglePopup = (value) => {
@@ -502,6 +494,15 @@ const Bills = () => {
             onChange={(e) => setClientContact(e.target.value)}
           />
         </div>
+        <div className="input-group">
+          <label htmlFor="clientContact">Customer Address:</label>
+          <input
+            type="text"
+            id="clientName"
+            value={customeraddress}
+            onChange={(e) => setcustomeraddress(e.target.value)}
+          />
+        </div>
       </div>
       <div className="table-container">
         <table className="medicine-table">
@@ -530,7 +531,7 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-                  <select>
+                  <select value={selectedService[index]} onChange={(e) => setSelectedService(index, e.target.value)}>
                     {services.map((service, index) => (
                       <option key={index} value={service}>
                         {service}
@@ -547,12 +548,11 @@ const Bills = () => {
                     }
                   />
                 </td>
-                {/* <td>{itemPrices[selectedItems[index]] || 0}</td> */}
                 <td>{itemPrices[selectedItems[index]] || 0}</td>
 
                 <td>
                   <div className="iconflex">
-                    {index === rows.length - 1 ? ( // Check if this is the last row
+                    {index === rows.length - 1 ? ( 
                       <button className="itembtn" onClick={handleAddRow}>
                         <span>
                           <FaPlus />
@@ -564,13 +564,11 @@ const Bills = () => {
                       </button>
                     ) : null}
 
-                    {/* <button class="buttonbin" onClick={() => handleDeleteRow(row.id)} disabled={rows.length === 1}> */}
                     <button
                       className="buttonbin"
                       onClick={() => handleDeleteRow(index)}
                       disabled={rows.length === 1}
                     >
-                      {/* Delete button always rendered */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -618,17 +616,7 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-            {/* <div className="input-group">
-              <label htmlFor="currency">Currency:</label>
-              <select
-                className="input009"
-                id="currency"
-                value={selectedCurrency}
-                onChange={(e) => setSelectedCurrency(e.target.value)}
-                disabled >
-                <option value="INR">INR - Indian Rupee</option>
-              </select>
-            </div> */}
+            
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
@@ -636,11 +624,12 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-               
+            
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
             </div>
+
             <div className="input-group">
               <label htmlFor="taxRate">Tax Rate:</label>
               <input
@@ -725,7 +714,7 @@ const Bills = () => {
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
-                Add Stockists
+                Billing Data
                 <button
                   className="close-button"
                   onClick={() => {
@@ -740,38 +729,88 @@ const Bills = () => {
               <div className="popup-content">
                 <form>
                   <label className="nameclass-label">InvoiceNo:</label>
-                  <input
-                    type="text"
-                    placeholder="Invoice No"
-                    value={invoiceNumber}
-                    readOnly
-                  />
+                  <input type="text" value={invoiceNumber} readOnly />
                   <label className="nameclass-label">InvoiceDate:</label>
-                  <input
-                    type="text"
-                    placeholder="Invoice Date"
-                    value={invoiceDate}
-                  />
+                  <input type="text" value={invoiceDate} />
                   <label className="nameclass-label">clientName:</label>
-                  <input
-                    type="text"
-                    placeholder="clientName"
-                    value={clientName}
-                  />
+                  <input type="text" value={clientName} />
                   <label className="nameclass-label">clientContact:</label>
                   <input
                     type="text"
-                    placeholder="clientContact"
                     value={clientContact}
                   />
-                  <label className="nameclass-label">total:</label>
-                  <input type="text" placeholder="Added Date" value={total} />
-                  <label className="nameclass-label">item:</label>
+                  {/* <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-                    placeholder="Selected Item"
+                    placeholder="Added Date"
+                    value={total}
+                  /> */}
+                    {/* <label htmlFor="clientContact">Customer Address:</label>
+                    <input
+                      type="text"
+                      id="clientName"
+                      value={customeraddress}
+                      // onChange={(e) => setcustomeraddress(e.target.value)}
+                    /> */}
+                  <label className='nameclass-label'>customeraddress:</label>
+                  <input
+                    type="text"
+                    value={customeraddress}
+                    
+                  />
+                  <label className='nameclass-label'>item:</label>
+                  <input
+                    type="text"
                     value={selectedPopupItem}
                     readOnly
+                  />
+                  <label className='nameclass-label'>Services:</label>
+                  <input
+                    type="text"
+                    
+                    value={services}
+                  />
+                  <label className='nameclass-label'>quantity:</label>
+                  <input
+                    type="text"
+                    
+                    value={quantities}
+                  />
+                  <label className='nameclass-label'>TaxRate:</label>
+                  <input
+                    type="text"
+                    
+                    value={taxRate}
+                  />
+                  <label className='nameclass-label'>discountRate:</label>
+                  <input
+                    type="text"
+                    
+                    value={discountRate}
+                  />
+                  <label className='nameclass-label'>subTotal:</label>
+                  <input
+                    type="text"
+                    
+                    value={subTotal}
+                  />
+                  <label className='nameclass-label'>taxAmount:</label>
+                  <input
+                    type="text"
+                    
+                    value={taxAmount}
+                  />
+                  <label className='nameclass-label'>discountAmount:</label>
+                  <input
+                    type="text"
+                    
+                    value={discountAmount}
+                  />
+                  <label className='nameclass-label'>total:</label>
+                  <input
+                    type="text"
+                    
+                    value={total}
                   />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">send Copy</button>

@@ -22,6 +22,7 @@ import image13 from "../components/images/background.jpg";
 import Navbar from "../components/Navbar.js";
 import Backbutton from "./Backbutton.js";
 import { BASE_URL } from "../Helper/Helper.js";
+import "jspdf-autotable";
 
 const PreviousBills = () => {
   const [customerServicesCus, setcustomerServicesCus] = useState([]);
@@ -137,7 +138,7 @@ const PreviousBills = () => {
           formData
         );
       } else {
-        await axios.post(`${BASE_URL}/invoice/`, formData);
+        await axios.post(`${BASE_URL}/invoice/, formData`);
       }
       fetchcustomerServicesCus();
       setselectedServiceCus(null);
@@ -192,79 +193,166 @@ const PreviousBills = () => {
 
   const handleDownloadPDF = (service) => {
     const pdf = new jsPDF();
-    pdf.setDrawColor(0, 0, 255);
-    pdf.setFontSize(16);
-    pdf.setFont("helvetica", "bold");
-
-    const imgWidth = 30;
+    pdf.setDrawColor(7, 126, 96); // RGB values for a shade of green
+    let lineY = 48;
+  
+    const imgWidth = 40;
     const imgHeight = 15;
     const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
     const imgY = 15;
     pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
-
+  
     const billingDateTime = new Date().toLocaleString();
-    pdf.text(`Customer Details          Date : ${billingDateTime}`, 20, 45);
+    const invoiceName = "Payment Invoice";
+    const invoiceNameX = pdf.internal.pageSize.getWidth() / 2;
+    const dateX =
+      pdf.internal.pageSize.getWidth() - pdf.getTextWidth(billingDateTime) - 1;
+  
+    pdf.text(invoiceName, invoiceNameX, 45, { align: "center" });
+    pdf.setFontSize(10);
+    pdf.text(`Date : ${billingDateTime}`, dateX, 45);
+  
     pdf.rect(
-        10,
-        10,
-        pdf.internal.pageSize.getWidth() - 20,
-        pdf.internal.pageSize.getHeight() - 20,
-        "S"
+      10,
+      10,
+      pdf.internal.pageSize.getWidth() - 20,
+      pdf.internal.pageSize.getHeight() - 20,
+      "S"
     );
-    // pdf.line(20, 55, 190, 55);
+  
     const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    
-    pdf.rect(0, 0, pageWidth, pageHeight);
-    pdf.line(10, 55, pageWidth - 10, 55); 
+  
+    const borderWidth = 10;
+    const lineWidth = 2;
+    pdf.line(10, lineY - lineWidth, pageWidth - borderWidth, lineY - lineWidth);
+  
+    // Section for basic details
+    const basicDetailsRows = [
+      { label: "Invoice No:", value: service.invoiceNo },
+      { label: "Customer Name:", value: service.clientName },
+      { label: "Contact Number:", value: service.clientContact },
+      { label: "Invoice Date:", value: service.invoiceDate },
+    ];
+  
+    basicDetailsRows.forEach(({ label, value }) => {
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(12);
+      pdf.text(`${label}`, 20, (lineY += 8));
+  
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${value}`, 60, lineY);
+    });
+  
+    // GSTIN Number
+    const gstin = "29ABCDE1234F1ZW"; // Replace with your actual GSTIN number
+    const gstinX = pdf.internal.pageSize.getWidth() - 58;
+    const gstinY = 15;
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    pdf.text(`GSTIN: ${gstin}`, gstinX, gstinY);
+  
+    // Section for the rest of the details
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
 
     // Ensure tableRows is an array of objects
-    const tableRows = [
-      ["Invoice No:", service.invoiceNo],
-      ["Invoice Date:", service.invoiceDate],
-      ["Client Name:", service.clientName],
-      ["Client Contact:", service.clientContact],
-      ["Subtotal :", service.subTotal],
-      ["Discount Rate:", service.discountRate],
-      ["Discount Amount:", service.discountAmount],
-      ["Tax Rate:", service.taxRate],
-      ["Tax Amount:", service.taxAmount],
-      ["Total:", service.total],
-      ["Currency:", service.selectedCurrency],
+    // const tableRows = [
+    //   ["Invoice No:", service.invoiceNo],
+    //   ["Invoice Date:", service.invoiceDate],
+    //   ["Client Name:", service.clientName],
+    //   ["Client Contact:", service.clientContact],
+    //   ["Subtotal :", service.subTotal],
+    //   ["Discount Rate:", service.discountRate],
+    //   ["Discount Amount:", service.discountAmount],
+    //   ["Tax Rate:", service.taxRate],
+    //   ["Tax Amount:", service.taxAmount],
+    //   ["Total:", service.total],
+    //   ["Currency:", service.selectedCurrency],
+    // ];
+  
+    const boldLabels = [
+      "Discount Rate",
+      "Discount Amount",
+      "Tax Rate",
+      "Tax Amount",
+      "Subtotal",
+      "Total",
+      "Currency",
+      "Item Type",
+      "Item Quantity",
     ];
-
-    let yPos = 65;
-    const gapBetweenFields = 15;
-    const xPositionLabel = 20;
-    const xPositionValue = 65; // Adjust the value based on your preference
-
-    tableRows.forEach(({ label, value }) => {
-        const sanitizedLabel = label.replace(/[^\x20-\x7E]/g, "");
-
-        console.log("Sanitized Label:", sanitizedLabel);
-        console.log("yPos:", yPos, typeof yPos);
-
-        try {
-            const labelWithColon = sanitizedLabel.endsWith(":") ? sanitizedLabel : `${sanitizedLabel}:`;
-            pdf.text(labelWithColon, xPositionLabel, yPos);
-            pdf.text(`${value}`, xPositionValue, yPos);
-        } catch (error) {
-            console.error("Error adding label:", error);
-        }
-
-        yPos += gapBetweenFields; // Increase yPos by the gap value
+  
+    const tableRows = [
+      { label: "Discount Rate:", value: service.discountRate },
+      { label: "Discount Amount:", value: service.discountAmount },
+      { label: "Tax(SGST 9%):", value: service.taxRate },
+      {label:"Rate per Unit:",value:service.Rate},
+      { label: "Tax Amount:", value: service.taxAmount },
+      { label: "Subtotal:", value: service.subTotal },
+      { label: "Total:", value: service.total },
+      { label: "Currency:", value: service.selectedCurrency },
+      {label:"Payment Mode:",value:service.selectedPaymentMode},
+    ];
+  
+    if (service.items && service.items.length > 0) {
+      service.items.forEach((item, index) => {
+        tableRows.push({
+          label: `Item Type:`,
+          value: item.item,
+        });
+        tableRows.push({
+          label: `Item Quantity:`,
+          value: item.quantity,
+        });
+        tableRows.push({
+          label: 'Item Service Type',
+          value: item.services,
+        });
+      });
+    }
+  
+    const headers = ["Particulars", "Amount"];
+    const data = tableRows.map(({ label, value }) => [
+      boldLabels.includes(label.replace(":", "")) ? label.replace(":", "") : label,
+      value,
+    ]);
+  
+    const tableOptions = {
+      startY: lineY + 15,
+      margin: { top: 10 },
+    };
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(12);
+  
+    pdf.autoTable({
+      head: [headers],
+      body: data,
+      theme: "grid",
+      ...tableOptions,
     });
-
+  
+    pdf.setFont("helvetica", "normal");
+  
+    // Signature and system-generated text
     const signature = "Signature Or Stamp";
     const signatureX = 150;
-    const signatureY = yPos + 20;
+    const signatureY = pdf.lastAutoTable.finalY + 20;
     pdf.text(signature, signatureX, signatureY);
-
+  
+    const systemGeneratedText = "****This is a system-generated bill****";
+    const systemGeneratedTextX = pdf.internal.pageSize.getWidth() / 2;
+    const systemGeneratedTextY = pdf.internal.pageSize.getHeight() - 15;
+  
+    pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, {
+      align: "center",
+    });
+  
     pdf.save(`customer_details_${service._id}.pdf`);
   };
 
+  
+  
+  
   // const generateWhatsappMessage = (service) => {
     
   //   return `
@@ -357,10 +445,16 @@ const PreviousBills = () => {
               <th className="product-ooi">SubTotal</th>
               <th className="product-ooi">TaxRate</th>
               <th className="product-ooi">Tax Amount</th>
+              <th className="product-ooi">Invoice Date</th>
+              <th className="product-ooi">Customer Name</th>
+              <th className="product-ooi">Customer Contact</th>
+             
               <th className="product-ooi">Discount Rate</th>
               <th className="product-ooi">Discount Amount</th>
               <th className="product-ooi">Items</th>
               <th className="product-ooi">Actions</th>
+              <th className="product-ooi">Pay Mode</th>
+              
             </tr>
           </thead>
           <tbody>
@@ -383,6 +477,13 @@ const PreviousBills = () => {
                   <td>{service.taxAmount}</td>
                   <td>{service.discountRate}</td>
                   <td>{service.discountAmount}</td>
+                  <td>{service.selectedCurrency}</td>
+                  
+                 
+                  
+        
+                 
+
                   <td>
                     <button
                       className="edit-button_5"
@@ -403,6 +504,7 @@ const PreviousBills = () => {
                                 <th>Price</th>
                                 <th>Quantity</th>
                                 <th>Description</th>
+                                <th>Services</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -413,6 +515,8 @@ const PreviousBills = () => {
                                   <td>{item.price}</td>
                                   <td>{item.quantity}</td>
                                   <td>{item.description}</td>
+                                  <td>{item.services}</td>
+
                                 </tr>
                               ))}
                             </tbody>
@@ -471,6 +575,7 @@ const PreviousBills = () => {
                       )}
                     </div>
                   </td>
+                  <td>{service.selectedPaymentMode}</td>
                 </tr>
               ))}
           </tbody>
