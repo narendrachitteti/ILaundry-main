@@ -116,7 +116,7 @@ export const reviews = [
     customerName: "Sanvitha",
     rating: 4.5,
     feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+      "This laundry service is a lifesaver! They pick up and deliver my clothes well.",
   },
 
   {
@@ -124,7 +124,7 @@ export const reviews = [
     customerName: "Abhishek",
     rating: 4,
     feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+      "This laundry service is doing a good job. I liked their efforts regarding clothes. ",
   },
 
   {
@@ -132,14 +132,14 @@ export const reviews = [
     customerName: "Shahrukh",
     rating: 4.5,
     feedback:
-      "This laundry service is a huge help during my busy work weeks. They collect my dirty clothes and return everything neatly folded so I can focus on my job.",
+      "This laundry service is a huge help during my busy work weeks.",
   },
   {
     imgURL: customer8,
     customerName: "Suhasini",
     rating: 5,
     feedback:
-      "This laundry service is a huge help during my busy work weeks. They collect my dirty clothes and return everything neatly folded so I can focus on my job.",
+      "This laundry service doing good job. I liked their work sincierity and well-maintained staff.",
   },
 
   {
@@ -147,15 +147,15 @@ export const reviews = [
     customerName: "Tejashvi",
     rating: 4,
     feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+      "This laundry service is good to use for working people but maintain good effort",
   },
 
   {
     imgURL: customer10,
     customerName: "Ayansh",
     rating: 4.2,
-    feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+    feedback: 
+      "Here, Their services are good. They did good washing to my new clothes well.",
   },
 
   {
@@ -163,7 +163,7 @@ export const reviews = [
     customerName: "Harsha",
     rating: 3.5,
     feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+      "Here, They are doing well but they damaged my slik clothes when using dry-cleaning.",
   },
 
   {
@@ -171,7 +171,7 @@ export const reviews = [
     customerName: "Kajol",
     rating: 4,
     feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+      "I liked their eforts in laundry service. but should improve better.",
   },
 
   {
@@ -179,7 +179,7 @@ export const reviews = [
     customerName: "Anushka",
     rating: 4,
     feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+      "Efficient service with prompt delivery, but could enhance customer communication well.",
   },
 
   {
@@ -187,7 +187,7 @@ export const reviews = [
     customerName: "Rajesh",
     rating: 4.1,
     feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+      "Quality cleaning, but occasional delays in pickup and delivery could be improved."
   },
 
   {
@@ -195,15 +195,15 @@ export const reviews = [
     customerName: "Vishnu",
     rating: 5,
     feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+    "Exceeding expectations with attention to detail, efficiency, and customer care."
   },
 
   {
     imgURL: customer16,
     customerName: "Vithika",
-    rating: 4,
+    rating: 5,
     feedback:
-      "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
+      " service offering high-quality results in both normal usage and occassional usage."
   },
 ];
 

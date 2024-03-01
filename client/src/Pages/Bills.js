@@ -6,6 +6,9 @@ import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
 import jsPDF from "jspdf";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 const currencies = currencyCodes.data;
 
@@ -232,7 +235,7 @@ const Bills = () => {
     setSelectedItems([...selectedItems, ""]);
     setQuantities([...quantities, 0]);
     setSubtotals([...subtotals, 0]);
-    setSelectedServices([...selectedServices, ""]); // using `selectedServices`
+    setSelectedServices([...selectedServices, ""]); // using selectedServices
   };
 
   useEffect(() => {
@@ -312,12 +315,17 @@ const Bills = () => {
         return "";
     }
   };
-
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    const formatter = new Intl.DateTimeFormat('en-GB', options);
+    return formatter.format(date);
+  };
 
   const handleReviewInvoice = () => {
     const data = {
       invoiceNo,
-      invoiceDate,
+      invoiceDate: formatDate(invoiceDate),
       clientName,
       clientContact,
       customeraddress,
@@ -356,7 +364,9 @@ const Bills = () => {
         console.error("Error:", error);
       });
   };
-
+  const handleInvoiceDateChange = (selectedDate) => {
+    setInvoiceDate(selectedDate);
+  };
   const handledownloadcopy = () => {
     const doc = new jsPDF();
     doc.text("Invoice No: " + invoiceNo, 10, 10);
@@ -411,7 +421,7 @@ const Bills = () => {
             onChange={(e) => setInvoiceNo(e.target.value)}
           />
         </div>
-        <div className="input-group">
+        {/* <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
           <input
             type="date"
@@ -419,7 +429,16 @@ const Bills = () => {
             value={invoiceDate}
             onChange={(e) => setInvoiceDate(e.target.value)}
           />
-        </div>
+        </div> */}
+        <div className="input-group">
+        <label htmlFor="invoiceDate">Invoice Date:</label>
+        {/* Placeholder for your date picker component */}
+        <DatePicker
+          selected={invoiceDate}
+          onChange={(date) => handleInvoiceDateChange(date)}
+          // Add any other necessary props for your date picker
+        />
+      </div>
         <div className="input-group">
           <label htmlFor="clientName">Customer Name:</label>
           <input
