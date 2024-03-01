@@ -27,7 +27,7 @@ const Bills = () => {
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
   const [customeraddress, setcustomeraddress] = useState('');
-  const [selectedService, setSelectedService] = useState("");
+  const [selectedServices, setSelectedServices] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
@@ -51,16 +51,6 @@ const Bills = () => {
       console.error("Error fetching last invoice number:", error);
     }
   };
-
-  const services = [
-    "Select a service",
-    "Wash & Fold",
-    "Wash & Iron",
-    "Dry Cleaning",
-    "Express Laundry Services",
-    "Premium Laundry",
-    "Steam Ironing",
-  ];
 
   const itemsList = [
     "Select a Item",
@@ -236,14 +226,13 @@ const Bills = () => {
     "Curtain door single panel": 200.0,
     "Bed protector": 250.0,
   };
-
   const handleAddRow = () => {
     const newRow = { id: rows.length + 1 };
     setRows([...rows, newRow]);
     setSelectedItems([...selectedItems, ""]);
     setQuantities([...quantities, 0]);
     setSubtotals([...subtotals, 0]);
-    setSelectedService([...selectedService, ""]);
+    setSelectedServices([...selectedServices, ""]); // using `selectedServices`
   };
 
   useEffect(() => {
@@ -308,7 +297,6 @@ const Bills = () => {
       discount += (price * quantity * discountRate) / 100;
       tax += (price * quantity * taxRate) / 100;
     });
-    // Calculate total
     const totalAmount = subtotal - discount + tax;
     setSubTotal(subtotal);
     setDiscountAmount(discount);
@@ -326,47 +314,6 @@ const Bills = () => {
   };
 
 
-  // const handleReviewInvoice = () => {
-  //   const data = {
-  //     invoiceNo,
-  //     invoiceDate,
-  //     clientName,
-  //     clientContact,
-  //     items: rows.map((row, index) => ({
-  //       item: selectedItems[index],
-  //       quantity: quantities[index],
-  //       price: price[index],
-  //       subtotal: subtotals[index],
-  //     })),
-  //     subTotal,
-  //     discountRate,
-  //     discountAmount,
-  //     taxRate,
-  //     taxAmount,
-  //     total,
-  //     selectedCurrency,
-  //     selectedPaymentMode,
-  //     selectedPopupItem,
-  //   };
-  //   // setSelectedInvoice(data); // Set the selected invoice data
-  //   setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
-  //   togglePopup(true);
-  //   fetch("http://localhost:5000/api/billing", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("Success:", data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle error
-  //     });
-  // };
   const handleReviewInvoice = () => {
     const data = {
       invoiceNo,
@@ -378,8 +325,8 @@ const Bills = () => {
         item: selectedItems[index],
         quantity: quantities[index],
         price: price[index],
+        services: selectedServices,
         subtotal: subtotals[index],
-        services:services[index],
       })),
       subTotal,
       discountRate,
@@ -439,7 +386,7 @@ const Bills = () => {
     setTaxAmount(0);
     setTotal(0);
     setSelectedPaymentMode("");
-    setSelectedService("");
+    setSelectedServices("");
   };
 
   const togglePopup = (isCancel) => {
@@ -531,12 +478,20 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-                  <select value={selectedService[index]} onChange={(e) => setSelectedService(index, e.target.value)}>
-                    {services.map((service, index) => (
-                      <option key={index} value={service}>
-                        {service}
-                      </option>
-                    ))}
+                  <select
+                    className="selectedServices"
+                    value={selectedServices[index]}
+                    onChange={(e) => {
+                      const newSelectedServices = [...selectedServices];
+                      newSelectedServices[index] = e.target.value;
+                      setSelectedServices(newSelectedServices);
+                    }}
+                    
+                  >
+                    <option value="">Select service</option>
+                    <option value="wash & fold">Wash & fold</option>
+                    <option value="wash & iron">Wash & Iron</option>
+                    <option value="premium laundry">Premium Laundry</option>
                   </select>
                 </td>
                 <td>
@@ -552,7 +507,7 @@ const Bills = () => {
 
                 <td>
                   <div className="iconflex">
-                    {index === rows.length - 1 ? ( 
+                    {index === rows.length - 1 ? (
                       <button className="itembtn" onClick={handleAddRow}>
                         <span>
                           <FaPlus />
@@ -616,7 +571,7 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-            
+
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
@@ -624,7 +579,7 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-            
+
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
@@ -745,7 +700,7 @@ const Bills = () => {
                     placeholder="Added Date"
                     value={total}
                   /> */}
-                    {/* <label htmlFor="clientContact">Customer Address:</label>
+                  {/* <label htmlFor="clientContact">Customer Address:</label>
                     <input
                       type="text"
                       id="clientName"
@@ -756,7 +711,7 @@ const Bills = () => {
                   <input
                     type="text"
                     value={customeraddress}
-                    
+
                   />
                   <label className='nameclass-label'>item:</label>
                   <input
@@ -767,49 +722,49 @@ const Bills = () => {
                   <label className='nameclass-label'>Services:</label>
                   <input
                     type="text"
-                    
-                    value={services}
+
+                    value={selectedServices}
                   />
                   <label className='nameclass-label'>quantity:</label>
                   <input
                     type="text"
-                    
+
                     value={quantities}
                   />
                   <label className='nameclass-label'>TaxRate:</label>
                   <input
                     type="text"
-                    
+
                     value={taxRate}
                   />
                   <label className='nameclass-label'>discountRate:</label>
                   <input
                     type="text"
-                    
+
                     value={discountRate}
                   />
                   <label className='nameclass-label'>subTotal:</label>
                   <input
                     type="text"
-                    
+
                     value={subTotal}
                   />
                   <label className='nameclass-label'>taxAmount:</label>
                   <input
                     type="text"
-                    
+
                     value={taxAmount}
                   />
                   <label className='nameclass-label'>discountAmount:</label>
                   <input
                     type="text"
-                    
+
                     value={discountAmount}
                   />
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-                    
+
                     value={total}
                   />
                   <div className="merge-karthik-bill">
