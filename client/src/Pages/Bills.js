@@ -325,7 +325,7 @@ const Bills = () => {
         item: selectedItems[index],
         quantity: quantities[index],
         price: itemPrices[selectedItems[index]] || 0,
-        services: selectedServices,
+        services: selectedServices[index],
         subtotal: subtotals[index],
       })),
       subTotal,
