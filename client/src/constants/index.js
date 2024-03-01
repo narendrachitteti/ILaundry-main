@@ -144,7 +144,7 @@ export const reviews = [
 
   {
     imgURL: customer9,
-    customerName: "Deepa",
+    customerName: "Tejashvi",
     rating: 4,
     feedback:
       "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
@@ -152,7 +152,7 @@ export const reviews = [
 
   {
     imgURL: customer10,
-    customerName: "Dilip",
+    customerName: "Ayansh",
     rating: 4.2,
     feedback:
       "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
@@ -168,7 +168,7 @@ export const reviews = [
 
   {
     imgURL: customer12,
-    customerName: "Karishma",
+    customerName: "Kajol",
     rating: 4,
     feedback:
       "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
@@ -176,7 +176,7 @@ export const reviews = [
 
   {
     imgURL: customer13,
-    customerName: "Kanishka",
+    customerName: "Anushka",
     rating: 4,
     feedback:
       "This laundry service is a lifesaver! They pick up and deliver my clothes washed, pressed and folded - far superior to the awful hostel laundry room.",
