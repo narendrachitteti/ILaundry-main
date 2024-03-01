@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import ReviewCard from "../components/ReviewCard";
 import { reviews } from "../constants";
 import Slider from 'react-slick';
@@ -6,6 +7,12 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const CustomerReviews = () => {
+    const [expandedIndex, setExpandedIndex] = useState(null);
+
+    const handleCardClick = (index) => {
+        setExpandedIndex(index === expandedIndex ? null : index);
+    };
+
     const settings = {
         dots: true,
         infinite: true,
@@ -41,14 +48,22 @@ const CustomerReviews = () => {
             </p>
             <div className="mt-24 mx-auto">
                 <Slider {...settings}>
-                    {reviews.map((review) => (
-                        <div key={review.customerName} className="review-slide">
-                            <ReviewCard
-                                imgURL={review.imgURL}
-                                customerName={review.customerName}
-                                rating={review.rating}
-                                feedback={review.feedback}
-                            />
+                    {reviews.map((review, index) => (
+                        <div key={index} className="review-slide">
+                            <motion.div
+                                className="review-card-container"
+                                style={{ filter: expandedIndex !== null && index !== expandedIndex ? 'blur(4px)' : 'none' }}
+                                whileHover={{ scale: 1.1 }}
+                                animate={{ scale: 1 }}
+                                onClick={() => handleCardClick(index)}
+                            >
+                                <ReviewCard
+                                    imgURL={review.imgURL}
+                                    customerName={review.customerName}
+                                    rating={review.rating}
+                                    feedback={review.feedback}
+                                />
+                            </motion.div>
                         </div>
                     ))}
                 </Slider>
