@@ -308,7 +308,6 @@ const Bills = () => {
       discount += (price * quantity * discountRate) / 100;
       tax += (price * quantity * taxRate) / 100;
     });
-    // Calculate total
     const totalAmount = subtotal - discount + tax;
     setSubTotal(subtotal);
     setDiscountAmount(discount);

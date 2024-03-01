@@ -35,7 +35,7 @@ import customer9 from "../constants/customer9.jpeg";
 import customer10 from "../constants/customer10.jpeg";
 import customer11 from "../constants/customer11.jpeg";
 import customer12 from "../constants/customer12.jpeg";
-import fold from "../constants/fold.jpeg"
+import fold from "../constants/fold.jpeg";
 
 export const navLinks = [
   { href: "#home", label: "Home" },
@@ -187,8 +187,6 @@ export const footerLinks = [
     title: "Help",
     links: [
       { name: "About us", link: "/" },
-      { name: "FAQs", link: "/" },
-      { name: "How it works", link: "/" },
       { name: "Privacy policy", link: "/" },
       { name: "Payment policy", link: "/" },
     ],
