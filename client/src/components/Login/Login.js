@@ -180,7 +180,7 @@ function Login() {
             <Components.LeftOverlayPanel signingIn={signIn}>
               <Components.Title>Master Login</Components.Title>
               <Components.Paragraph>
-                To keep connected with us please login with your personal info
+                To keep connected with us please login with your personal info.slide left to Master Login
               </Components.Paragraph>
               <Components.GhostButton onClick={() => setSignIn(true)}>
                 slide right

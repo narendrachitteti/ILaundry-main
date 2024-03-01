@@ -166,15 +166,15 @@ const PreviousBills = () => {
     const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
     const imgY = 15;
     pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
-
+  
     const billingDateTime = new Date().toLocaleString();
     pdf.text(`Customer Details          Date : ${billingDateTime}`, 20, 45);
     pdf.rect(
-        10,
-        10,
-        pdf.internal.pageSize.getWidth() - 20,
-        pdf.internal.pageSize.getHeight() - 20,
-        "S"
+      10,
+      10,
+      pdf.internal.pageSize.getWidth() - 20,
+      pdf.internal.pageSize.getHeight() - 20,
+      "S"
     );
     // pdf.line(20, 55, 190, 55);
     const pageWidth = pdf.internal.pageSize.getWidth();
@@ -359,8 +359,8 @@ const PreviousBills = () => {
             <tr className="product-ooi">
               <th className="product-ooi">Invoice No</th>
               <th className="product-ooi">Invoice Date</th>
-              <th className="product-ooi">Client Name</th>
-              <th className="product-ooi">Client Contact </th>
+              <th className="product-ooi">Customer Name</th>
+              <th className="product-ooi">Customer Contact</th>
              
               <th className="product-ooi">Discount Rate</th>
               <th className="product-ooi">Discount Amount</th>
@@ -371,7 +371,7 @@ const PreviousBills = () => {
               <th className="product-ooi">Currency</th>
               <th className="product-ooi">Items</th>
               <th className="product-ooi">Actions</th>
-              {/* <th className="product-ooi">Whatsapp</th> */}
+              <th className="product-ooi">Pay Mode</th>
               
             </tr>
           </thead>
@@ -485,6 +485,7 @@ const PreviousBills = () => {
                       )}
                     </div>
                   </td>
+                  <td>{service.selectedPaymentMode}</td>
                 </tr>
               ))}
           </tbody>

@@ -56,6 +56,14 @@ const Navbar = () => {
             <p>Previous Bills</p>
           </div>
         </Link>
+
+        <Link to="/Register">
+          <div className="bills">
+            <img src={register} alt="" style={{ height: "2.5rem" }} />
+            <p>Register</p>
+          </div>
+        </Link>
+        
         <div className="bills">
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
           <p>Profile</p>
@@ -71,12 +79,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        <Link to="/Register">
-          <div className="bills">
-            <img src={register} alt="" style={{ height: "2.5rem" }} />
-            <p>Register</p>
-          </div>
-        </Link>
+        
       </div>
     </div>
   );

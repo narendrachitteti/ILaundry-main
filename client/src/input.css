@@ -30,15 +30,17 @@
   padding-top: 1rem;
   padding-bottom: 1rem;
   padding-left: 2rem;
-    padding-right: 2rem;
+  padding-right: 2rem;
 }
 #products {
-  padding-top: 100px; 
+  padding-top: 100px;
 }
 #about-us {
-  padding-top: 100px; 
+  padding-top: 100px;
 }
-
+.mt-24 {
+  margin-top: 2em;
+}
 
 @layer components {
   .max-container {
@@ -87,5 +89,5 @@
   .text-8xl {
     font-size: 87px;
     line-height: 106px;
-}
+  }
 }

@@ -39,8 +39,10 @@ const SuperQuality = () => {
         </div>
       </section>
 
-      <section className="section-down">
+      <div className="section-down">
+        {/* <div className="section-down-img"> */}
         <img src={aboutsimg1} alt="" />
+        {/* </div> */}
         <div className="right-textone">
           <h1 className="font-palanquin text-4xl capitalize font-bold lg:max-w-lg">
             Clean And Hygiene
@@ -51,13 +53,50 @@ const SuperQuality = () => {
           >
             Our team
           </h2>
-          <p className="mt-6 lg:max-w-lg info-text">
+          <p className="mt-6  info-text">
             Purely Pristine Laundry is a modern laundromat,Our company is here
             to help our customers get their laundry done efficiently in a safe
             and clean environment.
-            <br /> <br />
+            <br />
+            <br />
             Our superior levels of customer satisfaction is made possible by our
             laundry professionals.
+          </p>
+        </div>
+      </div>
+
+      <section>
+        <div class="about-us left">
+          {/* <h1>About Us</h1> */}
+          <h2 className="font-palanquin text-4xl mt-6 capitalize font-bold ">
+            Our Story
+          </h2>
+          <p className="mt-7  info-text">
+            At Purely Pristine Laundry, our journey began with a simple idea: to
+            revolutionize the way people experience laundry services. Founded in
+            [2016], we started as a small family-owned business with a passion
+            for providing exceptional care for clothes.
+          </p>
+          <p className="mt-6  info-text">
+            Driven by our commitment to quality and customer satisfaction, we
+            expanded our services, embracing innovation and technology while
+            preserving the values of reliability and trust.
+          </p>
+
+          <h2 className="font-palanquin text-4xl capitalize font-bold ">
+            Our Mission
+          </h2>
+          <p className="mt-8  info-text">
+            Our mission is to simplify and elevate the laundry experience for
+            individuals and businesses alike. We strive to deliver unmatched
+            convenience, reliability, and efficiency through our
+            state-of-the-art facilities, eco-friendly practices, and
+            personalized customer service.
+          </p>
+          <p className="mt-6  info-text">
+            With every load of laundry, we aim to exceed expectations, leaving
+            our customers with more than just clean clothes – we leave them with
+            peace of mind and the freedom to focus on what matters most.
           </p>
         </div>
       </section>
