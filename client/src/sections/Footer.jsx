@@ -45,9 +45,9 @@ const Footer = () => {
             <div className="flex justify-between text-white-400 mt-24 max-sm:flex-col max-sm:items-center">
                 <div className="flex flex-1 justify-start gap-2 flex items-start font-montserrat cursor-pointer" style={{background:'none'}}> 
                     <img src={copyrightSign} alt="copy right sign" width={20} height={20} className="rounded-full m-0 " />
-                    <p>Copyright. All rights reserved <a className="text-white-400 no-underline" href="https://www.matrical.in/" target="_blank" > @Matrical Technologies</a></p>
+                    <p>Copyright 2024 All rights reserved <a className="text-white-400 no-underline" href="https://www.matrical.in/" target="_blank" >| Developed by Matrical Technologies Pvt Ltd.</a></p>
                 </div>
-                <p className="font-montserrat cursor-pointer"style={{background:'none'}}>Terms & Conditions</p>
+                <p className="font-montserrat cursor-pointer"style={{background:'none'}}>Terms & Conditions*</p>
             </div>
         </footer>
     )
