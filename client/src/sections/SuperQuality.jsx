@@ -68,7 +68,7 @@ const SuperQuality = () => {
       <section>
         <div class="about-us left">
           {/* <h1>About Us</h1> */}
-          <h2 className="font-palanquin text-4xl capitalize font-bold ">
+          <h2 className="font-palanquin text-4xl mt-6 capitalize font-bold ">
             Our Story
           </h2>
           <p className="mt-7  info-text">
@@ -82,12 +82,7 @@ const SuperQuality = () => {
             expanded our services, embracing innovation and technology while
             preserving the values of reliability and trust.
           </p>
-          {/* <p className="mt-6  info-text">
-            Over the years, we've grown into a trusted name in the industry,
-            serving individuals, families, and businesses of all sizes. Our
-            dedication to excellence has earned us recognition for our superior
-            service and environmental stewardship.
-          </p> */}
+
           <h2 className="font-palanquin text-4xl capitalize font-bold ">
             Our Mission
           </h2>
@@ -103,24 +98,6 @@ const SuperQuality = () => {
             our customers with more than just clean clothes – we leave them with
             peace of mind and the freedom to focus on what matters most.
           </p>
-          {/* <h3>Why Choose Purely Pristine Laundry?</h3>
-          <ul>
-            <li className="mt-6  info-text">
-              State-of-the-art facilities equipped with the latest technology
-            </li>
-            <li className="mt-6  info-text">
-              Eco-friendly practices to reduce our environmental footprint
-            </li>
-            <li className="mt-6  info-text">
-              Convenient pickup and delivery options for added convenience
-            </li>
-            <li className="mt-6  info-text">
-              Competitive pricing and transparent pricing policies
-            </li>
-            <li className="mt-6  info-text">
-              Commitment to community involvement and giving back
-            </li>
-          </ul> */}
         </div>
       </section>
     </>
