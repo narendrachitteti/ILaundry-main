@@ -222,8 +222,7 @@ const PreviousBills = () => {
       { label: "Discount Rate:", value: service.discountRate },
       { label: "Discount Amount:", value: service.discountAmount },
       { label: "Tax(SGST 9%):", value: service.taxRate },
-      {label:"Rate per Unit:",value:service.Rate},
-      { label: "Tax Amount:", value: service.taxAmount },
+      { label: "Tax Deduction:", value: service.taxAmount },
       { label: "Subtotal:", value: service.subTotal },
       { label: "Total:", value: service.total },
       { label: "Currency:", value: service.selectedCurrency },
@@ -237,12 +236,16 @@ const PreviousBills = () => {
           value: item.item,
         });
         tableRows.push({
-          label: `Item Quantity:`,
+          label: `Quantity:`,
           value: item.quantity,
         });
         tableRows.push({
-          label: 'Item Service Type',
+          label: ' Service Type',
           value: item.services,
+        });
+        tableRows.push({
+          label: 'Rate per piece',
+          value: item.price,
         });
       });
     }
@@ -288,75 +291,23 @@ const PreviousBills = () => {
   
   
   
-  // const generateWhatsappMessage = (service) => {
-    
-  //   return `
-  //   Invoice No: ${service.prefix}${service.invoiceNo}
-  //   Invoice Date: ${service.invoiceDate}
-  //   Client Name: ${service.clientName}
-  //   Client Contact: ${service.clientContact}
-  //   Subtotal: ${service.subTotal}
-  //   Discount Rate: ${service.discountRate}
-  //   Discount Amount: ${service.discountAmount}
-  //   Tax Rate: ${service.taxRate}
-  //   Tax Amount: ${service.taxAmount}
-  //   Total: ${service.total}
-  //   Currency: ${service.selectedCurrency}
-  //   `
-  // };
   const generateWhatsappMessage = (service) => {
-    const {
-      prefix,
-      invoiceNo,
-      invoiceDate,
-      clientName,
-      clientContact,
-      subTotal,
-      discountRate,
-      discountAmount,
-      taxRate,
-      taxAmount,
-      total,
-      selectedCurrency,
-      phoneNumber,
-    } = service;
-  
-    // Check if all required properties are defined
-    if (
-      prefix &&
-      invoiceNo &&
-      invoiceDate &&
-      clientName &&
-      clientContact &&
-      subTotal &&
-      discountRate &&
-      discountAmount &&
-      taxRate &&
-      taxAmount &&
-      total &&
-      selectedCurrency &&
-      phoneNumber
-    ) {
-      return `
-        Invoice No: ${prefix}${invoiceNo}
-        Invoice Date: ${invoiceDate}
-        Client Name: ${clientName}
-        Client Contact: ${clientContact}
-        Subtotal: ${subTotal}
-        Discount Rate: ${discountRate}
-        Discount Amount: ${discountAmount}
-        Tax Rate: ${taxRate}
-        Tax Amount: ${taxAmount}
-        Total: ${total}
-        Currency: ${selectedCurrency}
-      `;
-    } else {
-      // Handle the case where some properties are undefined
-      console.error("Some properties are undefined in generateWhatsappMessage");
-      return "";
-    }
+    
+    return `
+    Invoice No: ${service.invoiceNo}
+    Invoice Date: ${service.invoiceDate}
+    Customer Name: ${service.clientName}
+    Contact Number: ${service.clientContact}
+    Subtotal: ${service.subTotal}
+    Discount Rate: ${service.discountRate}
+    Discount Amount: ${service.discountAmount}
+    Tax(SGST 9%): ${service.taxRate}
+    Tax Deduction: ${service.taxAmount}
+    Total: ${service.total}
+    Currency: ${service.selectedCurrency}
+    `
   };
-  
+
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
   };
