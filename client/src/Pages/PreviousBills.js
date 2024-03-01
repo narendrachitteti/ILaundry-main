@@ -23,6 +23,8 @@ import KeyboardDoubleArrowRight from "@mui/icons-material/KeyboardDoubleArrowRig
 import image13 from "../components/images/background.jpg";
 import Navbar from "../components/Navbar.js";
 import Backbutton from "./Backbutton.js";
+import InvoiceDetailsPopup from './InvoiceDetailsPopup.js'
+import { autoTable } from 'pdfmake/build/pdfmake';
 import "jspdf-autotable";
 
 const PreviousBills = () => {
@@ -42,18 +44,27 @@ const PreviousBills = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [allData, setAllData] = useState([]);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
 
+
+  
   const fetchcustomerServicesCus = async () => {
     try {
       console.log("Fetching Customer Details");
       const response = await axios.get(`${BASE_URL}/api/get-bills`);
       setcustomerServicesCus(response.data);
-      setAllData(response.data); 
-      console.log(customerServicesCus);
+      setAllData(response.data);
     } catch (error) {
       console.error("Error fetching Customer Details:", error);
     }
   };
+
+  useEffect(() => {
+    console.log("Before API call");
+    fetchcustomerServicesCus();
+  }, []);
+
+  
   const handleFromDateChange = (e) => {
     setFromDate(e.target.value);
   };
@@ -61,7 +72,9 @@ const PreviousBills = () => {
   const handleToDateChange = (e) => {
     setToDate(e.target.value);
   };
-
+   const handleFieldClick = (invoice) => {
+    setSelectedInvoice(invoice);
+  };
 
   const handleCancelCus = () => {
     setselectedServiceCus(null);
@@ -71,6 +84,10 @@ const PreviousBills = () => {
   const handleEditCus = (service) => {
     setselectedServiceCus(service);
     setAddPopupOpenCus(true);
+  };
+
+  const openDetailsPopup = (invoice) => {
+    setSelectedInvoice(invoice);
   };
 
   useEffect(() => {
@@ -91,7 +108,7 @@ const PreviousBills = () => {
           formData
         );
       } else {
-        await axios.post(`${BASE_URL}/invoice/, formData`);
+        await axios.post(`${BASE_URL}/invoice/`, formData);
       }
       fetchcustomerServicesCus();
       setselectedServiceCus(null);
@@ -101,8 +118,6 @@ const PreviousBills = () => {
     }
   };
   
-  
-
   const handlesearchTextCusChange = (newValue) => {
     setsearchTextCus(newValue);
   };
@@ -128,184 +143,218 @@ const PreviousBills = () => {
 
   const filteredData = customerServicesCus.filter((item) => {
     return (
-      filterByField(item, "invoiceNo", searchTextCus) ||
-      filterByField(item, "invoiceDate", searchTextCus) ||
-      filterByField(item, "clientName", searchTextCus) ||
-      filterByField(item, "clientContact", searchTextCus) ||
-      filterByField(item, "subTotal", searchTextCus) ||
-      filterByField(item, "discountRate", searchTextCus) ||
-      filterByField(item, "discountAmount", searchTextCus) ||
-      filterByField(item, "taxRate", searchTextCus) ||
-      filterByField(item, "taxAmount", searchTextCus) ||
-      filterByField(item, "total", searchTextCus) ||
-      filterByField(item, "selectedCurrency", searchTextCus)
+      item.invoiceNo.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+      moment(item.invoiceDate).format("YYYY-MM-DD").includes(searchTextCus) ||
+      item.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+      item.clientContact.includes(searchTextCus) ||
+      item.subTotal.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert subTotal to string
+      item.discountRate.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert discountRate to string
+      item.discountAmount.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert discountAmount to string
+      item.taxRate.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert taxRate to string
+      item.taxAmount.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert taxAmount to string
+      item.total.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert total to string
+      item.selectedCurrency.toLowerCase().includes(searchTextCus.toLowerCase())
     );
   });
   
-  const handleDownloadPDF = (service) => {
-    const pdf = new jsPDF();
-    pdf.setDrawColor(7, 126, 96); // RGB values for a shade of green
-    let lineY = 48;
-  
-    const imgWidth = 40;
-    const imgHeight = 15;
-    const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
-    const imgY = 15;
-    pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
-  
-    const billingDateTime = new Date().toLocaleString();
-    const invoiceName = "Payment Invoice";
-    const invoiceNameX = pdf.internal.pageSize.getWidth() / 2;
-    const dateX =
-      pdf.internal.pageSize.getWidth() - pdf.getTextWidth(billingDateTime) - 1;
-  
-    pdf.text(invoiceName, invoiceNameX, 45, { align: "center" });
-    pdf.setFontSize(10);
-    pdf.text(`Date : ${billingDateTime}`, dateX, 45);
-  
-    pdf.rect(
-      10,
-      10,
-      pdf.internal.pageSize.getWidth() - 20,
-      pdf.internal.pageSize.getHeight() - 20,
-      "S"
-    );
-  
-    const pageWidth = pdf.internal.pageSize.getWidth();
-  
-    const borderWidth = 10;
-    const lineWidth = 2;
-    pdf.line(10, lineY - lineWidth, pageWidth - borderWidth, lineY - lineWidth);
-  
-    // Section for basic details
-    const basicDetailsRows = [
-      { label: "Invoice No:", value: service.invoiceNo },
-      { label: "Customer Name:", value: service.clientName },
-      { label: "Contact Number:", value: service.clientContact },
-      { label: "Invoice Date:", value: service.invoiceDate },
-    ];
-  
-    basicDetailsRows.forEach(({ label, value }) => {
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(12);
-      pdf.text(`${label}`, 20, (lineY += 8));
-  
-      pdf.setFont("helvetica", "normal");
-      pdf.text(`${value}`, 60, lineY);
+
+const handleDownloadPDF = (service) => {
+  const pdf = new jsPDF();
+  pdf.setDrawColor(7, 126, 96); // RGB values for a shade of green
+  let lineY = 48;
+
+  const imgWidth = 40;
+  const imgHeight = 15;
+  const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
+  const imgY = 15;
+  pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
+
+  const billingDateTime = new Date().toLocaleString();
+  const invoiceName = "Payment Invoice";
+  const invoiceNameX = pdf.internal.pageSize.getWidth() / 2;
+  // const dateX =
+  //   pdf.internal.pageSize.getWidth() - pdf.getTextWidth(billingDateTime) - 1;
+
+  pdf.text(invoiceName, invoiceNameX, 45, { align: "center" });
+  pdf.setFontSize(10);
+  // pdf.text(`Date : ${billingDateTime}`, dateX, 45);
+
+  pdf.rect(
+    10,
+    10,
+    pdf.internal.pageSize.getWidth() - 20,
+    pdf.internal.pageSize.getHeight() - 20,
+    "S"
+  );
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+
+  const borderWidth = 10;
+  const lineWidth = 2;
+  pdf.line(10, lineY - lineWidth, pageWidth - borderWidth, lineY - lineWidth);
+
+  // Section for basic details
+  const basicDetailsRows = [
+    { label: "Invoice No:", value: service.invoiceNo },
+    { label: "Client Name:", value: service.clientName },
+    { label: "Client Contact:", value: service.clientContact },
+    { label: "Invoice Date:", value: service.invoiceDate },
+  ];
+
+  basicDetailsRows.forEach(({ label, value }) => {
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(12);
+    pdf.text(`${label}`, 20, (lineY += 8));
+
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${value}`, 60, lineY);
+  });
+
+  // GSTIN Number
+  const gstin = "29ABCDE1234F1ZW"; // Replace with your actual GSTIN number
+  const gstinX = pdf.internal.pageSize.getWidth() - 58;
+  const gstinY = 15;
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(10);
+  pdf.text(`GSTIN: ${gstin}`, gstinX, gstinY);
+
+  // Section for the rest of the details
+  pdf.setFontSize(12);
+  pdf.setFont("helvetica", "normal");
+
+  const boldLabels = [
+    "Discount Rate",
+    "Discount Amount",
+    "Tax Rate",
+    "Tax Amount",
+    "Subtotal",
+    "Total",
+    "Currency",
+    "Item Type",
+    "Item Quantity",
+  ];
+
+  const tableRows = [
+    { label: "Discount Rate:", value: service.discountRate },
+    { label: "Discount Amount:", value: service.discountAmount },
+    { label: "Tax(SGST 9%):", value: service.taxRate },
+    { label: "Tax Amount:", value: service.taxAmount },
+    { label: "Subtotal:", value: service.subTotal },
+    { label: "Total:", value: service.total },
+    { label: "Currency:", value: service.selectedCurrency },
+    {label:"Payment Mode:",value:service.selectedPaymentMode},
+  ];
+
+  if (service.items && service.items.length > 0) {
+    tableRows.push({
+      label: 'Item Service Type',
+      value: service.items[0].services,
     });
   
-    // GSTIN Number
-    const gstin = "29ABCDE1234F1ZW"; // Replace with your actual GSTIN number
-    const gstinX = pdf.internal.pageSize.getWidth() - 58;
-    const gstinY = 15;
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(10);
-    pdf.text(`GSTIN: ${gstin}`, gstinX, gstinY);
-  
-    // Section for the rest of the details
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "normal");
-  
-    const boldLabels = [
-      "Discount Rate",
-      "Discount Amount",
-      "Tax Rate",
-      "Tax Amount",
-      "Subtotal",
-      "Total",
-      "Currency",
-      "Item Type",
-      "Item Quantity",
-    ];
-  
-    const tableRows = [
-      { label: "Discount Rate:", value: service.discountRate },
-      { label: "Discount Amount:", value: service.discountAmount },
-      { label: "Tax(SGST 9%):", value: service.taxRate },
-      { label: "Tax Deduction:", value: service.taxAmount },
-      { label: "Subtotal:", value: service.subTotal },
-      { label: "Total:", value: service.total },
-      { label: "Currency:", value: service.selectedCurrency },
-      {label:"Payment Mode:",value:service.selectedPaymentMode},
-    ];
-  
-    if (service.items && service.items.length > 0) {
-      service.items.forEach((item, index) => {
-        tableRows.push({
-          label: `Item Type:`,
-          value: item.item,
-        });
-        tableRows.push({
-          label: `Quantity:`,
-          value: item.quantity,
-        });
-        tableRows.push({
-          label: ' Service Type',
-          value: item.services,
-        });
-        tableRows.push({
-          label: 'Rate per piece',
-          value: item.price,
-        });
+    service.items.forEach((item, index) => {
+      tableRows.push({
+        label: `Item Type:`,
+        value: item.item,
       });
-    }
-  
-    const headers = ["Particulars", "Amount"];
-    const data = tableRows.map(({ label, value }) => [
-      boldLabels.includes(label.replace(":", "")) ? label.replace(":", "") : label,
-      value,
-    ]);
-  
-    const tableOptions = {
-      startY: lineY + 15,
-      margin: { top: 10 },
-    };
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(12);
-  
-    pdf.autoTable({
-      head: [headers],
-      body: data,
-      theme: "grid",
-      ...tableOptions,
+      tableRows.push({
+        label: `Item Quantity:`,
+        value: item.quantity,
+      });
+      
     });
+  }
   
-    pdf.setFont("helvetica", "normal");
-  
-    // Signature and system-generated text
-    const signature = "Signature Or Stamp";
-    const signatureX = 150;
-    const signatureY = pdf.lastAutoTable.finalY + 20;
-    pdf.text(signature, signatureX, signatureY);
-  
-    const systemGeneratedText = "****This is a system-generated bill****";
-    const systemGeneratedTextX = pdf.internal.pageSize.getWidth() / 2;
-    const systemGeneratedTextY = pdf.internal.pageSize.getHeight() - 15;
-  
-    pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, {
-      align: "center",
-    });
-  
-    pdf.save(`customer_details_${service._id}.pdf`);
+
+  const headers = ["Particulars", "Amount"];
+  const data = tableRows.map(({ label, value }) => [
+    boldLabels.includes(label.replace(":", "")) ? label.replace(":", "") : label,
+    value,
+  ]);
+
+  const tableOptions = {
+    startY: lineY + 15,
+    margin: { top: 10 },
   };
-  
-  
-  
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(12);
+
+  pdf.autoTable({
+    head: [headers],
+    body: data,
+    theme: "grid",
+    ...tableOptions,
+  });
+
+  pdf.setFont("helvetica", "normal");
+
+  // Signature and system-generated text
+  const signature = "Signature Or Stamp";
+  const signatureX = 150;
+  const signatureY = pdf.lastAutoTable.finalY + 20;
+  pdf.text(signature, signatureX, signatureY);
+
+  const systemGeneratedText = "****This is a system-generated bill****";
+  const systemGeneratedTextX = pdf.internal.pageSize.getWidth() / 2;
+  const systemGeneratedTextY = pdf.internal.pageSize.getHeight() - 15;
+
+  pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, {
+    align: "center",
+  });
+
+  pdf.save(`customer_details_${service._id}.pdf`);
+};
+
+
   const generateWhatsappMessage = (service) => {
-    
-    return `
-    Invoice No: ${service.invoiceNo}
-    Invoice Date: ${service.invoiceDate}
-    Customer Name: ${service.clientName}
-    Contact Number: ${service.clientContact}
-    Subtotal: ${service.subTotal}
-    Discount Rate: ${service.discountRate}
-    Discount Amount: ${service.discountAmount}
-    Tax(SGST 9%): ${service.taxRate}
-    Tax Deduction: ${service.taxAmount}
-    Total: ${service.total}
-    Currency: ${service.selectedCurrency}
-    `
+    const {
+      prefix,
+      invoiceNo,
+      invoiceDate,
+      clientName,
+      clientContact,
+      subTotal,
+      discountRate,
+      discountAmount,
+      taxRate,
+      taxAmount,
+      total,
+      selectedCurrency,
+      phoneNumber,
+    } = service;
+  
+    // Check if all required properties are defined
+    if (
+      prefix &&
+      invoiceNo &&
+      invoiceDate &&
+      clientName &&
+      clientContact &&
+      subTotal &&
+      discountRate &&
+      discountAmount &&
+      taxRate &&
+      taxAmount &&
+      total &&
+      selectedCurrency &&
+      phoneNumber
+    ) {
+      return `
+        Invoice No: ${prefix}${invoiceNo}
+        Invoice Date: ${invoiceDate}
+        Client Name: ${clientName}
+        Client Contact: ${clientContact}
+        Subtotal: ${subTotal}
+        Discount Rate: ${discountRate}
+        Discount Amount: ${discountAmount}
+        Tax Rate: ${taxRate}
+        Tax Amount: ${taxAmount}
+        Total: ${total}
+        Currency: ${selectedCurrency}
+      `;
+    } else {
+      console.error("Some properties are undefined in generateWhatsappMessage");
+      return "";
+    }
   };
 
   const handlePageChange = (pageNumber) => {
@@ -329,17 +378,17 @@ const PreviousBills = () => {
     console.log("Filtering by date...");
     console.log("fromDate:", fromDate);
     console.log("toDate:", toDate);
-  
+
     const filteredData = allData.filter((item) => {
       const currentDate = new Date(item.invoiceDate).getTime();
       const fromTimestamp = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : 0;
       const toTimestamp = toDate ? new Date(toDate).setHours(23, 59, 59, 999) : Infinity;
-  
+
       return currentDate >= fromTimestamp && currentDate <= toTimestamp;
     });
-  
+
     console.log("Filtered Data:", filteredData);
-  
+
     setcustomerServicesCus(filteredData);
   };
   
@@ -403,32 +452,25 @@ const PreviousBills = () => {
           </thead>
           <tbody>
             {filteredData
-              .slice(indexOfFirstItem, indexOfLastItem)
+              .slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage)
               .map((service) => (
                 <tr key={service._id}>
-                  <td>
-                    {service.invoiceNo}
-                  </td>
-                  <td>
+                  <td onClick={() => handleFieldClick(service)}> {service.invoiceNo}</td>
+                  <td onClick={() => handleFieldClick(service)}>
                 {service.invoiceDate
                   ? moment(service.invoiceDate).format("YYYY-MM-DD")
                   : ""}
               </td>{" "}
-              <td>{service.clientName}</td>
-                  <td>{service.clientContact}</td>
+              <td onClick={() => handleFieldClick(service)}> {service.clientName}</td>
+                  <td onClick={() => handleFieldClick(service)}>{service.clientContact}</td>
                  
-                  <td>{service.discountRate}</td>
-                  <td>{service.discountAmount}</td>
-                  <td>{service.taxRate}</td>
-                  <td>{service.taxAmount}</td>
-                  <td>{service.total}</td>
-                  <td>{service.subTotal}</td>
-                  <td>{service.selectedCurrency}</td>
-                  
-                 
-                  
-        
-                 
+                  <td onClick={() => handleFieldClick(service)}>{service.discountRate}</td>
+                  <td onClick={() => handleFieldClick(service)}>{service.discountAmount}</td>
+                  <td onClick={() => handleFieldClick(service)}>{service.taxRate}</td>
+                  <td onClick={() => handleFieldClick(service)}>{service.taxAmount}</td>
+                  <td onClick={() => handleFieldClick(service)}>{service.total}</td>
+                  <td onClick={() => handleFieldClick(service)}>{service.subTotal}</td>
+                  <td onClick={() => handleFieldClick(service)}>{service.selectedCurrency}</td>
 
                   <td>
                     <button
@@ -460,7 +502,6 @@ const PreviousBills = () => {
                                   <td>{item.price}</td>
                                   <td>{item.quantity}</td>
                                   <td>{item.services}</td>
-
                                 </tr>
                               ))}
                             </tbody>
@@ -526,11 +567,11 @@ const PreviousBills = () => {
         </table>
         <div className="pagination-container">
           <ReactJsPagination
-            activePage={activePage}
-            itemsCountPerPage={itemsPerPage}
-            totalItemsCount={customerServicesCus.length}
-            pageRangeDisplayed={5}
-            onChange={handlePageChange}
+           activePage={activePage}
+           itemsCountPerPage={itemsPerPage}
+           totalItemsCount={customerServicesCus.length}
+           pageRangeDisplayed={5}
+           onChange={handlePageChange}
             prevPageText={
               <span className="custom-pagination-arrow">
                 <KeyboardArrowLeft />
@@ -554,10 +595,23 @@ const PreviousBills = () => {
             activeClass="active-page"
           />
         </div>
+        
+        <Popup
+  open={!!selectedInvoice}
+  onClose={() => setSelectedInvoice(null)}
+  closeOnDocumentClick={true}
+  className="invoice-popup"
+>
+  <InvoiceDetailsPopup
+    selectedInvoice={selectedInvoice}
+    onClose={() => setSelectedInvoice(null)}
+  />
+</Popup>
+
         <Popup
           open={selectedServiceCus !== null || isAddPopupOpenCus}
           onClose={handleCancelCus}
-          closeOnDocumentClick
+          closeOnDocumentClick={true}
         >
           <CustomerForm
             selectedServiceCus={selectedServiceCus}

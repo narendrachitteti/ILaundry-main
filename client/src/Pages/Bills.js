@@ -5,9 +5,10 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
+import jsPDF from "jspdf";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import jsPDF from "jspdf";
+
 
 const currencies = currencyCodes.data;
 
@@ -28,13 +29,8 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
-  const [customeraddress, setcustomeraddress] = useState("");
-  // const [selectedService, setSelectedService] = useState("");
-
-  const [selectedService, setSelectedService] = useState(
-    Array(rows.length).fill("")
-  );
-
+  const [customeraddress, setcustomeraddress] = useState('');
+  const [selectedServices, setSelectedServices] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
@@ -58,16 +54,6 @@ const Bills = () => {
       console.error("Error fetching last invoice number:", error);
     }
   };
-
-  const services = [
-    "Select a service",
-    "Wash & Fold",
-    "Wash & Iron",
-    "Dry Cleaning",
-    "Express Laundry Services",
-    "Premium Laundry",
-    "Steam Ironing",
-  ];
 
   const itemsList = [
     "Select a Item",
@@ -243,14 +229,13 @@ const Bills = () => {
     "Curtain door single panel": 200.0,
     "Bed protector": 250.0,
   };
-
   const handleAddRow = () => {
     const newRow = { id: rows.length + 1 };
     setRows([...rows, newRow]);
     setSelectedItems([...selectedItems, ""]);
     setQuantities([...quantities, 0]);
     setSubtotals([...subtotals, 0]);
-    setSelectedService([...selectedService, ""]);
+    setSelectedServices([...selectedServices, ""]); // using selectedServices
   };
 
   useEffect(() => {
@@ -276,7 +261,6 @@ const Bills = () => {
     );
   };
 
-  
   const handleItemChange = (index, value) => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
@@ -316,7 +300,6 @@ const Bills = () => {
       discount += (price * quantity * discountRate) / 100;
       tax += (price * quantity * taxRate) / 100;
     });
-    // Calculate total
     const totalAmount = subtotal - discount + tax;
     setSubTotal(subtotal);
     setDiscountAmount(discount);
@@ -332,73 +315,26 @@ const Bills = () => {
         return "";
     }
   };
-
-  // const handleReviewInvoice = () => {
-  //   const data = {
-  //     invoiceNo,
-  //     invoiceDate,
-  //     clientName,
-  //     clientContact,
-  //     items: rows.map((row, index) => ({
-  //       item: selectedItems[index],
-  //       quantity: quantities[index],
-  //       price: price[index],
-  //       subtotal: subtotals[index],
-  //     })),
-  //     subTotal,
-  //     discountRate,
-  //     discountAmount,
-  //     taxRate,
-  //     taxAmount,
-  //     total,
-  //     selectedCurrency,
-  //     selectedPaymentMode,
-  //     selectedPopupItem,
-  //   };
-  //   // setSelectedInvoice(data); // Set the selected invoice data
-  //   setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
-  //   togglePopup(true);
-  //   fetch("http://localhost:5000/api/billing", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("Success:", data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle error
-  //     });
-  // };
-  // const formatDate = (date) => {
-  //   const formattedDate = new Date(date).toLocaleDateString();
-  //   return formattedDate;
-  // };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     const formatter = new Intl.DateTimeFormat('en-GB', options);
     return formatter.format(date);
   };
-  
+
   const handleReviewInvoice = () => {
-    
     const data = {
       invoiceNo,
       invoiceDate: formatDate(invoiceDate),
       clientName,
       clientContact,
       customeraddress,
-      items: rows.map((_row, index) => ({
+      items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
-        price: itemPrices[selectedItems[index]],
+        price: price[index],
+        services: selectedServices,
         subtotal: subtotals[index],
-        service: selectedService[index], // Use selectedService here
       })),
       subTotal,
       discountRate,
@@ -409,8 +345,8 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
+
     };
-  
     togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
@@ -428,7 +364,9 @@ const Bills = () => {
         console.error("Error:", error);
       });
   };
-
+  const handleInvoiceDateChange = (selectedDate) => {
+    setInvoiceDate(selectedDate);
+  };
   const handledownloadcopy = () => {
     const doc = new jsPDF();
     doc.text("Invoice No: " + invoiceNo, 10, 10);
@@ -446,7 +384,7 @@ const Bills = () => {
     setInvoiceNo("");
     setClientName("");
     setClientContact("");
-    setcustomeraddress("");
+    setcustomeraddress('');
     setRows([{ id: 1 }]);
     setSelectedItems(Array(rows.length).fill(""));
     setQuantities(Array(rows.length).fill(0));
@@ -458,14 +396,11 @@ const Bills = () => {
     setTaxAmount(0);
     setTotal(0);
     setSelectedPaymentMode("");
-    setSelectedService("");
+    setSelectedServices("");
   };
 
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
-  };
-  const handleInvoiceDateChange = (selectedDate) => {
-    setInvoiceDate(selectedDate);
   };
 
   // const togglePopup = (value) => {
@@ -495,16 +430,7 @@ const Bills = () => {
             onChange={(e) => setInvoiceDate(e.target.value)}
           />
         </div> */}
-        {/* <div className="input-group">
-  <label htmlFor="invoiceDate">Invoice Date:</label>
-  <input
-    type="date"
-    id="invoiceDate"
-    value={invoiceDate}
-    onChange={(e) => setInvoiceDate(formatDate(e.target.value))}
-  />
-</div> */}
-<div className="input-group">
+        <div className="input-group">
         <label htmlFor="invoiceDate">Invoice Date:</label>
         {/* Placeholder for your date picker component */}
         <DatePicker
@@ -513,7 +439,6 @@ const Bills = () => {
           // Add any other necessary props for your date picker
         />
       </div>
-
         <div className="input-group">
           <label htmlFor="clientName">Customer Name:</label>
           <input
@@ -572,42 +497,21 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-                  {/* <select value={selectedService[index]} onChange={(e) => setSelectedService(index, e.target.value)}>
-                    {services.map((service, index) => (
-                      <option key={index} value={service}>
-                        {service}
-                      </option>
-                    ))}
-                  </select> */}
                   <select
-                    value={selectedService[index]}
+                    className="selectedServices"
+                    value={selectedServices[index]}
                     onChange={(e) => {
-                      const updatedServices = [...selectedService];
-                      updatedServices[index] = [e.target.value];
-                      setSelectedService(updatedServices);
+                      const newSelectedServices = [...selectedServices];
+                      newSelectedServices[index] = e.target.value;
+                      setSelectedServices(newSelectedServices);
                     }}
+                    
                   >
-                    {services.map((service, index) => (
-                      <option key={index} value={service}>
-                        {service}
-                      </option>
-                    ))}
+                    <option value="">Select service</option>
+                    <option value="wash & fold">Wash & fold</option>
+                    <option value="wash & iron">Wash & Iron</option>
+                    <option value="premium laundry">Premium Laundry</option>
                   </select>
-
-                  {/* <select
-                    value={selectedService[index]}
-                    onChange={(e) => {
-                      const updatedServices = [...selectedService];
-                      updatedServices[index] = e.target.value;
-                      setSelectedService(updatedServices);
-                    }}
-                  >
-                    {services.map((service, index) => (
-                      <option key={index} value={service}>
-                        {service}
-                      </option>
-                    ))}
-                  </select> */}
                 </td>
                 <td>
                   <input
@@ -686,6 +590,7 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
+
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
@@ -693,6 +598,7 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
+
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
@@ -803,7 +709,10 @@ const Bills = () => {
                   <label className="nameclass-label">clientName:</label>
                   <input type="text" value={clientName} />
                   <label className="nameclass-label">clientContact:</label>
-                  <input type="text" value={clientContact} />
+                  <input
+                    type="text"
+                    value={clientContact}
+                  />
                   {/* <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
@@ -817,26 +726,66 @@ const Bills = () => {
                       value={customeraddress}
                       // onChange={(e) => setcustomeraddress(e.target.value)}
                     /> */}
-                  <label className="nameclass-label">customeraddress:</label>
-                  <input type="text" value={customeraddress} />
-                  <label className="nameclass-label">item:</label>
-                  <input type="text" value={selectedPopupItem} readOnly />
-                  <label className="nameclass-label">Services:</label>
-                  <input type="text" value={services} />
-                  <label className="nameclass-label">quantity:</label>
-                  <input type="text" value={quantities} />
-                  <label className="nameclass-label">TaxRate:</label>
-                  <input type="text" value={taxRate} />
-                  <label className="nameclass-label">discountRate:</label>
-                  <input type="text" value={discountRate} />
-                  <label className="nameclass-label">subTotal:</label>
-                  <input type="text" value={subTotal} />
-                  <label className="nameclass-label">taxAmount:</label>
-                  <input type="text" value={taxAmount} />
-                  <label className="nameclass-label">discountAmount:</label>
-                  <input type="text" value={discountAmount} />
-                  <label className="nameclass-label">total:</label>
-                  <input type="text" value={total} />
+                  <label className='nameclass-label'>customeraddress:</label>
+                  <input
+                    type="text"
+                    value={customeraddress}
+
+                  />
+                  <label className='nameclass-label'>item:</label>
+                  <input
+                    type="text"
+                    value={selectedPopupItem}
+                    readOnly
+                  />
+                  <label className='nameclass-label'>Services:</label>
+                  <input
+                    type="text"
+
+                    value={selectedServices}
+                  />
+                  <label className='nameclass-label'>quantity:</label>
+                  <input
+                    type="text"
+
+                    value={quantities}
+                  />
+                  <label className='nameclass-label'>TaxRate:</label>
+                  <input
+                    type="text"
+
+                    value={taxRate}
+                  />
+                  <label className='nameclass-label'>discountRate:</label>
+                  <input
+                    type="text"
+
+                    value={discountRate}
+                  />
+                  <label className='nameclass-label'>subTotal:</label>
+                  <input
+                    type="text"
+
+                    value={subTotal}
+                  />
+                  <label className='nameclass-label'>taxAmount:</label>
+                  <input
+                    type="text"
+
+                    value={taxAmount}
+                  />
+                  <label className='nameclass-label'>discountAmount:</label>
+                  <input
+                    type="text"
+
+                    value={discountAmount}
+                  />
+                  <label className='nameclass-label'>total:</label>
+                  <input
+                    type="text"
+
+                    value={total}
+                  />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">send Copy</button>
                     <button
