@@ -486,6 +486,7 @@ const Bills = () => {
                       newSelectedServices[index] = e.target.value;
                       setSelectedServices(newSelectedServices);
                     }}
+                    
                   >
                     <option value="">Select service</option>
                     <option value="wash & fold">Wash & fold</option>
