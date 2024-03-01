@@ -324,7 +324,7 @@ const Bills = () => {
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
-        price: price[index],
+        price: itemPrices[selectedItems[index]] || 0,
         services: selectedServices,
         subtotal: subtotals[index],
       })),
