@@ -332,7 +332,7 @@ const Bills = () => {
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
-        price: price[index],
+        price: itemPrices[selectedItems[index]] || 0,
         services: selectedServices,
         subtotal: subtotals[index],
       })),
@@ -485,7 +485,7 @@ const Bills = () => {
             {rows.map((row, index) => (
               <tr key={index}>
                 <td>
-                  <select
+                  <select                                                                                                                                                                                                       
                     value={selectedItems[index]}
                     onChange={(e) => handleItemChange(index, e.target.value)}
                   >
@@ -505,7 +505,7 @@ const Bills = () => {
                       newSelectedServices[index] = e.target.value;
                       setSelectedServices(newSelectedServices);
                     }}
-                    
+
                   >
                     <option value="">Select service</option>
                     <option value="wash & fold">Wash & fold</option>
@@ -598,12 +598,10 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
             </div>
-
             <div className="input-group">
               <label htmlFor="taxRate">Tax Rate:</label>
               <input
