@@ -325,7 +325,7 @@ const Bills = () => {
         item: selectedItems[index],
         quantity: quantities[index],
         price: price[index],
-        services:selectedServices,
+        services: selectedServices,
         subtotal: subtotals[index],
       })),
       subTotal,
@@ -478,21 +478,21 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-  <select
-    className="selectedServices"
-    value={selectedServices[index]}
-    onChange={(e) => {
-      const newSelectedServices = [...selectedServices];
-      newSelectedServices[index] = e.target.value;
-      setSelectedServices(newSelectedServices);
-    }}
-  >
-    <option value="">Select service</option>
-    <option value="wash & fold">Wash & fold</option>
-    <option value="wash & iron">Wash & Iron</option>
-    <option value="premium laundry">Premium Laundry</option>
-  </select>
-</td>
+                  <select
+                    className="selectedServices"
+                    value={selectedServices[index]}
+                    onChange={(e) => {
+                      const newSelectedServices = [...selectedServices];
+                      newSelectedServices[index] = e.target.value;
+                      setSelectedServices(newSelectedServices);
+                    }}
+                  >
+                    <option value="">Select service</option>
+                    <option value="wash & fold">Wash & fold</option>
+                    <option value="wash & iron">Wash & Iron</option>
+                    <option value="premium laundry">Premium Laundry</option>
+                  </select>
+                </td>
                 <td>
                   <input
                     type="number"
@@ -506,7 +506,7 @@ const Bills = () => {
 
                 <td>
                   <div className="iconflex">
-                    {index === rows.length - 1 ? ( 
+                    {index === rows.length - 1 ? (
                       <button className="itembtn" onClick={handleAddRow}>
                         <span>
                           <FaPlus />
@@ -570,7 +570,7 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-            
+
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
@@ -578,7 +578,7 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-            
+
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
@@ -699,7 +699,7 @@ const Bills = () => {
                     placeholder="Added Date"
                     value={total}
                   /> */}
-                    {/* <label htmlFor="clientContact">Customer Address:</label>
+                  {/* <label htmlFor="clientContact">Customer Address:</label>
                     <input
                       type="text"
                       id="clientName"
@@ -710,7 +710,7 @@ const Bills = () => {
                   <input
                     type="text"
                     value={customeraddress}
-                    
+
                   />
                   <label className='nameclass-label'>item:</label>
                   <input
@@ -721,49 +721,49 @@ const Bills = () => {
                   <label className='nameclass-label'>Services:</label>
                   <input
                     type="text"
-                    
+
                     value={selectedServices}
                   />
                   <label className='nameclass-label'>quantity:</label>
                   <input
                     type="text"
-                    
+
                     value={quantities}
                   />
                   <label className='nameclass-label'>TaxRate:</label>
                   <input
                     type="text"
-                    
+
                     value={taxRate}
                   />
                   <label className='nameclass-label'>discountRate:</label>
                   <input
                     type="text"
-                    
+
                     value={discountRate}
                   />
                   <label className='nameclass-label'>subTotal:</label>
                   <input
                     type="text"
-                    
+
                     value={subTotal}
                   />
                   <label className='nameclass-label'>taxAmount:</label>
                   <input
                     type="text"
-                    
+
                     value={taxAmount}
                   />
                   <label className='nameclass-label'>discountAmount:</label>
                   <input
                     type="text"
-                    
+
                     value={discountAmount}
                   />
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-                    
+
                     value={total}
                   />
                   <div className="merge-karthik-bill">
