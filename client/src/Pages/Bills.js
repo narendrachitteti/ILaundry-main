@@ -27,7 +27,7 @@ const Bills = () => {
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
   const [customeraddress, setcustomeraddress] = useState('');
-  const [selectedService, setSelectedService] = useState("");
+  const [selectedServices, setSelectedServices] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
@@ -51,16 +51,6 @@ const Bills = () => {
       console.error("Error fetching last invoice number:", error);
     }
   };
-
-  const services = [
-    "Select a service",
-    "Wash & Fold",
-    "Wash & Iron",
-    "Dry Cleaning",
-    "Express Laundry Services",
-    "Premium Laundry",
-    "Steam Ironing",
-  ];
 
   const itemsList = [
     "Select a Item",
@@ -236,14 +226,13 @@ const Bills = () => {
     "Curtain door single panel": 200.0,
     "Bed protector": 250.0,
   };
-
   const handleAddRow = () => {
     const newRow = { id: rows.length + 1 };
     setRows([...rows, newRow]);
     setSelectedItems([...selectedItems, ""]);
     setQuantities([...quantities, 0]);
     setSubtotals([...subtotals, 0]);
-    setSelectedService([...selectedService, ""]);
+    setSelectedServices([...selectedServices, ""]); // using `selectedServices`
   };
 
   useEffect(() => {
@@ -325,47 +314,6 @@ const Bills = () => {
   };
 
 
-  // const handleReviewInvoice = () => {
-  //   const data = {
-  //     invoiceNo,
-  //     invoiceDate,
-  //     clientName,
-  //     clientContact,
-  //     items: rows.map((row, index) => ({
-  //       item: selectedItems[index],
-  //       quantity: quantities[index],
-  //       price: price[index],
-  //       subtotal: subtotals[index],
-  //     })),
-  //     subTotal,
-  //     discountRate,
-  //     discountAmount,
-  //     taxRate,
-  //     taxAmount,
-  //     total,
-  //     selectedCurrency,
-  //     selectedPaymentMode,
-  //     selectedPopupItem,
-  //   };
-  //   // setSelectedInvoice(data); // Set the selected invoice data
-  //   setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
-  //   togglePopup(true);
-  //   fetch("http://localhost:5000/api/billing", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("Success:", data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle error
-  //     });
-  // };
   const handleReviewInvoice = () => {
     const data = {
       invoiceNo,
@@ -377,8 +325,8 @@ const Bills = () => {
         item: selectedItems[index],
         quantity: quantities[index],
         price: price[index],
+        services:selectedServices,
         subtotal: subtotals[index],
-        services:services[index],
       })),
       subTotal,
       discountRate,
@@ -438,7 +386,7 @@ const Bills = () => {
     setTaxAmount(0);
     setTotal(0);
     setSelectedPaymentMode("");
-    setSelectedService("");
+    setSelectedServices("");
   };
 
   const togglePopup = (isCancel) => {
@@ -530,14 +478,21 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-                  <select value={selectedService[index]} onChange={(e) => setSelectedService(index, e.target.value)}>
-                    {services.map((service, index) => (
-                      <option key={index} value={service}>
-                        {service}
-                      </option>
-                    ))}
-                  </select>
-                </td>
+  <select
+    className="selectedServices"
+    value={selectedServices[index]}
+    onChange={(e) => {
+      const newSelectedServices = [...selectedServices];
+      newSelectedServices[index] = e.target.value;
+      setSelectedServices(newSelectedServices);
+    }}
+  >
+    <option value="">Select service</option>
+    <option value="wash & fold">Wash & fold</option>
+    <option value="wash & iron">Wash & Iron</option>
+    <option value="premium laundry">Premium Laundry</option>
+  </select>
+</td>
                 <td>
                   <input
                     type="number"
@@ -767,7 +722,7 @@ const Bills = () => {
                   <input
                     type="text"
                     
-                    value={services}
+                    value={selectedServices}
                   />
                   <label className='nameclass-label'>quantity:</label>
                   <input
