@@ -6,9 +6,14 @@ import ShoeCard from "../components/ShoeCard";
 import { shoes, statistics } from "../constants";
 import { Link } from "react-router-dom";
 import wash1 from "../assets/images/wash1.jpg";
+import { motion } from "framer-motion";
+import "../sections/All.css";
 
 const Hero = () => {
   const [bigShoeImg, setBigShoeImg] = useState(wash1);
+  const changeBigShoeImage = (shoe) => {
+    setBigShoeImg(shoe);
+  };
 
   return (
     <div>
@@ -16,7 +21,12 @@ const Hero = () => {
         id="home"
         className="w-full flex xl:flex-row flex-col justify-center min-h-screen gap-10 max-container"
       >
-        <div className="relative xl:w-2/5 flex flex-col justify-center items-start w-full max-xl:padding-x pt-28">
+        <motion.div
+          animate={{ x: -300 }}
+          whileInView={{ x: 0 }}
+          transition={{ ease: "easeInOut", duration: 3 }}
+          className="relative xl:w-2/5 flex flex-col justify-center items-start w-full max-xl:padding-x pt-28"
+        >
           <p
             className="text-xl font-montserrat text-coral-red"
             style={{ marginTop: "2%", marginBottom: "-3%" }}
@@ -52,16 +62,21 @@ const Hero = () => {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="relative flex-1 flex justify-center items-center xl:min-h-screen max-xl:py-40 bg-primary bg-hero bg-cover bg-center">
+        <motion.div
+          animate={{ x: 600 }}
+          whileInView={{ x: 0 }}
+          transition={{ ease: "easeInOut", duration: 3 }}
+          className="relative flex-1 flex justify-center items-center xl:min-h-screen max-xl:py-40 bg-primary bg-hero bg-cover bg-center"
+        >
           <img
             src={bigShoeImg}
             // src={wash1}
             alt="Shoe Collection"
             width={610}
             height={500}
-            className="object-contain relative z-10"
+            className="object-contain relative z-10 animate-scale"
           />
           <div className="flex sm:gap-8 gap-4 absolute -bottom-[5%] sm:left-[10%] max-sm:px-6">
             {shoes.map((shoe) => (
@@ -74,7 +89,7 @@ const Hero = () => {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
     </div>
   );
