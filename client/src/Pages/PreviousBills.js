@@ -23,8 +23,8 @@ import KeyboardDoubleArrowRight from "@mui/icons-material/KeyboardDoubleArrowRig
 import image13 from "../components/images/background.jpg";
 import Navbar from "../components/Navbar.js";
 import Backbutton from "./Backbutton.js";
-import InvoiceDetailsPopup from './InvoiceDetailsPopup.js'
-import { autoTable } from 'pdfmake/build/pdfmake';
+import InvoiceDetailsPopup from "./InvoiceDetailsPopup.js";
+import { autoTable } from "pdfmake/build/pdfmake";
 import "jspdf-autotable";
 
 const PreviousBills = () => {
@@ -46,8 +46,6 @@ const PreviousBills = () => {
   const [allData, setAllData] = useState([]);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
-
-  
   const fetchcustomerServicesCus = async () => {
     try {
       console.log("Fetching Customer Details");
@@ -64,7 +62,6 @@ const PreviousBills = () => {
     fetchcustomerServicesCus();
   }, []);
 
-  
   const handleFromDateChange = (e) => {
     setFromDate(e.target.value);
   };
@@ -72,7 +69,7 @@ const PreviousBills = () => {
   const handleToDateChange = (e) => {
     setToDate(e.target.value);
   };
-   const handleFieldClick = (invoice) => {
+  const handleFieldClick = (invoice) => {
     setSelectedInvoice(invoice);
   };
 
@@ -117,7 +114,7 @@ const PreviousBills = () => {
       console.error("Error adding/updating Customer Details:", error);
     }
   };
-  
+
   const handlesearchTextCusChange = (newValue) => {
     setsearchTextCus(newValue);
   };
@@ -147,163 +144,183 @@ const PreviousBills = () => {
       moment(item.invoiceDate).format("YYYY-MM-DD").includes(searchTextCus) ||
       item.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
       item.clientContact.includes(searchTextCus) ||
-      item.subTotal.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert subTotal to string
-      item.discountRate.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert discountRate to string
-      item.discountAmount.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert discountAmount to string
-      item.taxRate.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert taxRate to string
-      item.taxAmount.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert taxAmount to string
-      item.total.toString().toLowerCase().includes(searchTextCus.toLowerCase()) || // Convert total to string
+      item.subTotal
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert subTotal to string
+      item.discountRate
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert discountRate to string
+      item.discountAmount
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert discountAmount to string
+      item.taxRate
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert taxRate to string
+      item.taxAmount
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert taxAmount to string
+      item.total
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert total to string
       item.selectedCurrency.toLowerCase().includes(searchTextCus.toLowerCase())
     );
   });
-  
 
-const handleDownloadPDF = (service) => {
-  const pdf = new jsPDF();
-  pdf.setDrawColor(7, 126, 96); // RGB values for a shade of green
-  let lineY = 48;
+  const handleDownloadPDF = (service) => {
+    const pdf = new jsPDF();
+    pdf.setDrawColor(7, 126, 96); // RGB values for a shade of green
+    let lineY = 48;
 
-  const imgWidth = 40;
-  const imgHeight = 15;
-  const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
-  const imgY = 15;
-  pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
+    const imgWidth = 40;
+    const imgHeight = 15;
+    const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
+    const imgY = 15;
+    pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
 
-  const billingDateTime = new Date().toLocaleString();
-  const invoiceName = "Payment Invoice";
-  const invoiceNameX = pdf.internal.pageSize.getWidth() / 2;
-  // const dateX =
-  //   pdf.internal.pageSize.getWidth() - pdf.getTextWidth(billingDateTime) - 1;
+    const billingDateTime = new Date().toLocaleString();
+    const invoiceName = "Payment Invoice";
+    const invoiceNameX = pdf.internal.pageSize.getWidth() / 2;
+    // const dateX =
+    //   pdf.internal.pageSize.getWidth() - pdf.getTextWidth(billingDateTime) - 1;
 
-  pdf.text(invoiceName, invoiceNameX, 45, { align: "center" });
-  pdf.setFontSize(10);
-  // pdf.text(`Date : ${billingDateTime}`, dateX, 45);
+    pdf.text(invoiceName, invoiceNameX, 45, { align: "center" });
+    pdf.setFontSize(10);
+    // pdf.text(`Date : ${billingDateTime}`, dateX, 45);
 
-  pdf.rect(
-    10,
-    10,
-    pdf.internal.pageSize.getWidth() - 20,
-    pdf.internal.pageSize.getHeight() - 20,
-    "S"
-  );
+    pdf.rect(
+      10,
+      10,
+      pdf.internal.pageSize.getWidth() - 20,
+      pdf.internal.pageSize.getHeight() - 20,
+      "S"
+    );
 
-  const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageWidth = pdf.internal.pageSize.getWidth();
 
-  const borderWidth = 10;
-  const lineWidth = 2;
-  pdf.line(10, lineY - lineWidth, pageWidth - borderWidth, lineY - lineWidth);
+    const borderWidth = 10;
+    const lineWidth = 2;
+    pdf.line(10, lineY - lineWidth, pageWidth - borderWidth, lineY - lineWidth);
 
-  // Section for basic details
-  const basicDetailsRows = [
-    { label: "Invoice No:", value: service.invoiceNo },
-    { label: "Client Name:", value: service.clientName },
-    { label: "Client Contact:", value: service.clientContact },
-    { label: "Invoice Date:", value: service.invoiceDate },
-  ];
+    // Section for basic details
+    const basicDetailsRows = [
+      { label: "Invoice No:", value: service.invoiceNo },
+      { label: "Client Name:", value: service.clientName },
+      { label: "Client Contact:", value: service.clientContact },
+      { label: "Invoice Date:", value: service.invoiceDate },
+    ];
 
-  basicDetailsRows.forEach(({ label, value }) => {
+    basicDetailsRows.forEach(({ label, value }) => {
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(12);
+      pdf.text(`${label}`, 20, (lineY += 8));
+
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${value}`, 60, lineY);
+    });
+
+    // GSTIN Number
+    const gstin = "29ABCDE1234F1ZW"; // Replace with your actual GSTIN number
+    const gstinX = pdf.internal.pageSize.getWidth() - 58;
+    const gstinY = 15;
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    pdf.text(`GSTIN: ${gstin}`, gstinX, gstinY);
+
+    // Section for the rest of the details
+    pdf.setFontSize(12);
+    pdf.setFont("helvetica", "normal");
+
+    const boldLabels = [
+      "Discount Rate",
+      "Discount Amount",
+      "Tax Rate",
+      "Tax Amount",
+      "Subtotal",
+      "Total",
+      "Currency",
+      "Item Type",
+      "Item Quantity",
+    ];
+
+    const tableRows = [
+      { label: "Discount Rate:", value: service.discountRate },
+      { label: "Discount Amount:", value: service.discountAmount },
+      { label: "Tax(SGST 9%):", value: service.taxRate },
+      { label: "Tax Amount:", value: service.taxAmount },
+      { label: "Subtotal:", value: service.subTotal },
+      { label: "Total:", value: service.total },
+      { label: "Currency:", value: service.selectedCurrency },
+      { label: "Payment Mode:", value: service.selectedPaymentMode },
+    ];
+
+    if (service.items && service.items.length > 0) {
+      service.items.forEach((item, index) => {
+        tableRows.push({
+          label: `Rate per unit:`,
+          value: item.price,
+        });
+        tableRows.push({
+          label: `Item Type:`,
+          value: item.item,
+        });
+        tableRows.push({
+          label: "Item Service Type:",
+          value: item.services,
+        });
+
+        tableRows.push({
+          label: `Item Quantity:`,
+          value: item.quantity,
+        });
+      });
+    }
+
+    const headers = ["Particulars", "Amount"];
+    const data = tableRows.map(({ label, value }) => [
+      boldLabels.includes(label.replace(":", ""))
+        ? label.replace(":", "")
+        : label,
+      value,
+    ]);
+
+    const tableOptions = {
+      startY: lineY + 15,
+      margin: { top: 10 },
+    };
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(12);
-    pdf.text(`${label}`, 20, (lineY += 8));
+
+    pdf.autoTable({
+      head: [headers],
+      body: data,
+      theme: "grid",
+      ...tableOptions,
+    });
 
     pdf.setFont("helvetica", "normal");
-    pdf.text(`${value}`, 60, lineY);
-  });
 
-  // GSTIN Number
-  const gstin = "29ABCDE1234F1ZW"; // Replace with your actual GSTIN number
-  const gstinX = pdf.internal.pageSize.getWidth() - 58;
-  const gstinY = 15;
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(10);
-  pdf.text(`GSTIN: ${gstin}`, gstinX, gstinY);
+    // Signature and system-generated text
+    const signature = "Signature Or Stamp";
+    const signatureX = 150;
+    const signatureY = pdf.lastAutoTable.finalY + 20;
+    pdf.text(signature, signatureX, signatureY);
 
-  // Section for the rest of the details
-  pdf.setFontSize(12);
-  pdf.setFont("helvetica", "normal");
+    const systemGeneratedText = "****This is a system-generated bill****";
+    const systemGeneratedTextX = pdf.internal.pageSize.getWidth() / 2;
+    const systemGeneratedTextY = pdf.internal.pageSize.getHeight() - 15;
 
-  const boldLabels = [
-    "Discount Rate",
-    "Discount Amount",
-    "Tax Rate",
-    "Tax Amount",
-    "Subtotal",
-    "Total",
-    "Currency",
-    "Item Type",
-    "Item Quantity",
-  ];
-
-  const tableRows = [
-    { label: "Discount Rate:", value: service.discountRate },
-    { label: "Discount Amount:", value: service.discountAmount },
-    { label: "Tax(SGST 9%):", value: service.taxRate },
-    { label: "Tax Amount:", value: service.taxAmount },
-    { label: "Subtotal:", value: service.subTotal },
-    { label: "Total:", value: service.total },
-    { label: "Currency:", value: service.selectedCurrency },
-    {label:"Payment Mode:",value:service.selectedPaymentMode},
-  ];
-
-  if (service.items && service.items.length > 0) {
-    tableRows.push({
-      label: 'Item Service Type',
-      value: service.items[0].services,
+    pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, {
+      align: "center",
     });
-  
-    service.items.forEach((item, index) => {
-      tableRows.push({
-        label: `Item Type:`,
-        value: item.item,
-      });
-      tableRows.push({
-        label: `Item Quantity:`,
-        value: item.quantity,
-      });
-      
-    });
-  }
-  
 
-  const headers = ["Particulars", "Amount"];
-  const data = tableRows.map(({ label, value }) => [
-    boldLabels.includes(label.replace(":", "")) ? label.replace(":", "") : label,
-    value,
-  ]);
-
-  const tableOptions = {
-    startY: lineY + 15,
-    margin: { top: 10 },
+    pdf.save(`customer_details_${service._id}.pdf`);
   };
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(12);
-
-  pdf.autoTable({
-    head: [headers],
-    body: data,
-    theme: "grid",
-    ...tableOptions,
-  });
-
-  pdf.setFont("helvetica", "normal");
-
-  // Signature and system-generated text
-  const signature = "Signature Or Stamp";
-  const signatureX = 150;
-  const signatureY = pdf.lastAutoTable.finalY + 20;
-  pdf.text(signature, signatureX, signatureY);
-
-  const systemGeneratedText = "****This is a system-generated bill****";
-  const systemGeneratedTextX = pdf.internal.pageSize.getWidth() / 2;
-  const systemGeneratedTextY = pdf.internal.pageSize.getHeight() - 15;
-
-  pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, {
-    align: "center",
-  });
-
-  pdf.save(`customer_details_${service._id}.pdf`);
-};
-
 
   const generateWhatsappMessage = (service) => {
     const {
@@ -321,7 +338,7 @@ const handleDownloadPDF = (service) => {
       selectedCurrency,
       phoneNumber,
     } = service;
-  
+
     // Check if all required properties are defined
     if (
       prefix &&
@@ -381,8 +398,12 @@ const handleDownloadPDF = (service) => {
 
     const filteredData = allData.filter((item) => {
       const currentDate = new Date(item.invoiceDate).getTime();
-      const fromTimestamp = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : 0;
-      const toTimestamp = toDate ? new Date(toDate).setHours(23, 59, 59, 999) : Infinity;
+      const fromTimestamp = fromDate
+        ? new Date(fromDate).setHours(0, 0, 0, 0)
+        : 0;
+      const toTimestamp = toDate
+        ? new Date(toDate).setHours(23, 59, 59, 999)
+        : Infinity;
 
       return currentDate >= fromTimestamp && currentDate <= toTimestamp;
     });
@@ -391,8 +412,7 @@ const handleDownloadPDF = (service) => {
 
     setcustomerServicesCus(filteredData);
   };
-  
-  
+
   return (
     <>
       <Navbar />
@@ -419,15 +439,17 @@ const handleDownloadPDF = (service) => {
           </div>
           <div className="date-filter">
             <label>From Date:</label>
-            <input type="date" value={fromDate} onChange={handleFromDateChange} />
+            <input
+              type="date"
+              value={fromDate}
+              onChange={handleFromDateChange}
+            />
 
             <label>To Date:</label>
             <input type="date" value={toDate} onChange={handleToDateChange} />
 
             <button onClick={handleFilterByDate}>Filter</button>
           </div>
-
-         
         </div>
         <table className="lab-service-table_5">
           <thead>
@@ -436,7 +458,7 @@ const handleDownloadPDF = (service) => {
               <th className="product-ooi">Invoice Date</th>
               <th className="product-ooi">Customer Name</th>
               <th className="product-ooi">Customer Contact</th>
-             
+
               <th className="product-ooi">Discount Rate</th>
               <th className="product-ooi">Discount Amount</th>
               <th className="product-ooi">Tax Rate</th>
@@ -447,7 +469,6 @@ const handleDownloadPDF = (service) => {
               <th className="product-ooi">Items</th>
               <th className="product-ooi">Actions</th>
               <th className="product-ooi">Pay Mode</th>
-              
             </tr>
           </thead>
           <tbody>
@@ -455,22 +476,45 @@ const handleDownloadPDF = (service) => {
               .slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage)
               .map((service) => (
                 <tr key={service._id}>
-                  <td onClick={() => handleFieldClick(service)}> {service.invoiceNo}</td>
                   <td onClick={() => handleFieldClick(service)}>
-                {service.invoiceDate
-                  ? moment(service.invoiceDate).format("YYYY-MM-DD")
-                  : ""}
-              </td>{" "}
-              <td onClick={() => handleFieldClick(service)}> {service.clientName}</td>
-                  <td onClick={() => handleFieldClick(service)}>{service.clientContact}</td>
-                 
-                  <td onClick={() => handleFieldClick(service)}>{service.discountRate}</td>
-                  <td onClick={() => handleFieldClick(service)}>{service.discountAmount}</td>
-                  <td onClick={() => handleFieldClick(service)}>{service.taxRate}</td>
-                  <td onClick={() => handleFieldClick(service)}>{service.taxAmount}</td>
-                  <td onClick={() => handleFieldClick(service)}>{service.total}</td>
-                  <td onClick={() => handleFieldClick(service)}>{service.subTotal}</td>
-                  <td onClick={() => handleFieldClick(service)}>{service.selectedCurrency}</td>
+                    {" "}
+                    {service.invoiceNo}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.invoiceDate
+                      ? moment(service.invoiceDate).format("MM-DD-YYYY")
+                      : ""}
+                  </td>
+
+                  <td onClick={() => handleFieldClick(service)}>
+                    {" "}
+                    {service.clientName}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.clientContact}
+                  </td>
+
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.discountRate}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.discountAmount}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.taxRate}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.taxAmount}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.total}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.subTotal}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.selectedCurrency}
+                  </td>
 
                   <td>
                     <button
@@ -487,7 +531,6 @@ const handleDownloadPDF = (service) => {
                           <table>
                             <thead>
                               <tr>
-                      
                                 <th>Item Name</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
@@ -497,7 +540,6 @@ const handleDownloadPDF = (service) => {
                             <tbody>
                               {service.items.map((item) => (
                                 <tr key={item.id}>
-                                
                                   <td>{item.item}</td>
                                   <td>{item.price}</td>
                                   <td>{item.quantity}</td>
@@ -567,11 +609,11 @@ const handleDownloadPDF = (service) => {
         </table>
         <div className="pagination-container">
           <ReactJsPagination
-           activePage={activePage}
-           itemsCountPerPage={itemsPerPage}
-           totalItemsCount={customerServicesCus.length}
-           pageRangeDisplayed={5}
-           onChange={handlePageChange}
+            activePage={activePage}
+            itemsCountPerPage={itemsPerPage}
+            totalItemsCount={customerServicesCus.length}
+            pageRangeDisplayed={5}
+            onChange={handlePageChange}
             prevPageText={
               <span className="custom-pagination-arrow">
                 <KeyboardArrowLeft />
@@ -595,18 +637,18 @@ const handleDownloadPDF = (service) => {
             activeClass="active-page"
           />
         </div>
-        
+
         <Popup
-  open={!!selectedInvoice}
-  onClose={() => setSelectedInvoice(null)}
-  closeOnDocumentClick={true}
-  className="invoice-popup"
->
-  <InvoiceDetailsPopup
-    selectedInvoice={selectedInvoice}
-    onClose={() => setSelectedInvoice(null)}
-  />
-</Popup>
+          open={!!selectedInvoice}
+          onClose={() => setSelectedInvoice(null)}
+          closeOnDocumentClick={true}
+          className="invoice-popup"
+        >
+          <InvoiceDetailsPopup
+            selectedInvoice={selectedInvoice}
+            onClose={() => setSelectedInvoice(null)}
+          />
+        </Popup>
 
         <Popup
           open={selectedServiceCus !== null || isAddPopupOpenCus}
