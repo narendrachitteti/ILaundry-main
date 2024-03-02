@@ -324,7 +324,6 @@ const PreviousBills = () => {
 
   const generateWhatsappMessage = (service) => {
     const {
-      prefix,
       invoiceNo,
       invoiceDate,
       clientName,
@@ -336,12 +335,11 @@ const PreviousBills = () => {
       taxAmount,
       total,
       selectedCurrency,
-      phoneNumber,
+      items,
     } = service;
-
+  
     // Check if all required properties are defined
     if (
-      prefix &&
       invoiceNo &&
       invoiceDate &&
       clientName &&
@@ -353,27 +351,37 @@ const PreviousBills = () => {
       taxAmount &&
       total &&
       selectedCurrency &&
-      phoneNumber
+      items
     ) {
+      const itemList = items
+        .map(
+          (item) =>
+            `${item.item} - ${item.quantity} units x ${item.price} ${selectedCurrency} (${item.serviceType})`
+        )
+        .join('\n');
+  
       return `
-        Invoice No: ${prefix}${invoiceNo}
+        Invoice No: ${invoiceNo}
         Invoice Date: ${invoiceDate}
         Client Name: ${clientName}
         Client Contact: ${clientContact}
-        Subtotal: ${subTotal}
-        Discount Rate: ${discountRate}
-        Discount Amount: ${discountAmount}
-        Tax Rate: ${taxRate}
-        Tax Amount: ${taxAmount}
-        Total: ${total}
-        Currency: ${selectedCurrency}
+        Subtotal: ${subTotal} ${selectedCurrency}
+        Discount Rate: ${discountRate}%
+        Discount Amount: ${discountAmount} ${selectedCurrency}
+        Tax Rate: ${taxRate}%
+        Tax Amount: ${taxAmount} ${selectedCurrency}
+        Total: ${total} ${selectedCurrency}
+        
+        Items:
+        ${itemList}
       `;
     } else {
       console.error("Some properties are undefined in generateWhatsappMessage");
       return "";
     }
   };
-
+  
+  
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
   };
