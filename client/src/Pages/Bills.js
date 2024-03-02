@@ -8,11 +8,29 @@ import Navbar from "../components/Navbar";
 import jsPDF from "jspdf";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import axios from "axios";
 
 
 const currencies = currencyCodes.data;
 
 const Bills = () => {
+  const [user, setUser] = useState(null);
+  
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("mail");
+    if (storedEmail) {
+      // Make a request to fetch user by email when the component mounts
+      axios
+        .get(`http://localhost:5000/users/${storedEmail}`)
+        .then((response) => {
+          setUser(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user by email:", error);
+        });
+    }
+  }, []);
+
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [selectedPopupItem, setSelectedPopupItem] = useState("");
   const [invoiceNumber, setInvoiceNumber] = useState(1);
@@ -345,6 +363,7 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
+      user,
 
     };
     togglePopup(true);
@@ -431,14 +450,14 @@ const Bills = () => {
           />
         </div> */}
         <div className="input-group">
-        <label htmlFor="invoiceDate">Invoice Date:</label>
-        {/* Placeholder for your date picker component */}
-        <DatePicker
-          selected={invoiceDate}
-          onChange={(date) => handleInvoiceDateChange(date)}
+          <label htmlFor="invoiceDate">Invoice Date:</label>
+          {/* Placeholder for your date picker component */}
+          <DatePicker
+            selected={invoiceDate}
+            onChange={(date) => handleInvoiceDateChange(date)}
           // Add any other necessary props for your date picker
-        />
-      </div>
+          />
+        </div>
         <div className="input-group">
           <label htmlFor="clientName">Customer Name:</label>
           <input
@@ -485,7 +504,7 @@ const Bills = () => {
             {rows.map((row, index) => (
               <tr key={index}>
                 <td>
-                  <select                                                                                                                                                                                                       
+                  <select
                     value={selectedItems[index]}
                     onChange={(e) => handleItemChange(index, e.target.value)}
                   >
@@ -683,6 +702,7 @@ const Bills = () => {
           >
             Review Invoice
           </button>
+          <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
@@ -700,6 +720,7 @@ const Bills = () => {
               <hr />
               <div className="popup-content">
                 <form>
+                <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
                   <label className="nameclass-label">InvoiceNo:</label>
                   <input type="text" value={invoiceNumber} readOnly />
                   <label className="nameclass-label">InvoiceDate:</label>
@@ -711,19 +732,6 @@ const Bills = () => {
                     type="text"
                     value={clientContact}
                   />
-                  {/* <label className='nameclass-label'>total:</label>
-                  <input
-                    type="text"
-                    placeholder="Added Date"
-                    value={total}
-                  /> */}
-                  {/* <label htmlFor="clientContact">Customer Address:</label>
-                    <input
-                      type="text"
-                      id="clientName"
-                      value={customeraddress}
-                      // onChange={(e) => setcustomeraddress(e.target.value)}
-                    /> */}
                   <label className='nameclass-label'>customeraddress:</label>
                   <input
                     type="text"
