@@ -246,21 +246,21 @@ const handleDownloadPDF = (service) => {
   ];
 
   if (service.items && service.items.length > 0) {
-    tableRows.push({
-      label: 'Item Service Type',
-      value: service.items[0].services,
-    });
-  
     service.items.forEach((item, index) => {
+
       tableRows.push({
         label: `Item Type:`,
         value: item.item,
       });
       tableRows.push({
+        label: 'Item Service Type:',
+        value: item.services,
+      });
+      
+      tableRows.push({
         label: `Item Quantity:`,
         value: item.quantity,
       });
-      
     });
   }
   
@@ -458,7 +458,7 @@ const handleDownloadPDF = (service) => {
                   <td onClick={() => handleFieldClick(service)}> {service.invoiceNo}</td>
                   <td onClick={() => handleFieldClick(service)}>
                 {service.invoiceDate
-                  ? moment(service.invoiceDate).format("YYYY-MM-DD")
+                  ? moment(service.invoiceDate).format("MM-DD-YYYY")
                   : ""}
               </td>{" "}
               <td onClick={() => handleFieldClick(service)}> {service.clientName}</td>
