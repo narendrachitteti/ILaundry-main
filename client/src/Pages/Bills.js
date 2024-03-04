@@ -528,7 +528,9 @@ const Bills = () => {
                   >
                     <option value="">Select service</option>
                     <option value="wash & fold">Wash & fold</option>
+                    <option value="Steam Iron">Steam Ironing</option>
                     <option value="wash & iron">Wash & Iron</option>
+                    <option value="Dry cleaning">Dry Cleaning</option>
                     <option value="premium laundry">Premium Laundry</option>
                   </select>
                 </td>
