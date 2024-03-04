@@ -260,6 +260,11 @@ const Bills = () => {
     calculateTotal();
   }, [quantities, discountRate, taxRate]);
 
+  useEffect(() => {
+    // Set the initial invoice date to the current date
+    setInvoiceDate(new Date());
+  }, []);
+
   const handleDeleteRow = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
@@ -453,10 +458,10 @@ const Bills = () => {
           <label htmlFor="invoiceDate">Invoice Date:</label>
           {/* Placeholder for your date picker component */}
           <DatePicker
-            selected={invoiceDate}
-            onChange={(date) => handleInvoiceDateChange(date)}
-          // Add any other necessary props for your date picker
-          />
+    selected={invoiceDate}
+    onChange={(date) => handleInvoiceDateChange(date)}
+    dateFormat="dd-MM-yyyy"  // Set the desired date format
+  />
         </div>
         <div className="input-group">
           <label htmlFor="clientName">Customer Name:</label>
