@@ -32,16 +32,11 @@
 // const billing = mongoose.model("bill", billingSchema);
 
 // module.exports = billing;
+
 const mongoose = require("mongoose");
 
-const itemSchema = new mongoose.Schema({
-  item: String,
-  quantity: Number,
-  services: [String],
-  price: Number,
-});
-
 const billingSchema = new mongoose.Schema({
+  user: String,
   invoiceNo: {
     type: String,
     unique: true,
@@ -54,7 +49,12 @@ const billingSchema = new mongoose.Schema({
   clientName: String,
   clientContact: String,
   customeraddress: String,
-  items: [itemSchema],
+  items: [{
+    item: String,
+    quantity: Number,
+    services: String,
+    price: Number,
+  }],
   subTotal: Number,
   discountRate: Number,
   discountAmount: Number,
@@ -66,13 +66,10 @@ const billingSchema = new mongoose.Schema({
 });
 
 billingSchema.methods.getFormattedInvoiceDate = function () {
-  // Assuming invoiceDate is stored as a string in the format "yyyy-mm-ddTHH:mm:ss.SSSZ"
   const rawDate = new Date(this.invoiceDate);
-  
   const day = rawDate.getDate().toString().padStart(2, '0');
-  const month = (rawDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+  const month = (rawDate.getMonth() + 1).toString().padStart(2, '0');
   const year = rawDate.getFullYear();
-
   return `${day}-${month}-${year}`;
 };
 const billing = mongoose.model("bill", billingSchema);
