@@ -9,6 +9,7 @@ import {
   Subscribe,
   Footer,
 } from "../sections";
+import Process from "../sections/Process";
 
 const Landing = () => {
   return (
@@ -16,6 +17,9 @@ const Landing = () => {
       <Nav />
       <section className="xl:padding-l wide:padding-r padding-b">
         <Hero />
+      </section>
+      <section className="padding">
+        <Process />
       </section>
       <section className="padding">
         <PopularProducts />
