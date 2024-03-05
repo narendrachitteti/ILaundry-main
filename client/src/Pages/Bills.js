@@ -374,7 +374,8 @@ const Bills = () => {
       user: user
         ? {
             userId: user._id,
-            username: user.username, // Use user.username instead of user.fullname
+            username: user.username,
+            fullName: user.fullName, // Include the user's full name
             // Include other user details as needed
           }
         : null,
