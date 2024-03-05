@@ -371,6 +371,16 @@ const Bills = () => {
       user,
 
     };
+    if (user) {
+      // Include user details
+      data.user = JSON.stringify({
+        userId: user._id,
+        username: user.username,
+        // Include other user details as needed
+      });
+    }
+    
+
     togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
