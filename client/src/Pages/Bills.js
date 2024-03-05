@@ -6,16 +6,15 @@ import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
 import jsPDF from "jspdf";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-
 
 const currencies = currencyCodes.data;
 
 const Bills = () => {
   const [user, setUser] = useState(null);
-  
+
   useEffect(() => {
     const storedEmail = localStorage.getItem("mail");
     if (storedEmail) {
@@ -47,7 +46,7 @@ const Bills = () => {
   const [total, setTotal] = useState(0);
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
-  const [customeraddress, setcustomeraddress] = useState('');
+  const [customeraddress, setcustomeraddress] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
@@ -340,8 +339,8 @@ const Bills = () => {
   };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    const formatter = new Intl.DateTimeFormat('en-GB', options);
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+    const formatter = new Intl.DateTimeFormat("en-GB", options);
     return formatter.format(date);
   };
 
@@ -369,18 +368,15 @@ const Bills = () => {
       selectedPaymentMode,
       selectedPopupItem,
       user,
-
     };
     if (user) {
       // Include user details
-      data.user = JSON.stringify({
+      data.user = {
         userId: user._id,
         username: user.username,
         // Include other user details as needed
-      });
+      };
     }
-    
-
     togglePopup(true);
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
@@ -418,7 +414,7 @@ const Bills = () => {
     setInvoiceNo("");
     setClientName("");
     setClientContact("");
-    setcustomeraddress('');
+    setcustomeraddress("");
     setRows([{ id: 1 }]);
     setSelectedItems(Array(rows.length).fill(""));
     setQuantities(Array(rows.length).fill(0));
@@ -468,10 +464,10 @@ const Bills = () => {
           <label htmlFor="invoiceDate">Invoice Date:</label>
           {/* Placeholder for your date picker component */}
           <DatePicker
-    selected={invoiceDate}
-    onChange={(date) => handleInvoiceDateChange(date)}
-    dateFormat="dd-MM-yyyy"  // Set the desired date format
-  />
+            selected={invoiceDate}
+            onChange={(date) => handleInvoiceDateChange(date)}
+            dateFormat="dd-MM-yyyy" // Set the desired date format
+          />
         </div>
         <div className="input-group">
           <label htmlFor="clientName">Customer Name:</label>
@@ -539,7 +535,6 @@ const Bills = () => {
                       newSelectedServices[index] = e.target.value;
                       setSelectedServices(newSelectedServices);
                     }}
-
                   >
                     <option value="">Select service</option>
                     <option value="wash & fold">Wash & fold</option>
@@ -626,7 +621,6 @@ const Bills = () => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
@@ -719,7 +713,8 @@ const Bills = () => {
           >
             Review Invoice
           </button>
-          <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
+          <p value="userType">{user ? user.fullName : "Username"}</p>
+
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
@@ -737,7 +732,9 @@ const Bills = () => {
               <hr />
               <div className="popup-content">
                 <form>
-                <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
+                  <p value="userType">{user ? user.fullName : "Username"}</p>
+
+                  {/* <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p> */}
                   <label className="nameclass-label">InvoiceNo:</label>
                   <input type="text" value={invoiceNumber} readOnly />
                   <label className="nameclass-label">InvoiceDate:</label>
@@ -745,70 +742,27 @@ const Bills = () => {
                   <label className="nameclass-label">clientName:</label>
                   <input type="text" value={clientName} />
                   <label className="nameclass-label">clientContact:</label>
-                  <input
-                    type="text"
-                    value={clientContact}
-                  />
-                  <label className='nameclass-label'>customeraddress:</label>
-                  <input
-                    type="text"
-                    value={customeraddress}
-
-                  />
-                  <label className='nameclass-label'>item:</label>
-                  <input
-                    type="text"
-                    value={selectedPopupItem}
-                    readOnly
-                  />
-                  <label className='nameclass-label'>Services:</label>
-                  <input
-                    type="text"
-
-                    value={selectedServices}
-                  />
-                  <label className='nameclass-label'>quantity:</label>
-                  <input
-                    type="text"
-
-                    value={quantities}
-                  />
-                  <label className='nameclass-label'>TaxRate:</label>
-                  <input
-                    type="text"
-
-                    value={taxRate}
-                  />
-                  <label className='nameclass-label'>discountRate:</label>
-                  <input
-                    type="text"
-
-                    value={discountRate}
-                  />
-                  <label className='nameclass-label'>subTotal:</label>
-                  <input
-                    type="text"
-
-                    value={subTotal}
-                  />
-                  <label className='nameclass-label'>taxAmount:</label>
-                  <input
-                    type="text"
-
-                    value={taxAmount}
-                  />
-                  <label className='nameclass-label'>discountAmount:</label>
-                  <input
-                    type="text"
-
-                    value={discountAmount}
-                  />
-                  <label className='nameclass-label'>total:</label>
-                  <input
-                    type="text"
-
-                    value={total}
-                  />
+                  <input type="text" value={clientContact} />
+                  <label className="nameclass-label">customeraddress:</label>
+                  <input type="text" value={customeraddress} />
+                  <label className="nameclass-label">item:</label>
+                  <input type="text" value={selectedPopupItem} readOnly />
+                  <label className="nameclass-label">Services:</label>
+                  <input type="text" value={selectedServices} />
+                  <label className="nameclass-label">quantity:</label>
+                  <input type="text" value={quantities} />
+                  <label className="nameclass-label">TaxRate:</label>
+                  <input type="text" value={taxRate} />
+                  <label className="nameclass-label">discountRate:</label>
+                  <input type="text" value={discountRate} />
+                  <label className="nameclass-label">subTotal:</label>
+                  <input type="text" value={subTotal} />
+                  <label className="nameclass-label">taxAmount:</label>
+                  <input type="text" value={taxAmount} />
+                  <label className="nameclass-label">discountAmount:</label>
+                  <input type="text" value={discountAmount} />
+                  <label className="nameclass-label">total:</label>
+                  <input type="text" value={total} />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">send Copy</button>
                     <button

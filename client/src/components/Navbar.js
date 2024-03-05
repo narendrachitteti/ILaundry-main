@@ -70,7 +70,8 @@ const Navbar = () => {
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
           <p>Profile</p>
           <div className="dropdown-content">
-            <p>{`${user?.firstName} ${user?.lastName}`}</p>
+            {/* <p>{`${user?.firstName} ${user?.lastName}`}</p> */}
+            <p>{user?.fullName}</p>
             <p
               onClick={logout}
               style={{ display: "flex", alignItems: "center", gap: "1rem" }}

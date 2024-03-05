@@ -36,7 +36,12 @@ const billsInvoice = async (req, res) => {
   try {
     const count = await Billing.countDocuments();
     const invoiceNumber = `INV${(count + 1).toString().padStart(5, '0')}`;
-    const newBilling = new Billing({ ...req.body, invoiceNo: invoiceNumber });
+    const newBilling = new Billing({ 
+      ...req.body, 
+      user: req.body.user.userId,
+      username: req.body.user.username,
+      invoiceNo: invoiceNumber 
+    });
     await newBilling.save();
     console.log('Billing saved successfully:', newBilling);
     res.status(201).json({ message: 'Billing submitted successfully!', invoiceNo: invoiceNumber });
@@ -46,6 +51,7 @@ const billsInvoice = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };
+
 
 
 const getLastInvoiceNumber = async (req, res) => {
