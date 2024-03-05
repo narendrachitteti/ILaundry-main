@@ -8,9 +8,11 @@ import Navbar from "../components/Navbar";
 import jsPDF from "jspdf";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
 import axios from "axios";
 
 const currencies = currencyCodes.data;
+
 
 const Bills = () => {
   const [user, setUser] = useState(null);
@@ -18,17 +20,18 @@ const Bills = () => {
   useEffect(() => {
     const storedEmail = localStorage.getItem("mail");
     if (storedEmail) {
-      // Make a request to fetch user by email when the component mounts
       axios
         .get(`http://localhost:5000/users/${storedEmail}`)
         .then((response) => {
           setUser(response.data);
+          setUsername(response.data.username); // Assuming the username property exists in your user data
         })
         .catch((error) => {
           console.error("Error fetching user by email:", error);
         });
     }
   }, []);
+  
 
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [selectedPopupItem, setSelectedPopupItem] = useState("");
@@ -44,6 +47,7 @@ const Bills = () => {
   const [taxRate, setTaxRate] = useState(0);
   const [taxAmount, setTaxAmount] = useState(0);
   const [total, setTotal] = useState(0);
+  const [username, setUsername] = useState("");
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
   const [customeraddress, setcustomeraddress] = useState("");
@@ -367,17 +371,18 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
-      user,
+      user: user
+        ? {
+            userId: user._id,
+            username: user.username, // Use user.username instead of user.fullname
+            // Include other user details as needed
+          }
+        : null,
     };
-    if (user) {
-      // Include user details
-      data.user = {
-        userId: user._id,
-        username: user.username,
-        // Include other user details as needed
-      };
-    }
+  
     togglePopup(true);
+  
+    // Send a POST request to the backend API to save the billing data
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
       headers: {
@@ -394,6 +399,7 @@ const Bills = () => {
         console.error("Error:", error);
       });
   };
+  
   const handleInvoiceDateChange = (selectedDate) => {
     setInvoiceDate(selectedDate);
   };
