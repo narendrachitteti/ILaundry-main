@@ -374,7 +374,6 @@ const PreviousBills = () => {
         Tax Rate: ${taxRate}%
         Tax Amount: ${taxAmount} ${selectedCurrency}
         Total: ${total} ${selectedCurrency}
-        
         Items:
         ${itemList}
       `;
@@ -500,7 +499,6 @@ const PreviousBills = () => {
                     {" "}
                     {service.user.fullName}
                   </td>
-
                   <td onClick={() => handleFieldClick(service)}>
                     {" "}
                     {service.clientName}
