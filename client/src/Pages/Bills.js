@@ -31,6 +31,12 @@ const Bills = () => {
         });
     }
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username); // Update the username state after user state is set
+    }
+  }, [user]);
   
 
   const [selectedInvoice, setSelectedInvoice] = useState({});
@@ -347,6 +353,11 @@ const Bills = () => {
     const formatter = new Intl.DateTimeFormat("en-GB", options);
     return formatter.format(date);
   };
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+    }
+  }, [user]);
 
   const handleReviewInvoice = () => {
     const data = {
@@ -375,31 +386,25 @@ const Bills = () => {
         ? {
             userId: user._id,
             username: user.username,
-            fullName: user.fullName, // Include the user's full name
-            // Include other user details as needed
+            fullName: user.fullName,
           }
         : null,
     };
   
-    togglePopup(true);
-  
     // Send a POST request to the backend API to save the billing data
-    fetch("http://localhost:5000/api/billing", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-        setInvoiceNumber(data.invoiceNo);
+    axios
+      .post("http://localhost:5000/api/billing", data)
+      .then((response) => {
+        console.log("Success:", response.data);
+        setInvoiceNumber(response.data.invoiceNo);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
+    togglePopup(true);
   };
+  
+  
   
   const handleInvoiceDateChange = (selectedDate) => {
     setInvoiceDate(selectedDate);
