@@ -6,11 +6,27 @@ const billsInvoice = async (req, res) => {
     const invoiceNumber = `INV${(count + 1).toString().padStart(5, '0')}`;
     
     const newBilling = new Billing({ 
-      ...req.body, 
-      user: req.body.user.userId,
-      username: req.body.user.username,
-      invoiceNo: invoiceNumber 
+      user: {
+        userId: req.body.user.userId,
+        fullName: req.body.user.fullName,
+      },
+      username: req.body.username,
+      invoiceNo: invoiceNumber,
+      invoiceDate: req.body.invoiceDate,
+      clientName: req.body.clientName,
+      clientContact: req.body.clientContact,
+      customeraddress: req.body.customeraddress,
+      items: req.body.items,
+      subTotal: req.body.subTotal,
+      discountRate: req.body.discountRate,
+      discountAmount: req.body.discountAmount,
+      taxRate: req.body.taxRate,
+      taxAmount: req.body.taxAmount,
+      total: req.body.total,
+      selectedCurrency: req.body.selectedCurrency,
+      selectedPaymentMode: req.body.selectedPaymentMode,
     });
+
     await newBilling.save();
     console.log('Billing saved successfully:', newBilling);
     res.status(201).json({ message: 'Billing submitted successfully!', invoiceNo: invoiceNumber });

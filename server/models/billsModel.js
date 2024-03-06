@@ -2,8 +2,11 @@
 const mongoose = require("mongoose");
 
 const billingSchema = new mongoose.Schema({
-  user: String,
-   username: String, 
+  user: {
+    userId: String,
+    fullName: String,
+  },
+  username: String,
   invoiceNo: {
     type: String,
     unique: true,
