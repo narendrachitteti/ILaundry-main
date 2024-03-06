@@ -46,17 +46,32 @@ const PreviousBills = () => {
   const [allData, setAllData] = useState([]);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
+  // const fetchcustomerServicesCus = async () => {
+  //   try {
+  //     console.log("Fetching Customer Details");
+  //     const response = await axios.get(`${BASE_URL}/api/get-bills`);
+  //     setcustomerServicesCus(response.data);
+  //     setAllData(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching Customer Details:", error);
+  //   }
+  // };
   const fetchcustomerServicesCus = async () => {
     try {
       console.log("Fetching Customer Details");
       const response = await axios.get(`${BASE_URL}/api/get-bills`);
-      setcustomerServicesCus(response.data);
-      setAllData(response.data);
+      const billingDataWithUsername = response.data.map(billing => ({
+        ...billing,
+        username: billing.user.fullName, // Assuming `fullName` is the correct field
+      }));
+      setcustomerServicesCus(billingDataWithUsername);
+      setAllData(billingDataWithUsername);
     } catch (error) {
       console.error("Error fetching Customer Details:", error);
     }
   };
-
+  
+  
   useEffect(() => {
     console.log("Before API call");
     fetchcustomerServicesCus();
@@ -338,7 +353,7 @@ const PreviousBills = () => {
       selectedCurrency,
       items,
     } = service;
-  
+
     // Check if all required properties are defined
     if (
       invoiceNo &&
@@ -360,8 +375,8 @@ const PreviousBills = () => {
           (item) =>
             `${item.item} - ${item.quantity} units x ${item.price} ${selectedCurrency} (${item.serviceType})`
         )
-        .join('\n');
-  
+        .join("\n");
+
       return `
         Invoice No: ${invoiceNo}
         Invoice Date: ${invoiceDate}
@@ -382,8 +397,7 @@ const PreviousBills = () => {
       return "";
     }
   };
-  
-  
+
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
   };
@@ -479,6 +493,7 @@ const PreviousBills = () => {
               <th className="product-ooi">Items</th>
               <th className="product-ooi">Actions</th>
               <th className="product-ooi">Pay Mode</th>
+              <th className="product-ooi">Staff Name</th>
             </tr>
           </thead>
           <tbody>
@@ -616,6 +631,9 @@ const PreviousBills = () => {
                     </div>
                   </td>
                   <td>{service.selectedPaymentMode}</td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.username}
+                  </td>
                 </tr>
               ))}
           </tbody>
