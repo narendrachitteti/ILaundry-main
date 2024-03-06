@@ -155,7 +155,7 @@ function Login() {
                 <Components.Button type="submit">Login</Components.Button>
                 <Link to="/Register">
                   <div style={{ display: "flex" }}>
-                    <p style={{ color: 'black' }}>Don't have an account ?</p>
+                    <p style={{ color: 'black' }}>Don't have an account!</p>
                     <p style={{ color: 'black', marginLeft: "10px" }}>Register</p>
                   </div>
                 </Link>
