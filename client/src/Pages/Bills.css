@@ -147,17 +147,18 @@
 }
 
 .popup {
-    position: fixed;
-    top: 312px;
-    left: 23%;
-    transform: translate(57%, -50%);
-    background-color: white;
-    padding: 20px;
-    z-index: 1000;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    width: 40%;
-    height: 71vh;
-  }
+  position: fixed;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center the popup exactly */
+  background-color: white;
+  padding: 20px;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 40%;
+  max-width: 600px; /* Limit maximum width if needed */
+  height: 71vh;
+}
 
   .popup-1{
     position: relative;
@@ -177,6 +178,7 @@
     align-items: center;
     font-size: 1.2rem;
     margin-bottom: 10px;
+    font-weight: bold;
   }
 
   .close-button {
@@ -198,13 +200,20 @@
   .nameclass-label{
     width: 40%;
     text-align: left;
+    margin-right: 5px;
   }
 
+  input[type="text"] {
+    margin-left: 20px; 
+  }
   .downloadcopy{
     width: 100%;
     padding: 10px;
     background-color: #007bff;
     margin-top: 2%;
+    margin-left: 2%;
+    border-radius: 8px;
+    color:white;
 
   }
   .merge-karthik-bill{
