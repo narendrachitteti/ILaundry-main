@@ -9,6 +9,10 @@ import jsPDF from "jspdf";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from "axios";
+import { saveAs } from 'file-saver';
+
+import { IoLogoWhatsapp } from "react-icons/io";
+import ReactWhatsapp from "react-whatsapp";
 
 
 const currencies = currencyCodes.data;
@@ -295,6 +299,7 @@ const Bills = () => {
     setQuantities(updatedQuantities);
     updateSubtotal(index, value, defaultQuantity);
   };
+  
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
@@ -329,6 +334,7 @@ const Bills = () => {
     setTaxAmount(tax);
     setTotal(totalAmount);
   };
+  
 
   const getCurrencySymbol = (currencyCode) => {
     switch (currencyCode) {
@@ -391,16 +397,40 @@ const Bills = () => {
   const handleInvoiceDateChange = (selectedDate) => {
     setInvoiceDate(selectedDate);
   };
-  const handledownloadcopy = () => {
-    const doc = new jsPDF();
-    doc.text("Invoice No: " + invoiceNo, 10, 10);
-    doc.text("Invoice Date: " + invoiceDate, 10, 20);
-    doc.text("Client Name: " + clientName, 10, 30);
-    doc.text("Client Contact: " + clientContact, 10, 40);
-    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
-    doc.text("Total: " + total, 10, 50);
-    doc.text("TaxAmount: " + taxAmount, 10, 60);
-    doc.save("Laundry Invoice.pdf");
+ 
+const handledownloadcopy = () => {
+  const doc = new jsPDF();
+  doc.text("Invoice No: " + invoiceNo, 10, 10);
+  doc.text("Invoice Date: " + formatDate(invoiceDate), 10, 20);
+  doc.text("Client Name: " + clientName, 10, 30);
+  doc.text("Client Contact: " + clientContact, 10, 40);
+  doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+  doc.text("Total: " + total, 10, 50);
+  doc.text("TaxAmount: " + taxAmount, 10, 60);
+  
+  // Save the PDF file
+  doc.save("Laundry Invoice.pdf");
+
+  // Convert the PDF blob to a file and send it via WhatsApp
+  const pdfBlob = doc.output('blob');
+  const pdfFile = new File([pdfBlob], "Laundry Invoice.pdf", { type: "application/pdf" });
+
+  // Send the PDF file via WhatsApp
+  sendPDFViaWhatsApp(pdfFile);
+};
+
+const sendPDFViaWhatsApp = (pdfFile) => {
+  // Use react-whatsapp to send the PDF file via WhatsApp
+  // Assuming you have the customer's contact number stored in 'clientContact'
+  const customerContact = clientContact; // Replace this with the actual contact number
+  const message = "Here's your laundry invoice.";
+  const url = window.URL.createObjectURL(pdfFile);
+
+  // Open WhatsApp with the PDF file attached
+  ReactWhatsapp.send(
+    customerContact,
+    message,
+    url  );
   };
 
   const [showPopup, setShowPopup] = useState(false);
@@ -422,10 +452,13 @@ const Bills = () => {
     setSelectedPaymentMode("");
     setSelectedServices("");
   };
+  
 
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
   };
+
+  
 
   // const togglePopup = (value) => {
   //   setSelectedPopupItem(value);
@@ -722,83 +755,87 @@ const Bills = () => {
                   X
                 </button>
               </div>
-              <hr />
+              {/* <hr /> */}
               <div className="popup-content">
                 <form>
-                <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
-                  <label className="nameclass-label">InvoiceNo:</label>
+                <label className="nameclass-label">User</label>:
+                 <input type="text" value={user ? `${user.firstName} ${user.lastName}` : "Username"} readOnly />
+                
+                  <label className="nameclass-label">InvoiceNo</label>:
                   <input type="text" value={invoiceNumber} readOnly />
-                  <label className="nameclass-label">InvoiceDate:</label>
+                  <label className="nameclass-label">InvoiceDate</label>:
                   <input type="text" value={invoiceDate} />
-                  <label className="nameclass-label">clientName:</label>
+                  <label className="nameclass-label">ClientName</label>:
                   <input type="text" value={clientName} />
-                  <label className="nameclass-label">clientContact:</label>
+                  <label className="nameclass-label">ClientContact</label>:
                   <input
                     type="text"
                     value={clientContact}
                   />
-                  <label className='nameclass-label'>customeraddress:</label>
+                  <label className='nameclass-label'>Customeraddress</label>:
                   <input
                     type="text"
                     value={customeraddress}
 
                   />
-                  <label className='nameclass-label'>item:</label>
+                  <label className='nameclass-label'>Item</label>:
                   <input
                     type="text"
-                    value={selectedPopupItem}
+                    value={selectedItems}
                     readOnly
                   />
-                  <label className='nameclass-label'>Services:</label>
+                  <label className='nameclass-label'>Services</label>:
                   <input
                     type="text"
 
                     value={selectedServices}
                   />
-                  <label className='nameclass-label'>quantity:</label>
+                  <label className='nameclass-label'>Quantity</label>:
                   <input
                     type="text"
 
                     value={quantities}
                   />
-                  <label className='nameclass-label'>TaxRate:</label>
+                  <label className='nameclass-label'>TaxRate</label>:
                   <input
                     type="text"
 
                     value={taxRate}
                   />
-                  <label className='nameclass-label'>discountRate:</label>
+                  <label className='nameclass-label'>DiscountRate</label>:
                   <input
                     type="text"
 
                     value={discountRate}
                   />
-                  <label className='nameclass-label'>subTotal:</label>
+                  <label className='nameclass-label'>SubTotal</label>:
                   <input
                     type="text"
 
                     value={subTotal}
                   />
-                  <label className='nameclass-label'>taxAmount:</label>
+                  <label className='nameclass-label'>TaxAmount</label>:
                   <input
                     type="text"
 
                     value={taxAmount}
                   />
-                  <label className='nameclass-label'>discountAmount:</label>
+                  <label className='nameclass-label'>DiscountAmount</label>:
                   <input
                     type="text"
 
                     value={discountAmount}
                   />
-                  <label className='nameclass-label'>total:</label>
+                  <label className='nameclass-label'>Total</label>:
                   <input
                     type="text"
 
                     value={total}
                   />
                   <div className="merge-karthik-bill">
-                    <button className="downloadcopy">send Copy</button>
+                    <button className="downloadcopy">Send Copy</button>
+     
+
                     <button
                       className="downloadcopy"
                       onClick={handledownloadcopy}
