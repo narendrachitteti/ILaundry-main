@@ -55,7 +55,7 @@ function Register() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="container-abed23s">
         <div className="Inner-container-abed23s">
           <h1>Registration</h1>

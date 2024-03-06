@@ -264,10 +264,10 @@ const PreviousBills = () => {
     ];
 
     const tableRows = [
-      { label: "Discount Rate:", value: service.discountRate },
-      { label: "Discount Amount:", value: service.discountAmount },
-      { label: "Tax(SGST 9%):", value: service.taxRate },
-      { label: "Tax Amount:", value: service.taxAmount },
+      { label: "Discount:", value: service.discountRate },
+      { label: "Discount:", value: service.discountAmount },
+      { label: "SGST 9%:", value: service.taxRate },
+      { label: "Tax:", value: service.taxAmount },
       { label: "Subtotal:", value: service.subTotal },
       { label: "Total:", value: service.total },
       { label: "Currency:", value: service.selectedCurrency },
@@ -341,6 +341,7 @@ const PreviousBills = () => {
     const {
       invoiceNo,
       invoiceDate,
+      staffName,
       clientName,
       clientContact,
       subTotal,
@@ -357,6 +358,7 @@ const PreviousBills = () => {
     if (
       invoiceNo &&
       invoiceDate &&
+      staffName &&
       clientName &&
       clientContact &&
       subTotal &&
@@ -378,6 +380,7 @@ const PreviousBills = () => {
       return `
         Invoice No: ${invoiceNo}
         Invoice Date: ${invoiceDate}
+        Staff Name:${staffName}
         Client Name: ${clientName}
         Client Contact: ${clientContact}
         Subtotal: ${subTotal} ${selectedCurrency}
@@ -478,13 +481,13 @@ const PreviousBills = () => {
             <tr className="product-ooi">
               <th className="product-ooi">Invoice No</th>
               <th className="product-ooi">Invoice Date</th>
+              <th className="product-ooi">Staff Name</th>
               <th className="product-ooi">Customer Name</th>
-              <th className="product-ooi">Customer Contact</th>
-
-              <th className="product-ooi">Discount Rate</th>
-              <th className="product-ooi">Discount Amount</th>
-              <th className="product-ooi">Tax Rate</th>
-              <th className="product-ooi">Tax Amount</th>
+              <th className="product-ooi">Contact</th>
+              <th className="product-ooi">D&R</th>
+              <th className="product-ooi">D&A</th>
+              <th className="product-ooi">T&R</th>
+              <th className="product-ooi">T&A</th>
               <th className="product-ooi">Total</th>
               <th className="product-ooi">Subtotal </th>
               <th className="product-ooi">Currency</th>
@@ -507,6 +510,10 @@ const PreviousBills = () => {
                     {service.invoiceDate
                       ? moment(service.invoiceDate).format("MM-DD-YYYY")
                       : ""}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {" "}
+                    {service.user.fullName}
                   </td>
 
                   <td onClick={() => handleFieldClick(service)}>

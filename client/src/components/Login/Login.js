@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import * as Components from "./Components";
 import "./Login.css";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+// import { Button } from "./Button"; 
+// import Button from "@material-ui/core/Button";
+
 
 function Login() {
   const navigate = useNavigate();
@@ -98,107 +102,126 @@ function Login() {
   };
 
   return (
-    <div className="complete98">
-      <button
-        className="cursor-pointer duration-200 hover:scale-125 active:scale-100"
-        title="Go Back"
-        style={{ marginLeft: "-90%", marginTop: "-5%" }}
-        onClick={handleBackButtonClick}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="40px"
-          height="40px"
-          viewBox="0 0 24 24"
-          className="stroke-white"
+    <div>
+      <div className="complete98">
+        <button
+          className="cursor-pointer duration-200 hover:scale-125 active:scale-100"
+          title="Go Back"
+          style={{ marginLeft: "-90%", marginTop: "-5%" }}
+          onClick={handleBackButtonClick}
         >
-          <path
-            stroke="red"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            strokeWidth="1.5"
-            d="M11 6L5 12M5 12L11 18M5 12H19"
-          ></path>
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="40px"
+            height="40px"
+            viewBox="0 0 24 24"
+            className="stroke-white"
+          >
+            <path
+              stroke="red"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeWidth="1.5"
+              d="M11 6L5 12M5 12L11 18M5 12H19"
+            ></path>
+          </svg>
+        </button>
 
-      <Components.Container
-        style={{
-          boxShadow:
-            "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-        }}
-      >
-        {signIn ? (
-          <Components.SignInContainer signingIn={signIn}>
-            <Components.Form onSubmit={handleLogin}>
-              <Components.Title>Master Login</Components.Title>
-              <Components.Input
-                name="email"
-                type="email"
-                placeholder="Email"
-                required
-              />
-              <Components.Input
-                name="password"
-                type="password"
-                placeholder="Password"
-                required
-              />
-              {/* <Components.Anchor href="#">
+        <Components.Container
+          style={{
+            boxShadow:
+              "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+          }}
+        >
+          {signIn ? (
+            <Components.SignInContainer signingIn={signIn}>
+              <Components.Form onSubmit={handleLogin}>
+                <Components.Title>Master Login</Components.Title>
+                <Components.Input
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  required
+                />
+                <Components.Input
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  required
+                />
+                {/* <Components.Anchor href="#">
                 Forgot your password?
               </Components.Anchor> */}
-              <Components.Button type="submit">Login</Components.Button>
-            </Components.Form>
-          </Components.SignInContainer>
-        ) : (
-          <Components.SignUpContainer signingIn={signIn}>
-            <Components.Form onSubmit={handleLogin1}>
-              <Components.Title>Staff Login</Components.Title>
-              <Components.Input
-                name="email"
-                type="email"
-                placeholder="Email"
-                value={staffEmail}
-                onChange={(e) => setStaffEmail(e.target.value)}
-                required
-              />
-              <Components.Input
-                name="password"
-                type="password"
-                placeholder="Password"
-                value={staffPassword}
-                onChange={(e) => setStaffPassword(e.target.value)}
-                required
-              />
-              <Components.Button type="submit">Login</Components.Button>
-              {staffError && <div className="error-message">{staffError}</div>}
-            </Components.Form>
-          </Components.SignUpContainer>
-        )}
-        <Components.OverlayContainer signingIn={signIn}>
-          <Components.Overlay signingIn={signIn}>
-            <Components.LeftOverlayPanel signingIn={signIn}>
-              <Components.Title>Master Login</Components.Title>
-              <Components.Paragraph>
-                To keep connected with us please login with your personal info.slide left to Master Login
-              </Components.Paragraph>
-              <Components.GhostButton onClick={() => setSignIn(true)}>
-                slide right
-              </Components.GhostButton>
-            </Components.LeftOverlayPanel>
-            <Components.RightOverlayPanel signingIn={signIn}>
-              <Components.Title>Staff Login</Components.Title>
-              <Components.Paragraph>
-                Enter your personal details and start journey with us. slide
-                left to staff Login
-              </Components.Paragraph>
-              <Components.GhostButton onClick={() => setSignIn(false)}>
-                slide left
-              </Components.GhostButton>
-            </Components.RightOverlayPanel>
-          </Components.Overlay>
-        </Components.OverlayContainer>
-      </Components.Container>
+                <Components.Button type="submit">Login</Components.Button>
+                <div style={{ display: "flex" }}>
+                  <p style={{ color: 'black' }}>Don't have an account?</p>
+                  <Link to="/Register">
+                    <div >
+                      <p style={{ color: 'black', marginLeft: "10px" }}>Register</p>
+                    </div>
+                  </Link>
+                </div>
+              </Components.Form>
+            </Components.SignInContainer>
+          ) : (
+            <Components.SignUpContainer signingIn={signIn}>
+              <Components.Form onSubmit={handleLogin1}>
+                <Components.Title>Staff Login</Components.Title>
+                <Components.Input
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  value={staffEmail}
+                  onChange={(e) => setStaffEmail(e.target.value)}
+                  required
+                />
+                <Components.Input
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  value={staffPassword}
+                  onChange={(e) => setStaffPassword(e.target.value)}
+                  required
+                />
+                <Components.Button type="submit">Login</Components.Button>
+                <div style={{ display: "flex" ,height:"25px" , backgroundColor:"orange", borderRadius:"6px" ,width:"100%", padding:"3px" , marginTop:"10px"}}>
+                  <p style={{ color: 'white' }}>Don't have an account?</p>
+                  <Link to="/Register">
+                    <div >
+                      <p style={{ color: 'white', marginLeft: "10px" }}>Register</p>
+                    </div>
+                  </Link>
+                </div>
+
+                {staffError && <div className="error-message">{staffError}</div>}
+              </Components.Form>
+            </Components.SignUpContainer>
+          )}
+          <Components.OverlayContainer signingIn={signIn}>
+            <Components.Overlay signingIn={signIn}>
+              <Components.LeftOverlayPanel signingIn={signIn}>
+                <Components.Title>Master Login</Components.Title>
+                <Components.Paragraph>
+                  To keep connected with us please login with your personal info.slide left to Master Login
+                </Components.Paragraph>
+                <Components.GhostButton onClick={() => setSignIn(true)}>
+                  slide right
+                </Components.GhostButton>
+              </Components.LeftOverlayPanel>
+              <Components.RightOverlayPanel signingIn={signIn}>
+                <Components.Title>Staff Login</Components.Title>
+                <Components.Paragraph>
+                  Enter your personal details and start journey with us. slide
+                  left to staff Login
+                </Components.Paragraph>
+                <Components.GhostButton onClick={() => setSignIn(false)}>
+                  slide left
+                </Components.GhostButton>
+              </Components.RightOverlayPanel>
+            </Components.Overlay>
+          </Components.OverlayContainer>
+        </Components.Container>
+      </div>
     </div>
   );
 }
