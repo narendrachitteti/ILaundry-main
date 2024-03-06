@@ -493,7 +493,7 @@ const PreviousBills = () => {
               <th className="product-ooi">Items</th>
               <th className="product-ooi">Actions</th>
               <th className="product-ooi">Pay Mode</th>
-              <th className="product-ooi">Staff Name</th>
+              {/* <th className="product-ooi">Staff Name</th> */}
             </tr>
           </thead>
           <tbody>
@@ -631,9 +631,9 @@ const PreviousBills = () => {
                     </div>
                   </td>
                   <td>{service.selectedPaymentMode}</td>
-                  <td onClick={() => handleFieldClick(service)}>
+                  {/* <td onClick={() => handleFieldClick(service)}>
                     {service.username}
-                  </td>
+                  </td> */}
                 </tr>
               ))}
           </tbody>

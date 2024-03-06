@@ -153,11 +153,11 @@ function Login() {
                 Forgot your password?
               </Components.Anchor> */}
                 <Components.Button type="submit">Login</Components.Button>
-                <div style={{ display: "flex" }}>
-                  <p style={{ color: 'black' }}>Don't have an account?</p>
+                <div style={{ display: "flex" ,height:"25px" , backgroundColor:"orange", borderRadius:"6px" ,width:"100%", padding:"3px" , marginTop:"10px"}}>
+                  <p style={{ color: 'white' }}>Don't have an account?</p>
                   <Link to="/Register">
                     <div >
-                      <p style={{ color: 'black', marginLeft: "10px" }}>Register</p>
+                      <p style={{ color: 'white', marginLeft: "10px" }}>Register</p>
                     </div>
                   </Link>
                 </div>
