@@ -498,7 +498,7 @@ const PreviousBills = () => {
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
                     {" "}
-                    {service.fullName}
+                    {service.user.fullName}
                   </td>
 
                   <td onClick={() => handleFieldClick(service)}>

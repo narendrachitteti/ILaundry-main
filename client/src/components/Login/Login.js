@@ -153,12 +153,14 @@ function Login() {
                 Forgot your password?
               </Components.Anchor> */}
                 <Components.Button type="submit">Login</Components.Button>
-                <Link to="/Register">
-                  <div style={{ display: "flex" }}>
-                    <p style={{ color: 'black' }}>Don't have an account!</p>
-                    <p style={{ color: 'black', marginLeft: "10px" }}>Register</p>
-                  </div>
-                </Link>
+                <div style={{ display: "flex" }}>
+                  <p style={{ color: 'black' }}>Don't have an account?</p>
+                  <Link to="/Register">
+                    <div >
+                      <p style={{ color: 'black', marginLeft: "10px" }}>Register</p>
+                    </div>
+                  </Link>
+                </div>
               </Components.Form>
             </Components.SignInContainer>
           ) : (
@@ -182,13 +184,14 @@ function Login() {
                   required
                 />
                 <Components.Button type="submit">Login</Components.Button>
-
-                <Link to="/Register">
-                  <div style={{ display: "flex" }}>
-                    <p style={{ color: 'black' }}>Don't have an account!</p>
-                    <p style={{ color: 'black', marginLeft: "10px" }}>Register</p>
-                  </div>
-                </Link>
+                <div style={{ display: "flex" ,height:"25px" , backgroundColor:"orange", borderRadius:"6px" ,width:"100%", padding:"3px" , marginTop:"10px"}}>
+                  <p style={{ color: 'white' }}>Don't have an account?</p>
+                  <Link to="/Register">
+                    <div >
+                      <p style={{ color: 'white', marginLeft: "10px" }}>Register</p>
+                    </div>
+                  </Link>
+                </div>
 
                 {staffError && <div className="error-message">{staffError}</div>}
               </Components.Form>
@@ -218,11 +221,7 @@ function Login() {
             </Components.Overlay>
           </Components.OverlayContainer>
         </Components.Container>
-
-
-
       </div>
-
     </div>
   );
 }
