@@ -6,6 +6,8 @@ import image16 from "../components/images/profile.jpg";
 import image17 from "../components/images/customer.jpg";
 import register from "../components/images/register.png";
 import { IoLogOutOutline } from "react-icons/io5";
+
+
 import "../Styles/Navbar.css";
 import axios from "axios";
 import { BASE_URL } from "../Helper/Helper";
@@ -17,7 +19,6 @@ const Navbar = () => {
   useEffect(() => {
     const storedEmail = localStorage.getItem("mail");
     if (storedEmail) {
-      // Make a request to fetch user by email when the component mounts
       axios
         .get(`${BASE_URL}/users/${storedEmail}`)
         .then((response) => {
@@ -33,6 +34,7 @@ const Navbar = () => {
     navigate("/");
     localStorage.removeItem("mail");
   };
+  
 
   return (
     <div>
@@ -67,14 +69,14 @@ const Navbar = () => {
         <div className="bills">
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
           <p>Profile</p>
-          <div class="dropdown-content">
-            <p>{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
+          <div className="dropdown-content">
+            {/* <p>{`${user?.firstName} ${user?.lastName}`}</p> */}
+            <p>{user?.fullName}</p>
             <p
               onClick={logout}
               style={{ display: "flex", alignItems: "center", gap: "1rem" }}
             >
-              Logout
-              <IoLogOutOutline />{" "}
+              Logout <IoLogOutOutline />
             </p>
           </div>
         </div>

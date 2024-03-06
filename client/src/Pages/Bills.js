@@ -6,34 +6,33 @@ import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
 import jsPDF from "jspdf";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import axios from "axios";
-import { saveAs } from 'file-saver';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-import { IoLogoWhatsapp } from "react-icons/io";
-import ReactWhatsapp from "react-whatsapp";
+import axios from "axios";
 
 
 const currencies = currencyCodes.data;
 
+
 const Bills = () => {
   const [user, setUser] = useState(null);
-  
+
   useEffect(() => {
     const storedEmail = localStorage.getItem("mail");
     if (storedEmail) {
-      // Make a request to fetch user by email when the component mounts
       axios
         .get(`http://localhost:5000/users/${storedEmail}`)
         .then((response) => {
           setUser(response.data);
+          setUsername(response.data.username); // Assuming the username property exists in your user data
         })
         .catch((error) => {
           console.error("Error fetching user by email:", error);
         });
     }
   }, []);
+  
 
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [selectedPopupItem, setSelectedPopupItem] = useState("");
@@ -49,9 +48,10 @@ const Bills = () => {
   const [taxRate, setTaxRate] = useState(0);
   const [taxAmount, setTaxAmount] = useState(0);
   const [total, setTotal] = useState(0);
+  const [username, setUsername] = useState("");
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
-  const [customeraddress, setcustomeraddress] = useState('');
+  const [customeraddress, setcustomeraddress] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
@@ -346,8 +346,8 @@ const Bills = () => {
   };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    const formatter = new Intl.DateTimeFormat('en-GB', options);
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+    const formatter = new Intl.DateTimeFormat("en-GB", options);
     return formatter.format(date);
   };
 
@@ -374,10 +374,19 @@ const Bills = () => {
       selectedCurrency,
       selectedPaymentMode,
       selectedPopupItem,
-      user,
-
+      user: user
+        ? {
+            userId: user._id,
+            username: user.username,
+            fullName: user.fullName, // Include the user's full name
+            // Include other user details as needed
+          }
+        : null,
     };
+  
     togglePopup(true);
+  
+    // Send a POST request to the backend API to save the billing data
     fetch("http://localhost:5000/api/billing", {
       method: "POST",
       headers: {
@@ -394,6 +403,7 @@ const Bills = () => {
         console.error("Error:", error);
       });
   };
+  
   const handleInvoiceDateChange = (selectedDate) => {
     setInvoiceDate(selectedDate);
   };
@@ -438,7 +448,7 @@ const sendPDFViaWhatsApp = (pdfFile) => {
     setInvoiceNo("");
     setClientName("");
     setClientContact("");
-    setcustomeraddress('');
+    setcustomeraddress("");
     setRows([{ id: 1 }]);
     setSelectedItems(Array(rows.length).fill(""));
     setQuantities(Array(rows.length).fill(0));
@@ -491,10 +501,10 @@ const sendPDFViaWhatsApp = (pdfFile) => {
           <label htmlFor="invoiceDate">Invoice Date:</label>
           {/* Placeholder for your date picker component */}
           <DatePicker
-    selected={invoiceDate}
-    onChange={(date) => handleInvoiceDateChange(date)}
-    dateFormat="dd-MM-yyyy"  // Set the desired date format
-  />
+            selected={invoiceDate}
+            onChange={(date) => handleInvoiceDateChange(date)}
+            dateFormat="dd-MM-yyyy" // Set the desired date format
+          />
         </div>
         <div className="input-group">
           <label htmlFor="clientName">Customer Name:</label>
@@ -562,11 +572,12 @@ const sendPDFViaWhatsApp = (pdfFile) => {
                       newSelectedServices[index] = e.target.value;
                       setSelectedServices(newSelectedServices);
                     }}
-
                   >
                     <option value="">Select service</option>
                     <option value="wash & fold">Wash & fold</option>
+                    <option value="Steam Iron">Steam Ironing</option>
                     <option value="wash & iron">Wash & Iron</option>
+                    <option value="Dry cleaning">Dry Cleaning</option>
                     <option value="premium laundry">Premium Laundry</option>
                   </select>
                 </td>
@@ -647,7 +658,6 @@ const sendPDFViaWhatsApp = (pdfFile) => {
       <center>
         <div className="flexxx">
           <div className="invoice-form2">
-
             <div className="input-group">
               <label htmlFor="currency">Currency:</label>
               <select
@@ -740,7 +750,8 @@ const sendPDFViaWhatsApp = (pdfFile) => {
           >
             Review Invoice
           </button>
-          <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
+          <p value="userType">{user ? user.fullName : "Username"}</p>
+
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
@@ -758,75 +769,73 @@ const sendPDFViaWhatsApp = (pdfFile) => {
               {/* <hr /> */}
               <div className="popup-content">
                 <form>
-                <label className="nameclass-label">User</label>:
-                 <input type="text" value={user ? `${user.firstName} ${user.lastName}` : "Username"} readOnly />
-                
-                  <label className="nameclass-label">InvoiceNo</label>:
+                <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
+                  <label className="nameclass-label">InvoiceNo:</label>
                   <input type="text" value={invoiceNumber} readOnly />
                   <label className="nameclass-label">InvoiceDate</label>:
                   <input type="text" value={invoiceDate} />
                   <label className="nameclass-label">ClientName</label>:
                   <input type="text" value={clientName} />
-                  <label className="nameclass-label">ClientContact</label>:
+                  <label className="nameclass-label">clientContact:</label>
                   <input
                     type="text"
                     value={clientContact}
                   />
-                  <label className='nameclass-label'>Customeraddress</label>:
+                  <label className='nameclass-label'>customeraddress:</label>
                   <input
                     type="text"
                     value={customeraddress}
 
                   />
-                  <label className='nameclass-label'>Item</label>:
+                  <label className='nameclass-label'>item:</label>
                   <input
                     type="text"
-                    value={selectedItems}
+                    value={selectedPopupItem}
                     readOnly
                   />
-                  <label className='nameclass-label'>Services</label>:
+                  <label className='nameclass-label'>Services:</label>
                   <input
                     type="text"
 
                     value={selectedServices}
                   />
-                  <label className='nameclass-label'>Quantity</label>:
+                  <label className='nameclass-label'>quantity:</label>
                   <input
                     type="text"
 
                     value={quantities}
                   />
-                  <label className='nameclass-label'>TaxRate</label>:
+                  <label className='nameclass-label'>TaxRate:</label>
                   <input
                     type="text"
 
                     value={taxRate}
                   />
-                  <label className='nameclass-label'>DiscountRate</label>:
+                  <label className='nameclass-label'>discountRate:</label>
                   <input
                     type="text"
 
                     value={discountRate}
                   />
-                  <label className='nameclass-label'>SubTotal</label>:
+                  <label className='nameclass-label'>subTotal:</label>
                   <input
                     type="text"
 
                     value={subTotal}
                   />
-                  <label className='nameclass-label'>TaxAmount</label>:
+                  <label className='nameclass-label'>taxAmount:</label>
                   <input
                     type="text"
 
                     value={taxAmount}
                   />
-                  <label className='nameclass-label'>DiscountAmount</label>:
+                  <label className='nameclass-label'>discountAmount:</label>
                   <input
                     type="text"
 
                     value={discountAmount}
                   />
-                  <label className='nameclass-label'>Total</label>:
+                  <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
 

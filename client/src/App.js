@@ -14,6 +14,7 @@ import Registration from "./components/Registration/Registration.js";
 import OldLogin from "./components/Registration/OldLogin.js";
 import StaffLogin from "./components/Registration/StaffLogin.js";
 
+
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -41,6 +42,7 @@ function App() {
             <Route path="/OldLogin" element={<OldLogin />} />
             <Route path="/StaffLogin" element={<StaffLogin />} />
             <Route element={<PrivateRoute />}></Route>
+            {/* <Route path="/Process" element={<Process/>}/> */}
           </Routes>
         </Router>
       )}

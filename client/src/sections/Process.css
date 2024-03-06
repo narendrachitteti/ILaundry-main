@@ -1,0 +1,36 @@
+.Process-body{
+    background-color: #fff;
+}
+.Process-h1{
+    text-align: center;
+    color: orangered;
+}
+
+.head-p{
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+    margin-top: 2%;
+}
+.Process{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3%;
+}
+.process_types{
+    display: flex;
+    justify-content: space-between;
+    font-size: x-large;
+    font-weight: bold;
+    margin-top: 10px;
+    color: black;
+}
+.pickup{
+    margin-left: 5%;
+}
+.Process-p{
+    margin-right: 4%;
+}
+.delivery{
+    margin-right: 5%;
+}

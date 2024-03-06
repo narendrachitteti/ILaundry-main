@@ -19,11 +19,13 @@ function Register() {
       return;
     }
 
+    // Combine firstName and lastName into fullName
+    const fullName = `${formData.get("firstName")} ${formData.get("lastName")}`;
+
     const userData = {
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
+      fullName: fullName, // Include fullName in userData
       email: formData.get("email"),
-      userType: userType, // Include userType in userData
+      userType: userType,
       password: password,
       confirmPassword: confirmPassword,
     };
@@ -39,7 +41,6 @@ function Register() {
 
       if (response.ok) {
         alert("Registration successful");
-        // Clear form fields after successful registration
         event.target.reset();
         setError("");
       } else {
