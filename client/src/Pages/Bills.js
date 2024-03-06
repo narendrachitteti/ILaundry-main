@@ -8,7 +8,7 @@ import Navbar from "../components/Navbar";
 import jsPDF from "jspdf";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import ReactWhatsapp from "react-whatsapp";
 import axios from "axios";
 
 
