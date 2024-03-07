@@ -10,6 +10,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ReactWhatsapp from "react-whatsapp";
 import axios from "axios";
+// import QRCode from "qrcode.react";
+import Barcode from 'react-barcode';
 
 
 const currencies = currencyCodes.data;
@@ -38,7 +40,7 @@ const Bills = () => {
       setUsername(user.username); // Update the username state after user state is set
     }
   }, [user]);
-  
+
 
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [selectedPopupItem, setSelectedPopupItem] = useState("");
@@ -305,7 +307,7 @@ const Bills = () => {
     setQuantities(updatedQuantities);
     updateSubtotal(index, value, defaultQuantity);
   };
-  
+
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
@@ -340,7 +342,7 @@ const Bills = () => {
     setTaxAmount(tax);
     setTotal(totalAmount);
   };
-  
+
 
   const getCurrencySymbol = (currencyCode) => {
     switch (currencyCode) {
@@ -387,13 +389,13 @@ const Bills = () => {
       selectedPopupItem,
       user: user
         ? {
-            userId: user._id,
-            username: user.username,
-            fullName: user.fullName,
-          }
+          userId: user._id,
+          username: user.username,
+          fullName: user.fullName,
+        }
         : null,
     };
-  
+
     // Send a POST request to the backend API to save the billing data
     axios
       .post("http://localhost:5000/api/billing", data)
@@ -406,46 +408,46 @@ const Bills = () => {
       });
     togglePopup(true);
   };
-  
-  
-  
+
+
+
   const handleInvoiceDateChange = (selectedDate) => {
     setInvoiceDate(selectedDate);
   };
- 
-const handledownloadcopy = () => {
-  const doc = new jsPDF();
-  doc.text("Invoice No: " + invoiceNo, 10, 10);
-  doc.text("Invoice Date: " + formatDate(invoiceDate), 10, 20);
-  doc.text("Client Name: " + clientName, 10, 30);
-  doc.text("Client Contact: " + clientContact, 10, 40);
-  doc.text("Selected Item: " + selectedPopupItem, 10, 60);
-  doc.text("Total: " + total, 10, 50);
-  doc.text("TaxAmount: " + taxAmount, 10, 60);
-  
-  // Save the PDF file
-  doc.save("Laundry Invoice.pdf");
 
-  // Convert the PDF blob to a file and send it via WhatsApp
-  const pdfBlob = doc.output('blob');
-  const pdfFile = new File([pdfBlob], "Laundry Invoice.pdf", { type: "application/pdf" });
+  const handledownloadcopy = () => {
+    const doc = new jsPDF();
+    doc.text("Invoice No: " + invoiceNo, 10, 10);
+    doc.text("Invoice Date: " + formatDate(invoiceDate), 10, 20);
+    doc.text("Client Name: " + clientName, 10, 30);
+    doc.text("Client Contact: " + clientContact, 10, 40);
+    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+    doc.text("Total: " + total, 10, 50);
+    doc.text("TaxAmount: " + taxAmount, 10, 60);
 
-  // Send the PDF file via WhatsApp
-  sendPDFViaWhatsApp(pdfFile);
-};
+    // Save the PDF file
+    doc.save("Laundry Invoice.pdf");
 
-const sendPDFViaWhatsApp = (pdfFile) => {
-  // Use react-whatsapp to send the PDF file via WhatsApp
-  // Assuming you have the customer's contact number stored in 'clientContact'
-  const customerContact = clientContact; // Replace this with the actual contact number
-  const message = "Here's your laundry invoice.";
-  const url = window.URL.createObjectURL(pdfFile);
+    // Convert the PDF blob to a file and send it via WhatsApp
+    const pdfBlob = doc.output('blob');
+    const pdfFile = new File([pdfBlob], "Laundry Invoice.pdf", { type: "application/pdf" });
 
-  // Open WhatsApp with the PDF file attached
-  ReactWhatsapp.send(
-    customerContact,
-    message,
-    url  );
+    // Send the PDF file via WhatsApp
+    sendPDFViaWhatsApp(pdfFile);
+  };
+
+  const sendPDFViaWhatsApp = (pdfFile) => {
+    // Use react-whatsapp to send the PDF file via WhatsApp
+    // Assuming you have the customer's contact number stored in 'clientContact'
+    const customerContact = clientContact; // Replace this with the actual contact number
+    const message = "Here's your laundry invoice.";
+    const url = window.URL.createObjectURL(pdfFile);
+
+    // Open WhatsApp with the PDF file attached
+    ReactWhatsapp.send(
+      customerContact,
+      message,
+      url);
   };
 
   const [showPopup, setShowPopup] = useState(false);
@@ -467,13 +469,13 @@ const sendPDFViaWhatsApp = (pdfFile) => {
     setSelectedPaymentMode("");
     setSelectedServices("");
   };
-  
+
 
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
   };
 
-  
+
 
   // const togglePopup = (value) => {
   //   setSelectedPopupItem(value);
@@ -774,7 +776,23 @@ const sendPDFViaWhatsApp = (pdfFile) => {
               {/* <hr /> */}
               <div className="popup-content">
                 <form>
-                <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
+                  {/* <QRCode
+        value={`Invoice No: ${invoiceNo},Date: ${invoiceDate} , clientName: ${clientName} ,clientContact:${clientContact}
+        customeraddress:${customeraddress}, items:${selectedItems} , Services:${selectedServices} , quantity:${quantities}
+        taxRate:${taxRate} ,discountRate:${discountRate} ,  subTotal:${subTotal} , taxAmount:${taxAmount} , discountRate:${discountRate}, Amount: ${total}`} // Adjust the value as per your data
+        size={150} // Adjust the size of the QR code as needed
+        level={"H"} // Error correction level (L, M, Q, H)
+        includeMargin={true} // Include margin
+      /> */}
+                  <Barcode 
+                    style={{ width: "50px", height: "auto" }}
+                    // value={`Invoice No: ${invoiceNo}, clientName: ${clientName}, clientContact: ${clientContact}`}
+                    value={`clientName: ${clientName}`}
+                    fontSize={10} 
+                    height={50}
+                    // width={50}
+                  />
+                  <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
                   <label className="nameclass-label">InvoiceNo:</label>
                   <input type="text" value={invoiceNumber} readOnly />
                   <label className="nameclass-label">InvoiceDate</label>:
@@ -789,43 +807,37 @@ const sendPDFViaWhatsApp = (pdfFile) => {
                   <label className='nameclass-label'>customeraddress:</label>
                   <input
                     type="text"
-                    value={customeraddress}
-
+                    value={customeraddress} 
                   />
                   <label className='nameclass-label'>item:</label>
                   <input
                     type="text"
-                    value={selectedPopupItem}
+                    value={selectedItems}
                     readOnly
                   />
                   <label className='nameclass-label'>Services:</label>
                   <input
                     type="text"
-
                     value={selectedServices}
                   />
                   <label className='nameclass-label'>quantity:</label>
                   <input
                     type="text"
-
                     value={quantities}
                   />
                   <label className='nameclass-label'>TaxRate:</label>
                   <input
                     type="text"
-
                     value={taxRate}
                   />
                   <label className='nameclass-label'>discountRate:</label>
                   <input
                     type="text"
-
                     value={discountRate}
                   />
                   <label className='nameclass-label'>subTotal:</label>
                   <input
                     type="text"
-
                     value={subTotal}
                   />
                   <label className='nameclass-label'>taxAmount:</label>
@@ -837,19 +849,15 @@ const sendPDFViaWhatsApp = (pdfFile) => {
                   <label className='nameclass-label'>discountAmount:</label>
                   <input
                     type="text"
-
                     value={discountAmount}
                   />
                   <label className='nameclass-label'>total:</label>
                   <input
                     type="text"
-
                     value={total}
                   />
                   <div className="merge-karthik-bill">
                     <button className="downloadcopy">Send Copy</button>
-     
-
                     <button
                       className="downloadcopy"
                       onClick={handledownloadcopy}
