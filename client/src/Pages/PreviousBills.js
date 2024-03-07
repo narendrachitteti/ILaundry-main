@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import moment from "moment";
+import { BASE_URL } from "../Helper/Helper.js";
+import "../Styles/PreviousBills.css";
 import Popup from "reactjs-popup";
 import CustomerForm from "./CustomerForm.js";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
-import "../Styles/PreviousBills.css";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaDownload } from "react-icons/fa6";
 import { IoLogoWhatsapp } from "react-icons/io";
@@ -21,7 +23,9 @@ import KeyboardDoubleArrowRight from "@mui/icons-material/KeyboardDoubleArrowRig
 import image13 from "../components/images/background.jpg";
 import Navbar from "../components/Navbar.js";
 import Backbutton from "./Backbutton.js";
-import { BASE_URL } from "../Helper/Helper.js";
+import InvoiceDetailsPopup from "./InvoiceDetailsPopup.js";
+import { autoTable } from "pdfmake/build/pdfmake";
+import "jspdf-autotable";
 
 const PreviousBills = () => {
   const [customerServicesCus, setcustomerServicesCus] = useState([]);
@@ -40,18 +44,39 @@ const PreviousBills = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [allData, setAllData] = useState([]);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
 
+  // const fetchcustomerServicesCus = async () => {
+  //   try {
+  //     console.log("Fetching Customer Details");
+  //     const response = await axios.get(`${BASE_URL}/api/get-bills`);
+  //     setcustomerServicesCus(response.data);
+  //     setAllData(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching Customer Details:", error);
+  //   }
+  // };
   const fetchcustomerServicesCus = async () => {
     try {
       console.log("Fetching Customer Details");
-      const response = await axios.get(`${BASE_URL}/invoice`);
-      setcustomerServicesCus(response.data);
-      setAllData(response.data); 
-      console.log(customerServicesCus);
+      const response = await axios.get(`${BASE_URL}/api/get-bills`);
+      const billingDataWithUsername = response.data.map(billing => ({
+        ...billing,
+        username: billing.user.fullName, // Assuming `fullName` is the correct field
+      }));
+      setcustomerServicesCus(billingDataWithUsername);
+      setAllData(billingDataWithUsername);
     } catch (error) {
       console.error("Error fetching Customer Details:", error);
     }
   };
+  
+  
+  useEffect(() => {
+    console.log("Before API call");
+    fetchcustomerServicesCus();
+  }, []);
+
   const handleFromDateChange = (e) => {
     setFromDate(e.target.value);
   };
@@ -59,7 +84,9 @@ const PreviousBills = () => {
   const handleToDateChange = (e) => {
     setToDate(e.target.value);
   };
-
+  const handleFieldClick = (invoice) => {
+    setSelectedInvoice(invoice);
+  };
 
   const handleCancelCus = () => {
     setselectedServiceCus(null);
@@ -69,6 +96,10 @@ const PreviousBills = () => {
   const handleEditCus = (service) => {
     setselectedServiceCus(service);
     setAddPopupOpenCus(true);
+  };
+
+  const openDetailsPopup = (invoice) => {
+    setSelectedInvoice(invoice);
   };
 
   useEffect(() => {
@@ -98,8 +129,6 @@ const PreviousBills = () => {
       console.error("Error adding/updating Customer Details:", error);
     }
   };
-  
-  
 
   const handlesearchTextCusChange = (newValue) => {
     setsearchTextCus(newValue);
@@ -126,35 +155,59 @@ const PreviousBills = () => {
 
   const filteredData = customerServicesCus.filter((item) => {
     return (
-      filterByField(item, "currentDate", searchTextCus) ||
-      filterByField(item, "customerName", searchTextCus) ||
-      filterByField(item, "phoneNumber", searchTextCus) ||
-      filterByField(item, "Email", searchTextCus) ||
-      filterByField(item, "notes", searchTextCus) ||
-      filterByField(item, "total", searchTextCus) ||
-      filterByField(item, "subTotal", searchTextCus) ||
-      filterByField(item, "taxRate", searchTextCus) ||
-      filterByField(item, "taxAmount", searchTextCus) ||
-      filterByField(item, "discountRate", searchTextCus) ||
-      filterByField(item, "discountAmount", searchTextCus) ||
-      filterByField(item, "items", searchTextCus)
+      item.invoiceNo.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+      moment(item.invoiceDate).format("YYYY-MM-DD").includes(searchTextCus) ||
+      item.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+      item.clientContact.includes(searchTextCus) ||
+      item.subTotal
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert subTotal to string
+      item.discountRate
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert discountRate to string
+      item.discountAmount
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert discountAmount to string
+      item.taxRate
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert taxRate to string
+      item.taxAmount
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert taxAmount to string
+      item.total
+        .toString()
+        .toLowerCase()
+        .includes(searchTextCus.toLowerCase()) || // Convert total to string
+      item.selectedCurrency.toLowerCase().includes(searchTextCus.toLowerCase())
     );
   });
 
   const handleDownloadPDF = (service) => {
     const pdf = new jsPDF();
+    pdf.setDrawColor(7, 126, 96); // RGB values for a shade of green
+    let lineY = 48;
 
-    pdf.setFontSize(16);
-    pdf.setFont("helvetica", "bold");
-
-    const imgWidth = 30;
+    const imgWidth = 40;
     const imgHeight = 15;
     const imgX = pdf.internal.pageSize.getWidth() - imgWidth - 155;
     const imgY = 15;
     pdf.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
 
     const billingDateTime = new Date().toLocaleString();
-    pdf.text(`Customer Details          Date : ${billingDateTime}`, 20, 45);
+    const invoiceName = "Payment Invoice";
+    const invoiceNameX = pdf.internal.pageSize.getWidth() / 2;
+    // const dateX =
+    //   pdf.internal.pageSize.getWidth() - pdf.getTextWidth(billingDateTime) - 1;
+
+    pdf.text(invoiceName, invoiceNameX, 45, { align: "center" });
+    pdf.setFontSize(10);
+    // pdf.text(`Date : ${billingDateTime}`, dateX, 45);
+
     pdf.rect(
       10,
       10,
@@ -162,68 +215,187 @@ const PreviousBills = () => {
       pdf.internal.pageSize.getHeight() - 20,
       "S"
     );
-    pdf.line(20, 55, 190, 55);
 
+    const pageWidth = pdf.internal.pageSize.getWidth();
+
+    const borderWidth = 10;
+    const lineWidth = 2;
+    pdf.line(10, lineY - lineWidth, pageWidth - borderWidth, lineY - lineWidth);
+
+    // Section for basic details
+    const basicDetailsRows = [
+      { label: "Invoice No:", value: service.invoiceNo },
+      { label: "Client Name:", value: service.clientName },
+      { label: "Client Contact:", value: service.clientContact },
+      { label: "Invoice Date:", value: service.invoiceDate },
+    ];
+
+    basicDetailsRows.forEach(({ label, value }) => {
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(12);
+      pdf.text(`${label}`, 20, (lineY += 8));
+
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${value}`, 60, lineY);
+    });
+
+    // GSTIN Number
+    const gstin = "29ABCDE1234F1ZW"; // Replace with your actual GSTIN number
+    const gstinX = pdf.internal.pageSize.getWidth() - 58;
+    const gstinY = 15;
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    pdf.text(`GSTIN: ${gstin}`, gstinX, gstinY);
+
+    // Section for the rest of the details
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
 
-    const tableRows = [
-      ["Customer Name:", service.customerName],
-      ["Phone Number:", service.phoneNumber],
-      ["Email :", service.Email],
-      ["total:", service.total],
-      ["subTotal:", service.subTotal],
-      ["taxRate:", service.taxRate],
-      ["taxAmount:", service.taxAmount],
-      ["discountRate:", service.discountRate],
-      ["items:", service.items],
+    const boldLabels = [
+      "Discount Rate",
+      "Discount Amount",
+      "Tax Rate",
+      "Tax Amount",
+      "Subtotal",
+      "Total",
+      "Currency",
+      "Item Type",
+      "Item Quantity",
     ];
 
-    let yPos = 65;
+    const tableRows = [
+      { label: "Discount:", value: service.discountRate },
+      { label: "Discount:", value: service.discountAmount },
+      { label: "SGST 9%:", value: service.taxRate },
+      { label: "Tax:", value: service.taxAmount },
+      { label: "Subtotal:", value: service.subTotal },
+      { label: "Total:", value: service.total },
+      { label: "Currency:", value: service.selectedCurrency },
+      { label: "Payment Mode:", value: service.selectedPaymentMode },
+    ];
 
-    tableRows.forEach(([label, value]) => {
-      const sanitizedLabel = label.replace(/[^\x20-\x7E]/g, "");
+    if (service.items && service.items.length > 0) {
+      service.items.forEach((item, index) => {
+        tableRows.push({
+          label: `Rate per unit:`,
+          value: item.price,
+        });
+        tableRows.push({
+          label: `Item Type:`,
+          value: item.item,
+        });
+        tableRows.push({
+          label: "Item Service Type:",
+          value: item.services,
+        });
 
-      console.log("Sanitized Label:", sanitizedLabel);
-      console.log("yPos:", yPos, typeof yPos);
+        tableRows.push({
+          label: `Item Quantity:`,
+          value: item.quantity,
+        });
+      });
+    }
 
-      try {
-        pdf.text(sanitizedLabel, 20, yPos);
-      } catch (error) {
-        console.error("Error adding label:", error);
-      }
+    const headers = ["Particulars", "Amount"];
+    const data = tableRows.map(({ label, value }) => [
+      boldLabels.includes(label.replace(":", ""))
+        ? label.replace(":", "")
+        : label,
+      value,
+    ]);
 
-      try {
-        pdf.text(value, 80, yPos);
-      } catch (error) {
-        console.error("Error adding value:", error);
-      }
+    const tableOptions = {
+      startY: lineY + 15,
+      margin: { top: 10 },
+    };
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(12);
 
-      yPos += 10;
+    pdf.autoTable({
+      head: [headers],
+      body: data,
+      theme: "grid",
+      ...tableOptions,
     });
 
+    pdf.setFont("helvetica", "normal");
+
+    // Signature and system-generated text
     const signature = "Signature Or Stamp";
     const signatureX = 150;
-    const signatureY = yPos + 20;
+    const signatureY = pdf.lastAutoTable.finalY + 20;
     pdf.text(signature, signatureX, signatureY);
+
+    const systemGeneratedText = "****This is a system-generated bill****";
+    const systemGeneratedTextX = pdf.internal.pageSize.getWidth() / 2;
+    const systemGeneratedTextY = pdf.internal.pageSize.getHeight() - 15;
+
+    pdf.text(systemGeneratedText, systemGeneratedTextX, systemGeneratedTextY, {
+      align: "center",
+    });
 
     pdf.save(`customer_details_${service._id}.pdf`);
   };
 
   const generateWhatsappMessage = (service) => {
-    return `
-      Customer Name: ${service.prefix}${service.customerName}
-      Customer Phone Number: ${service.phoneNumber}
-      Email: ${service.Email}
-      Notes: ${service.notes}
-      Total: ${service.total}
-      Sub Total: ${service.subTotal}
-      Tax Rate: ${service.taxRate}
-      Tax Amount: ${service.taxAmount}
-      Discount Rate: ${service.discountRate}
-      Discount Amount: ${service.discountAmount}
-      Items: ${service.items}
-    `;
+    const {
+      invoiceNo,
+      invoiceDate,
+      staffName,
+      clientName,
+      clientContact,
+      subTotal,
+      discountRate,
+      discountAmount,
+      taxRate,
+      taxAmount,
+      total,
+      selectedCurrency,
+      items,
+    } = service;
+
+    // Check if all required properties are defined
+    if (
+      invoiceNo &&
+      invoiceDate &&
+      staffName &&
+      clientName &&
+      clientContact &&
+      subTotal &&
+      discountRate &&
+      discountAmount &&
+      taxRate &&
+      taxAmount &&
+      total &&
+      selectedCurrency &&
+      items
+    ) {
+      const itemList = items
+        .map(
+          (item) =>
+            `${item.item} - ${item.quantity} units x ${item.price} ${selectedCurrency} (${item.serviceType})`
+        )
+        .join("\n");
+
+      return `
+        Invoice No: ${invoiceNo}
+        Invoice Date: ${invoiceDate}
+        Staff Name:${staffName}
+        Client Name: ${clientName}
+        Client Contact: ${clientContact}
+        Subtotal: ${subTotal} ${selectedCurrency}
+        Discount Rate: ${discountRate}%
+        Discount Amount: ${discountAmount} ${selectedCurrency}
+        Tax Rate: ${taxRate}%
+        Tax Amount: ${taxAmount} ${selectedCurrency}
+        Total: ${total} ${selectedCurrency}
+        Items:
+        ${itemList}
+      `;
+    } else {
+      console.error("Some properties are undefined in generateWhatsappMessage");
+      return "";
+    }
   };
 
   const handlePageChange = (pageNumber) => {
@@ -248,27 +420,23 @@ const PreviousBills = () => {
     console.log("fromDate:", fromDate);
     console.log("toDate:", toDate);
 
-    // const filteredData = allData.filter((item) => {
-    //   const currentDate = new Date(item.currentDate).getTime();
-    //   const fromTimestamp = fromDate ? new Date(fromDate).getTime() : 0;
-    //   const toTimestamp = toDate ? new Date(toDate).getTime() : Infinity;
-
-    //   return currentDate >= fromTimestamp && currentDate <= toTimestamp;
-    // });
     const filteredData = allData.filter((item) => {
-      const currentDate = new Date(item.currentDate).getTime();
-      const fromTimestamp = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : 0;
-      const toTimestamp = toDate ? new Date(toDate).setHours(23, 59, 59, 999) : Infinity;
-    
+      const currentDate = new Date(item.invoiceDate).getTime();
+      const fromTimestamp = fromDate
+        ? new Date(fromDate).setHours(0, 0, 0, 0)
+        : 0;
+      const toTimestamp = toDate
+        ? new Date(toDate).setHours(23, 59, 59, 999)
+        : Infinity;
+
       return currentDate >= fromTimestamp && currentDate <= toTimestamp;
     });
-    
+
     console.log("Filtered Data:", filteredData);
 
     setcustomerServicesCus(filteredData);
   };
 
-  
   return (
     <>
       <Navbar />
@@ -295,54 +463,87 @@ const PreviousBills = () => {
           </div>
           <div className="date-filter">
             <label>From Date:</label>
-            <input type="date" value={fromDate} onChange={handleFromDateChange} />
+            <input
+              type="date"
+              value={fromDate}
+              onChange={handleFromDateChange}
+            />
 
             <label>To Date:</label>
             <input type="date" value={toDate} onChange={handleToDateChange} />
 
             <button onClick={handleFilterByDate}>Filter</button>
           </div>
-
-         
         </div>
         <table className="lab-service-table_5">
           <thead>
             <tr className="product-ooi">
-              <th className="product-ooi">Date</th>
               <th className="product-ooi">Invoice No</th>
+              <th className="product-ooi">Invoice Date</th>
+              <th className="product-ooi">Staff Name</th>
               <th className="product-ooi">Customer Name</th>
-              <th className="product-ooi">Phone Number</th>
-              <th className="product-ooi">Email </th>
-              <th className="product-ooi">Total </th>
-              <th className="product-ooi">SubTotal</th>
-              <th className="product-ooi">TaxRate</th>
-              <th className="product-ooi">Tax Amount</th>
-              <th className="product-ooi">Discount Rate</th>
-              <th className="product-ooi">Discount Amount</th>
+              <th className="product-ooi">Contact</th>
+              <th className="product-ooi">D&R</th>
+              <th className="product-ooi">D&A</th>
+              <th className="product-ooi">T&R</th>
+              <th className="product-ooi">T&A</th>
+              <th className="product-ooi">Total</th>
+              <th className="product-ooi">Subtotal </th>
+              <th className="product-ooi">Currency</th>
               <th className="product-ooi">Items</th>
               <th className="product-ooi">Actions</th>
+              <th className="product-ooi">Pay Mode</th>
+              {/* <th className="product-ooi">Staff Name</th> */}
             </tr>
           </thead>
           <tbody>
             {filteredData
-              .slice(indexOfFirstItem, indexOfLastItem)
+              .slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage)
               .map((service) => (
                 <tr key={service._id}>
-                  <td>{service.currentDate}</td>
-                  <td>
-                    {service.invoiceNumber}
+                  <td onClick={() => handleFieldClick(service)}>
+                    {" "}
+                    {service.invoiceNo}
                   </td>
-                  <td>
-                    {service.customerName}
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.invoiceDate
+                      ? moment(service.invoiceDate).format("MM-DD-YYYY")
+                      : ""}
                   </td>
-                  <td>{service.phoneNumber}</td>
-                  <td>{service.Email}</td>
-                  <td>{service.total}</td>
-                  <td>{service.subTotal}</td>
-                  <td>{service.taxRate}</td>
-                  <td>{service.taxAmount}</td>
-                  <td>{service.discountRate}</td>
-                  <td>{service.discountAmount}</td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {" "}
+                    {service.user.fullName}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {" "}
+                    {service.clientName}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.clientContact}
+                  </td>
+
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.discountRate}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.discountAmount}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.taxRate}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.taxAmount}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.total}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.subTotal}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.selectedCurrency}
+                  </td>
+
                   <td>
                     <button
                       className="edit-button_5"
@@ -358,21 +559,19 @@ const PreviousBills = () => {
                           <table>
                             <thead>
                               <tr>
-                      
                                 <th>Item Name</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
-                                <th>Description</th>
+                                <th>Services</th>
                               </tr>
                             </thead>
                             <tbody>
                               {service.items.map((item) => (
                                 <tr key={item.id}>
-                                
-                                  <td>{item.name}</td>
+                                  <td>{item.item}</td>
                                   <td>{item.price}</td>
                                   <td>{item.quantity}</td>
-                                  <td>{item.description}</td>
+                                  <td>{item.services}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -397,7 +596,7 @@ const PreviousBills = () => {
                         <FaDownload title="download" />
                       </button>
                       <ReactWhatsapp
-                        number={service.phoneNumber}
+                        number={service.clientContact}
                         message={generateWhatsappMessage(service)}
                         className="edit-button_5"
                         style={{
@@ -431,6 +630,10 @@ const PreviousBills = () => {
                       )}
                     </div>
                   </td>
+                  <td>{service.selectedPaymentMode}</td>
+                  {/* <td onClick={() => handleFieldClick(service)}>
+                    {service.username}
+                  </td> */}
                 </tr>
               ))}
           </tbody>
@@ -465,10 +668,23 @@ const PreviousBills = () => {
             activeClass="active-page"
           />
         </div>
+
+        <Popup
+          open={!!selectedInvoice}
+          onClose={() => setSelectedInvoice(null)}
+          closeOnDocumentClick={true}
+          className="invoice-popup"
+        >
+          <InvoiceDetailsPopup
+            selectedInvoice={selectedInvoice}
+            onClose={() => setSelectedInvoice(null)}
+          />
+        </Popup>
+
         <Popup
           open={selectedServiceCus !== null || isAddPopupOpenCus}
           onClose={handleCancelCus}
-          closeOnDocumentClick
+          closeOnDocumentClick={true}
         >
           <CustomerForm
             selectedServiceCus={selectedServiceCus}

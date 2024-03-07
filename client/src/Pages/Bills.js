@@ -5,17 +5,44 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
-import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
-import jsPDF from 'jspdf';
+import jsPDF from "jspdf";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import ReactWhatsapp from "react-whatsapp";
+import axios from "axios";
 
 
 const currencies = currencyCodes.data;
 
 
 const Bills = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("mail");
+    if (storedEmail) {
+      axios
+        .get(`http://localhost:5000/users/${storedEmail}`)
+        .then((response) => {
+          setUser(response.data);
+          setUsername(response.data.username); // Assuming the username property exists in your user data
+        })
+        .catch((error) => {
+          console.error("Error fetching user by email:", error);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username); // Update the username state after user state is set
+    }
+  }, [user]);
+  
+
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [selectedPopupItem, setSelectedPopupItem] = useState("");
-
+  const [invoiceNumber, setInvoiceNumber] = useState(1);
   const [invoiceNo, setInvoiceNo] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
   const [clientName, setClientName] = useState("");
@@ -27,24 +54,35 @@ const Bills = () => {
   const [taxRate, setTaxRate] = useState(0);
   const [taxAmount, setTaxAmount] = useState(0);
   const [total, setTotal] = useState(0);
-  const [item, setitem] = useState(0);
+  const [username, setUsername] = useState("");
+  const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
   const [price, setprice] = useState(0);
-  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].code);
+  const [customeraddress, setcustomeraddress] = useState("");
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [selectedItems, setSelectedItems] = useState(
     Array(rows.length).fill("")
   );
   const [subtotals, setSubtotals] = useState(Array(rows.length).fill(0));
   const [quantities, setQuantities] = useState(Array(rows.length).fill(0));
 
-  const services = [
-    "Select a service",
-    "Wash & Fold",
-    "Wash & Iron",
-    "Dry Cleaning",
-    "Express Laundry Services",
-    "Premium Laundry",
-    "Steam Ironing",
-  ];
+  useEffect(() => {
+    fetchLastInvoiceNumber();
+  }, []);
+
+  const fetchLastInvoiceNumber = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/last-invoice-number"
+      );
+      const data = await response.json();
+      console.log(data);
+      setInvoiceNumber(data.lastInvoiceNumber);
+    } catch (error) {
+      console.error("Error fetching last invoice number:", error);
+    }
+  };
+
   const itemsList = [
     "Select a Item",
     "Handkerchief",
@@ -132,6 +170,7 @@ const Bills = () => {
     "Curtain door single panel",
     "Bed protector",
   ];
+
   const itemPrices = {
     Handkerchief: 40.0,
     "Kids frock": 40.0,
@@ -218,20 +257,25 @@ const Bills = () => {
     "Curtain door single panel": 200.0,
     "Bed protector": 250.0,
   };
-
   const handleAddRow = () => {
     const newRow = { id: rows.length + 1 };
     setRows([...rows, newRow]);
     setSelectedItems([...selectedItems, ""]);
     setQuantities([...quantities, 0]);
     setSubtotals([...subtotals, 0]);
+    setSelectedServices([...selectedServices, ""]); // using selectedServices
   };
+
   useEffect(() => {
     calculateTotal();
   }, [quantities, discountRate, taxRate]);
 
+  useEffect(() => {
+    // Set the initial invoice date to the current date
+    setInvoiceDate(new Date());
+  }, []);
+
   const handleDeleteRow = (index) => {
-    // Filter rows to remove the row at the given index
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
     console.log("Deleting row at index:", index);
@@ -239,7 +283,6 @@ const Bills = () => {
     console.log("Current selectedItems:", selectedItems);
     console.log("Current quantities:", quantities);
     console.log("Current subtotals:", subtotals);
-    // Remove the corresponding item, quantity, and subtotal at the given index
     setSelectedItems((prevSelectedItems) =>
       prevSelectedItems.filter((_, i) => i !== index)
     );
@@ -255,27 +298,20 @@ const Bills = () => {
     const updatedItems = [...selectedItems];
     updatedItems[index] = value;
     setSelectedItems(updatedItems);
-
-    // Set a default quantity when an item is selected
-    const defaultQuantity = ""; // You can set any default quantity you prefer
+    setSelectedPopupItem(value);
+    const defaultQuantity = "";
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = defaultQuantity;
     setQuantities(updatedQuantities);
-
-    // Update selected item for the popup
-    setSelectedPopupItem(value);
-
     updateSubtotal(index, value, defaultQuantity);
   };
+  
 
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = value;
     setQuantities(updatedQuantities);
-
     updateSubtotal(index, selectedItems[index], value);
-
-    // Remove the calculateTotal() call from here
   };
 
   const updateSubtotal = (index, item, quantity) => {
@@ -290,54 +326,54 @@ const Bills = () => {
     let subtotal = 0;
     let discount = 0;
     let tax = 0;
-
-    // Loop through rows to calculate subtotal, discount, and tax
     rows.forEach((row, index) => {
       const item = selectedItems[index];
       const quantity = quantities[index];
       const price = itemPrices[item] || 0;
-
       subtotal += price * quantity;
       discount += (price * quantity * discountRate) / 100;
       tax += (price * quantity * taxRate) / 100;
     });
-
-    // Calculate total
     const totalAmount = subtotal - discount + tax;
-
-    // Update state
     setSubTotal(subtotal);
     setDiscountAmount(discount);
     setTaxAmount(tax);
     setTotal(totalAmount);
   };
+  
 
   const getCurrencySymbol = (currencyCode) => {
     switch (currencyCode) {
-      case "USD":
-        return "$";
-      case "EUR":
-        return "€";
-      case "GBP":
-        return "£";
       case "INR":
         return "₹";
-      // Add more cases for other currencies as needed
       default:
         return "";
     }
   };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+    const formatter = new Intl.DateTimeFormat("en-GB", options);
+    return formatter.format(date);
+  };
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+    }
+  }, [user]);
 
   const handleReviewInvoice = () => {
     const data = {
       invoiceNo,
-      invoiceDate,
+      invoiceDate: formatDate(invoiceDate),
       clientName,
       clientContact,
+      customeraddress,
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
-        price:price[index],
+        price: itemPrices[selectedItems[index]] || 0,
+        services: selectedServices[index],
         subtotal: subtotals[index],
       })),
       subTotal,
@@ -347,47 +383,101 @@ const Bills = () => {
       taxAmount,
       total,
       selectedCurrency,
+      selectedPaymentMode,
+      selectedPopupItem,
+      user: user
+        ? {
+            userId: user._id,
+            username: user.username,
+            fullName: user.fullName,
+          }
+        : null,
     };
-    // setSelectedInvoice(data); // Set the selected invoice data
-    setInvoiceNumber((prevInvoiceNumber) => prevInvoiceNumber + 1);
-    togglePopup();
-    fetch("http://localhost:5000/api/billing", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
+  
+    // Send a POST request to the backend API to save the billing data
+    axios
+      .post("http://localhost:5000/api/billing", data)
+      .then((response) => {
+        console.log("Success:", response.data);
+        setInvoiceNumber(response.data.invoiceNo);
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Handle error
       });
+    togglePopup(true);
   };
+  
+  
+  
+  const handleInvoiceDateChange = (selectedDate) => {
+    setInvoiceDate(selectedDate);
+  };
+ 
+const handledownloadcopy = () => {
+  const doc = new jsPDF();
+  doc.text("Invoice No: " + invoiceNo, 10, 10);
+  doc.text("Invoice Date: " + formatDate(invoiceDate), 10, 20);
+  doc.text("Client Name: " + clientName, 10, 30);
+  doc.text("Client Contact: " + clientContact, 10, 40);
+  doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+  doc.text("Total: " + total, 10, 50);
+  doc.text("TaxAmount: " + taxAmount, 10, 60);
+  
+  // Save the PDF file
+  doc.save("Laundry Invoice.pdf");
 
-  const handledownloadcopy = () => {
-    const doc = new jsPDF();
-    doc.text("Invoice No: " + invoiceNo, 10, 10);
-    doc.text("Invoice Date: " + invoiceDate, 10, 20);
-    doc.text("Client Name: " + clientName, 10, 30);
-    doc.text("Client Contact: " + clientContact, 10, 40);
-    doc.text("Total: " + total, 10, 50);
-    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
+  // Convert the PDF blob to a file and send it via WhatsApp
+  const pdfBlob = doc.output('blob');
+  const pdfFile = new File([pdfBlob], "Laundry Invoice.pdf", { type: "application/pdf" });
 
-    doc.save("invoice.pdf");
+  // Send the PDF file via WhatsApp
+  sendPDFViaWhatsApp(pdfFile);
+};
+
+const sendPDFViaWhatsApp = (pdfFile) => {
+  // Use react-whatsapp to send the PDF file via WhatsApp
+  // Assuming you have the customer's contact number stored in 'clientContact'
+  const customerContact = clientContact; // Replace this with the actual contact number
+  const message = "Here's your laundry invoice.";
+  const url = window.URL.createObjectURL(pdfFile);
+
+  // Open WhatsApp with the PDF file attached
+  ReactWhatsapp.send(
+    customerContact,
+    message,
+    url  );
   };
 
   const [showPopup, setShowPopup] = useState(false);
+  const resetFields = () => {
+    setInvoiceNo("");
+    setClientName("");
+    setClientContact("");
+    setcustomeraddress("");
+    setRows([{ id: 1 }]);
+    setSelectedItems(Array(rows.length).fill(""));
+    setQuantities(Array(rows.length).fill(0));
+    setSubtotals(Array(rows.length).fill(0));
+    setSubTotal(0);
+    setDiscountRate(0);
+    setDiscountAmount(0);
+    setTaxRate(0);
+    setTaxAmount(0);
+    setTotal(0);
+    setSelectedPaymentMode("");
+    setSelectedServices("");
+  };
+  
 
-  const togglePopup = () => {
+  const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
   };
 
-  const [invoiceNumber, setInvoiceNumber] = useState(1);
+  
 
+  // const togglePopup = (value) => {
+  //   setSelectedPopupItem(value);
+  // };
   return (
     <div className="billtotal">
       <div className="nav111">
@@ -396,20 +486,29 @@ const Bills = () => {
       <div className="invoice-form">
         <div className="input-group">
           <label htmlFor="invoiceNo">Invoice No:</label>
-           <input
+          <input
             type="text"
             id="invoiceNo"
-            value={invoiceNo}
+            value={invoiceNumber}
             onChange={(e) => setInvoiceNo(e.target.value)}
           />
         </div>
-        <div className="input-group">
+        {/* <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
           <input
             type="date"
             id="invoiceDate"
             value={invoiceDate}
             onChange={(e) => setInvoiceDate(e.target.value)}
+          />
+        </div> */}
+        <div className="input-group">
+          <label htmlFor="invoiceDate">Invoice Date:</label>
+          {/* Placeholder for your date picker component */}
+          <DatePicker
+            selected={invoiceDate}
+            onChange={(date) => handleInvoiceDateChange(date)}
+            dateFormat="dd-MM-yyyy" // Set the desired date format
           />
         </div>
         <div className="input-group">
@@ -431,6 +530,15 @@ const Bills = () => {
             id="clientContact"
             value={clientContact}
             onChange={(e) => setClientContact(e.target.value)}
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="clientContact">Customer Address:</label>
+          <input
+            type="text"
+            id="clientName"
+            value={customeraddress}
+            onChange={(e) => setcustomeraddress(e.target.value)}
           />
         </div>
       </div>
@@ -461,12 +569,21 @@ const Bills = () => {
                   </select>
                 </td>
                 <td>
-                  <select>
-                    {services.map((service, index) => (
-                      <option key={index} value={service}>
-                        {service}
-                      </option>
-                    ))}
+                  <select
+                    className="selectedServices"
+                    value={selectedServices[index]}
+                    onChange={(e) => {
+                      const newSelectedServices = [...selectedServices];
+                      newSelectedServices[index] = e.target.value;
+                      setSelectedServices(newSelectedServices);
+                    }}
+                  >
+                    <option value="">Select service</option>
+                    <option value="wash & fold">Wash & fold</option>
+                    <option value="Steam Iron">Steam Ironing</option>
+                    <option value="wash & iron">Wash & Iron</option>
+                    <option value="Dry cleaning">Dry Cleaning</option>
+                    <option value="premium laundry">Premium Laundry</option>
                   </select>
                 </td>
                 <td>
@@ -478,12 +595,11 @@ const Bills = () => {
                     }
                   />
                 </td>
-                {/* <td>{itemPrices[selectedItems[index]] || 0}</td> */}
                 <td>{itemPrices[selectedItems[index]] || 0}</td>
 
                 <td>
                   <div className="iconflex">
-                    {index === rows.length - 1 ? ( // Check if this is the last row
+                    {index === rows.length - 1 ? (
                       <button className="itembtn" onClick={handleAddRow}>
                         <span>
                           <FaPlus />
@@ -495,13 +611,11 @@ const Bills = () => {
                       </button>
                     ) : null}
 
-                    {/* <button class="buttonbin" onClick={() => handleDeleteRow(row.id)} disabled={rows.length === 1}> */}
                     <button
                       className="buttonbin"
                       onClick={() => handleDeleteRow(index)}
                       disabled={rows.length === 1}
                     >
-                      {/* Delete button always rendered */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -556,12 +670,10 @@ const Bills = () => {
                 id="currency"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-                disabled
               >
                 <option value="INR">INR - Indian Rupee</option>
               </select>
             </div>
-
             <div className="input-group">
               <label htmlFor="taxRate">Tax Rate:</label>
               <input
@@ -582,40 +694,42 @@ const Bills = () => {
                 onChange={(e) => setDiscountRate(e.target.value)}
               />
             </div>
+            <div className="input-group">
+              <select
+                className="selectpaymentmode"
+                value={selectedPaymentMode}
+                onChange={(e) => setSelectedPaymentMode(e.target.value)}
+              >
+                <option value="">Select Payment Mode</option>
+                <option value="upi">UPI</option>
+                <option value="phonepay">PhonePe</option>
+                <option value="googlepay">Google Pay</option>
+              </select>
+            </div>
           </div>
           <Row className="row09">
             <Col style={{ width: "100%" }} lg={6}>
-              {/* Subtotal */}
               <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                 <span className="fw-bold">Subtotal:</span>
                 <span>
                   {getCurrencySymbol(selectedCurrency)} {subTotal.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with subtotal */}
                 </span>
               </div>
-
-              {/* Discount */}
               <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                 <span className="fw-bold">Discount:</span>
                 <span>
                   <span className="small ">({discountRate || 0}%)</span>
                   {getCurrencySymbol(selectedCurrency)}{" "}
                   {discountAmount.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with discount amount */}
                 </span>
               </div>
-
-              {/* Tax */}
               <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                 <span className="fw-bold">Tax:</span>
                 <span>
                   <span className="small ">({taxRate || 0}%)</span>
                   {getCurrencySymbol(selectedCurrency)} {taxAmount.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with tax amount */}
                 </span>
               </div>
-
-              {/* Total */}
               <div
                 className="d-flex flex-row align-items-start justify-content-between"
                 style={{
@@ -625,7 +739,6 @@ const Bills = () => {
                 <span className="fw-bold">Total:</span>
                 <span className="fw-bold">
                   {getCurrencySymbol(selectedCurrency)} {total.toFixed(2)}{" "}
-                  {/* Concatenate currency symbol with total */}
                 </span>
               </div>
             </Col>
@@ -633,73 +746,123 @@ const Bills = () => {
           {/* <button className="review-button" onClick={togglePopup}{handleReviewInvoice}>
             Review Invoice
           </button> */}
-          <button className="review-button" onClick={() => { togglePopup(true); handleReviewInvoice(); }}>
+          <button
+            className="review-button"
+            onClick={() => {
+              togglePopup(false);
+              handleReviewInvoice();
+            }}
+          >
             Review Invoice
           </button>
+          <p value="userType">{user ? user.fullName : "Username"}</p>
 
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
-                Add Stockists
-                <button className="close-button" onClick={togglePopup}>
+                Billing Data
+                <button
+                  className="close-button"
+                  onClick={() => {
+                    togglePopup(true);
+                    resetFields();
+                  }}
+                >
                   X
                 </button>
               </div>
-              <hr />
+              {/* <hr /> */}
               <div className="popup-content">
                 <form>
-                  <label className='nameclass-label'>InvoiceNo:</label>
+                <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
+                  <label className="nameclass-label">InvoiceNo:</label>
+                  <input type="text" value={invoiceNumber} readOnly />
+                  <label className="nameclass-label">InvoiceDate</label>:
+                  <input type="text" value={invoiceDate} />
+                  <label className="nameclass-label">ClientName</label>:
+                  <input type="text" value={clientName} />
+                  <label className="nameclass-label">clientContact:</label>
                   <input
                     type="text"
-                    placeholder="Invoice No"
-                    value={`INV${invoiceNumber.toString().padStart(5, '0')}`}
-                    readOnly
-                  />
-                  <label className='nameclass-label'>InvoiceDate:</label>
-                  <input
-                    type="text"
-                    placeholder="Invoice Date"
-                    value={invoiceDate}
-
-                  />
-                  <label className='nameclass-label'>clientName:</label>
-                  <input
-                    type="text"
-                    placeholder="clientName"
-                    value={clientName}
-                  />
-                  <label className='nameclass-label'>clientContact:</label>
-                  <input
-                    type="text"
-                    placeholder="clientContact"
                     value={clientContact}
                   />
-                  <label className='nameclass-label'>total:</label>
+                  <label className='nameclass-label'>customeraddress:</label>
                   <input
                     type="text"
-                    placeholder="Added Date"
-                    value={total}
+                    value={customeraddress}
 
                   />
                   <label className='nameclass-label'>item:</label>
                   <input
                     type="text"
-                    placeholder="Selected Item"
                     value={selectedPopupItem}
                     readOnly
                   />
+                  <label className='nameclass-label'>Services:</label>
+                  <input
+                    type="text"
+
+                    value={selectedServices}
+                  />
+                  <label className='nameclass-label'>quantity:</label>
+                  <input
+                    type="text"
+
+                    value={quantities}
+                  />
+                  <label className='nameclass-label'>TaxRate:</label>
+                  <input
+                    type="text"
+
+                    value={taxRate}
+                  />
+                  <label className='nameclass-label'>discountRate:</label>
+                  <input
+                    type="text"
+
+                    value={discountRate}
+                  />
+                  <label className='nameclass-label'>subTotal:</label>
+                  <input
+                    type="text"
+
+                    value={subTotal}
+                  />
+                  <label className='nameclass-label'>taxAmount:</label>
+                  <input
+                    type="text"
+
+                    value={taxAmount}
+                  />
+                  <label className='nameclass-label'>discountAmount:</label>
+                  <input
+                    type="text"
+
+                    value={discountAmount}
+                  />
+                  <label className='nameclass-label'>total:</label>
+                  <input
+                    type="text"
+
+                    value={total}
+                  />
                   <div className="merge-karthik-bill">
-                    <button className="downloadcopy">send Copy</button>
-                    <button className="downloadcopy" onClick={handledownloadcopy}>Download Copy</button>
+                    <button className="downloadcopy">Send Copy</button>
+     
+
+                    <button
+                      className="downloadcopy"
+                      onClick={handledownloadcopy}
+                    >
+                      Download Copy
+                    </button>
                   </div>
                 </form>
               </div>
             </div>
           )}
-
         </div>
       </center>
-
     </div>
   );
 };

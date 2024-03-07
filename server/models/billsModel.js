@@ -1,46 +1,25 @@
-// const mongoose = require("mongoose");
-
-// const billingSchema = new mongoose.Schema({
-//   invoiceNo: String,
-//   invoiceDate: Date,
-//   clientName: String,
-//   clientContact: String,
-//   rows: [{
-//     item: String,
-//     quantity: Number,
-//     subtotal: Number
-//   }],
-//   subTotal: Number,
-//   discountRate: Number,
-//   discountAmount: Number,
-//   taxRate: Number,
-//   taxAmount: Number,
-//   total: Number,
-//   selectedCurrency: String
-// });
-
-// const billing = mongoose.model("bill", billingSchema);
-
-// module.exports = billing;
 
 const mongoose = require("mongoose");
 
 const billingSchema = new mongoose.Schema({
+  user: {
+    userId: String,
+    fullName: String,
+  },
+  username: String,
   invoiceNo: {
     type: String,
     unique: true,
   },
-  invoiceDate: {
-    type: Date,
-    default: Date.now,
-  },
+  invoiceDate: String,
   clientName: String,
   clientContact: String,
+  customeraddress: String,
   items: [{
     item: String,
     quantity: Number,
-    // subtotal: Number,
-    price:Number,
+    services: String,
+    price: Number,
   }],
   subTotal: Number,
   discountRate: Number,
@@ -49,23 +28,16 @@ const billingSchema = new mongoose.Schema({
   taxAmount: Number,
   total: Number,
   selectedCurrency: String,
+  selectedPaymentMode: String,
 });
 
-// Pre-save middleware to generate invoice number
-// billingSchema.pre("save", async function (next) {
-//     if (!this.invoiceNo) {
-//         const latestInvoice = await this.constructor.findOne({}, {}, { sort: { 'invoiceNo': -1 } });
-//         let newInvoiceNo = "INV0001";
-//         if (latestInvoice) {
-//             const latestInvoiceNo = latestInvoice.invoiceNo;
-//             const lastNumber = parseInt(latestInvoiceNo.substring(3));
-//             newInvoiceNo = `INV${("000" + (lastNumber + 1)).slice(-4)}`;
-//         }
-//         this.invoiceNo = newInvoiceNo;
-//     }
-//     next();
-// });
-
+billingSchema.methods.getFormattedInvoiceDate = function () {
+  const rawDate = new Date(this.invoiceDate);
+  const day = rawDate.getDate().toString().padStart(2, '0');
+  const month = (rawDate.getMonth() + 1).toString().padStart(2, '0');
+  const year = rawDate.getFullYear();
+  return `${day}-${month}-${year}`;
+};
 const billing = mongoose.model("bill", billingSchema);
 
 module.exports = billing;

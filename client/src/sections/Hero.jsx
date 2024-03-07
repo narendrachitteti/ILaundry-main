@@ -1,74 +1,98 @@
 import React, { useState } from "react";
 import { arrowRight } from "../assets/icons";
-import  wash1  from "../assets/images/wash1.jpg";
+import { bigShoe1 } from "../assets/images";
 import Button from "../components/Button";
 import ShoeCard from "../components/ShoeCard";
 import { shoes, statistics } from "../constants";
 import { Link } from "react-router-dom";
-
-
+import wash1 from "../assets/images/wash1.jpg";
+import { motion } from "framer-motion";
+import "../sections/All.css";
 
 const Hero = () => {
+  const [bigShoeImg, setBigShoeImg] = useState(wash1);
+  const changeBigShoeImage = (shoe) => {
+    setBigShoeImg(shoe);
+  };
 
-    const [bigShoeImg, setBigShoeImg] = useState(wash1);
-
-    return (
-        <div>
-           
-        <section
-            id="home"
-            className="w-full flex xl:flex-row flex-col justify-center min-h-screen gap-10 max-container"
+  return (
+    <div>
+      <section
+        id="home"
+        className="w-full flex xl:flex-row flex-col justify-center min-h-screen gap-10 max-container"
+      >
+        <motion.div
+          animate={{ x: -300 }}
+          whileInView={{ x: 0 }}
+          transition={{ ease: "easeInOut", duration: 3 }}
+          className="relative xl:w-2/5 flex flex-col justify-center items-start w-full max-xl:padding-x pt-28"
         >
-            <div className="relative xl:w-2/5 flex flex-col justify-center items-start w-full max-xl:padding-x pt-28">
-                <p className="text-xl font-montserrat text-coral-red" style={{marginTop:'2%', marginBottom:'-3%'}}>Where Clean Meets Luxury</p>
-                <h1 className="mt-10 font-palanquin text-8xl max-sm:text-[72px] max-sm:leading-[82px] font-bold">
-                    <span className="xl:bg-white xl:whitespace-nowrap relative z-10 pr-10" style={{background:"none"}}>Purely Pristine</span>
-                    <br />
-                    <span className="text-coral-red inline-block mt-3">Laundry</span> Services
-                </h1>
-                <p className="font-montserrat text-slate-gray text-lg leading-8 mt-6 mb-14 sm:max-w-sm">
-                    World Renowned Machines Eco Friendly Cleaning Solutions Feel the Difference, Yourself.
+          <p
+            className="text-xl font-montserrat text-coral-red"
+            style={{ marginTop: "2%", marginBottom: "-3%" }}
+          >
+            Where Clean Meets Luxury
+          </p>
+          <h1 className="mt-10 font-palanquin text-8xl max-sm:text-[72px] max-sm:leading-[82px] font-bold">
+            <span
+              className="xl:bg-white xl:whitespace-nowrap relative z-10 pr-10"
+              style={{ background: "none" }}
+            >
+              Purely Pristine
+            </span>
+            <br />
+            <span className="text-coral-red inline-block mt-3">
+              Laundry
+            </span>{" "}
+            Services
+          </h1>
+          <p className="font-montserrat text-slate-gray text-lg leading-8 mt-6 mb-14 sm:max-w-sm">
+            World Renowned Machines Eco Friendly Cleaning Solutions Feel the
+            Difference, Yourself.
+          </p>
+          <div className="flex justify-start items-start flex-wrap w-full mt-20 gap-16">
+            {statistics.map((stat) => (
+              <div key={stat.label}>
+                <p className="text-4xl font-palanquin font-bold">
+                  {stat.value}
                 </p>
-                {/* <Link className="no-underline" to="/Login" >
-                <Button label="Login" iconURL={arrowRight} />
-                </Link> */}
-                <div className="flex justify-start items-start flex-wrap w-full mt-20 gap-16">
-                    {
-                        statistics.map((stat) => (
-                            <div key={stat.label}>
-                                <p className="text-4xl font-palanquin font-bold">{stat.value}</p>
-                                <p className="leading-7 font-montserrat text-slate-gray font-semibold">{stat.label}</p>
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
+                <p className="leading-7 font-montserrat text-slate-gray font-semibold">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
 
-            <div className="relative flex-1 flex justify-center items-center xl:min-h-screen max-xl:py-40 bg-primary bg-hero bg-cover bg-center">
-                <img
-                    src={wash1}
-                    alt="Shoe Collection"
-                    width={610}
-                    height={500}
-                    className="object-contain relative z-10"
+        <motion.div
+          animate={{ x: 600 }}
+          whileInView={{ x: 0 }}
+          transition={{ ease: "easeInOut", duration: 3 }}
+          className="relative flex-1 flex justify-center items-center xl:min-h-screen max-xl:py-40 bg-primary bg-hero bg-cover bg-center"
+        >
+          <img
+            src={bigShoeImg}
+            // src={wash1}
+            alt="Shoe Collection"
+            width={610}
+            height={500}
+            className="object-contain relative z-10 animate-scale"
+          />
+          <div className="flex sm:gap-8 gap-4 absolute -bottom-[5%] sm:left-[10%] max-sm:px-6">
+            {shoes.map((shoe) => (
+              <div key={shoe}>
+                <ShoeCard
+                  imgURL={shoe}
+                  changeBigShoeImage={(shoe) => setBigShoeImg(shoe)}
+                  bigShoeImg={bigShoeImg}
                 />
-                <div className="flex sm:gap-8 gap-4 absolute -bottom-[5%] sm:left-[10%] max-sm:px-6">
-                    {
-                        shoes.map((shoe) => (
-                            <div key={shoe}>
-                                <ShoeCard
-                                    imgURL={shoe}
-                                    changeBigShoeImage={(shoe) => setBigShoeImg(shoe)}
-                                    bigShoeImg={wash1}
-                                />
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-        </section>
-        </div>
-    )
-}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+    </div>
+  );
+};
 
 export default Hero;

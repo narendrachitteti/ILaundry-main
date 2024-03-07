@@ -1,13 +1,25 @@
-
-import Nav from "../components/Nav"
-import { Hero, PopularProducts, SuperQuality, Services, SpecialOffer, CustomerReviews, Subscribe, Footer } from "../sections";
+import Nav from "../components/Nav";
+import {
+  Hero,
+  PopularProducts,
+  SuperQuality,
+  Services,
+  SpecialOffer,
+  CustomerReviews,
+  Subscribe,
+  Footer,
+} from "../sections";
+import Process from "../sections/Process";
 
 const Landing = () => {
   return (
     <main className="relative">
       <Nav />
-      <section className="xl:padding-l wide:padding-r padding-b" >
+      <section className="xl:padding-l wide:padding-r padding-b">
         <Hero />
+      </section>
+      <section className="padding">
+        <Process />
       </section>
       <section className="padding">
         <PopularProducts />
@@ -23,6 +35,7 @@ const Landing = () => {
       </section> */}
       <section className="bg-pale-blue padding">
         <CustomerReviews />
+        
       </section>
       {/* <section className="padding-x sm:py-32 py-16 w-full">
         <Subscribe />
@@ -31,7 +44,7 @@ const Landing = () => {
         <Footer />
       </section>
     </main>
-  )
-}
+  );
+};
 
 export default Landing;
