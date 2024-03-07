@@ -792,12 +792,6 @@ const Bills = () => {
                     height={50}
                     // width={50}
                   />
-                  {/* <Barcode
-                    value={`Invoice No: ${invoiceNo}, Client Name: ${clientName}, Client Contact: ${clientContact}`}
-                    width={1} // Adjust the width of the barcode bars
-                    height={50} // Adjust the height of the barcode
-                    fontSize={10} // Adjust the font size of the text below the barcode
-                  /> */}
                   <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
                   <label className="nameclass-label">InvoiceNo:</label>
                   <input type="text" value={invoiceNumber} readOnly />
