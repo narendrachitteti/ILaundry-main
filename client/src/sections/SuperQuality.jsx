@@ -48,9 +48,7 @@ const SuperQuality = () => {
 
       <div className="section-down">
         <motion.div
-          // animate={{ y: 0, scale: 0.4, rotate: 360 }}
-          // whileInView={{ y: 0, scale: 1.0, rotate: 0 }}
-          // transition={{ ease: "easeInOut", duration: 1 }}
+        
         >
           <img src={aboutsimg1} alt="" />
         </motion.div>
