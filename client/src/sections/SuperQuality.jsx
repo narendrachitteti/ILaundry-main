@@ -58,6 +58,7 @@ const SuperQuality = () => {
           // transition={{ ease: "easeInOut", duration: 1 }}
           className="right-textone"
         >
+          
           <h1 className="font-palanquin text-4xl capitalize font-bold lg:max-w-lg">
             Clean And Hygiene
           </h1>
