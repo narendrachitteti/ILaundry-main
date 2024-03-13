@@ -792,66 +792,67 @@ const Bills = () => {
                     height={50}
                     // width={50}
                   />
-                  <p vlaue="userType">{user ? `${user.firstName} ${user.lastName}` : "Username"}</p>
-                  <label className="nameclass-label">InvoiceNo:</label>
+                      <label className="nameclass-label">User</label>:
+                      <input type="text" value={user ? user.fullName : "Username"} />
+                  <label className="nameclass-label">InvoiceNo</label>:
                   <input type="text" value={invoiceNumber} readOnly />
                   <label className="nameclass-label">InvoiceDate</label>:
                   <input type="text" value={invoiceDate} />
                   <label className="nameclass-label">ClientName</label>:
                   <input type="text" value={clientName} />
-                  <label className="nameclass-label">clientContact:</label>
+                  <label className="nameclass-label">clientContact</label>:
                   <input
                     type="text"
                     value={clientContact}
                   />
-                  <label className='nameclass-label'>customeraddress:</label>
+                  <label className='nameclass-label'>customeraddress</label>:
                   <input
                     type="text"
                     value={customeraddress} 
                   />
-                  <label className='nameclass-label'>item:</label>
+                  <label className='nameclass-label'>item</label>:
                   <input
                     type="text"
                     value={selectedItems}
                     readOnly
                   />
-                  <label className='nameclass-label'>Services:</label>
+                  <label className='nameclass-label'>Services</label>:
                   <input
                     type="text"
                     value={selectedServices}
                   />
-                  <label className='nameclass-label'>quantity:</label>
+                  <label className='nameclass-label'>quantity</label>:
                   <input
                     type="text"
                     value={quantities}
                   />
-                  <label className='nameclass-label'>TaxRate:</label>
+                  <label className='nameclass-label'>TaxRate</label>:
                   <input
                     type="text"
                     value={taxRate}
                   />
-                  <label className='nameclass-label'>discountRate:</label>
+                  <label className='nameclass-label'>discountRate</label>:
                   <input
                     type="text"
                     value={discountRate}
                   />
-                  <label className='nameclass-label'>subTotal:</label>
+                  <label className='nameclass-label'>subTotal</label>:
                   <input
                     type="text"
                     value={subTotal}
                   />
-                  <label className='nameclass-label'>taxAmount:</label>
+                  <label className='nameclass-label'>taxAmount</label>:
                   <input
                     type="text"
 
                     value={taxAmount}
                   />
-                  <label className='nameclass-label'>discountAmount:</label>
+                  <label className='nameclass-label'>discountAmount</label>:
                   <input
                     type="text"
                     value={discountAmount}
                   />
-                  <label className='nameclass-label'>total:</label>
+                  <label className='nameclass-label'>total</label>:
                   <input
                     type="text"
                     value={total}

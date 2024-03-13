@@ -46,23 +46,13 @@ const PreviousBills = () => {
   const [allData, setAllData] = useState([]);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
-  // const fetchcustomerServicesCus = async () => {
-  //   try {
-  //     console.log("Fetching Customer Details");
-  //     const response = await axios.get(`${BASE_URL}/api/get-bills`);
-  //     setcustomerServicesCus(response.data);
-  //     setAllData(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching Customer Details:", error);
-  //   }
-  // };
   const fetchcustomerServicesCus = async () => {
     try {
       console.log("Fetching Customer Details");
       const response = await axios.get(`${BASE_URL}/api/get-bills`);
       const billingDataWithUsername = response.data.map(billing => ({
         ...billing,
-        username: billing.user.fullName, // Assuming `fullName` is the correct field
+        username: billing.user.fullName, 
       }));
       setcustomerServicesCus(billingDataWithUsername);
       setAllData(billingDataWithUsername);
@@ -70,7 +60,6 @@ const PreviousBills = () => {
       console.error("Error fetching Customer Details:", error);
     }
   };
-  
   
   useEffect(() => {
     console.log("Before API call");
@@ -153,38 +142,14 @@ const PreviousBills = () => {
     }
   };
 
-  const filteredData = customerServicesCus.filter((item) => {
+  const filteredData = customerServicesCus.filter((service
+    ) => {
     return (
-      item.invoiceNo.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-      moment(item.invoiceDate).format("YYYY-MM-DD").includes(searchTextCus) ||
-      item.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-      item.clientContact.includes(searchTextCus) ||
-      item.subTotal
-        .toString()
-        .toLowerCase()
-        .includes(searchTextCus.toLowerCase()) || // Convert subTotal to string
-      item.discountRate
-        .toString()
-        .toLowerCase()
-        .includes(searchTextCus.toLowerCase()) || // Convert discountRate to string
-      item.discountAmount
-        .toString()
-        .toLowerCase()
-        .includes(searchTextCus.toLowerCase()) || // Convert discountAmount to string
-      item.taxRate
-        .toString()
-        .toLowerCase()
-        .includes(searchTextCus.toLowerCase()) || // Convert taxRate to string
-      item.taxAmount
-        .toString()
-        .toLowerCase()
-        .includes(searchTextCus.toLowerCase()) || // Convert taxAmount to string
-      item.total
-        .toString()
-        .toLowerCase()
-        .includes(searchTextCus.toLowerCase()) || // Convert total to string
-      item.selectedCurrency.toLowerCase().includes(searchTextCus.toLowerCase())
-    );
+      service.invoiceNo.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+        moment(service.invoiceDate).format("YYYY-MM-DD").includes(searchTextCus) ||
+        service.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+        service.clientContact.includes(searchTextCus)
+    )
   });
 
   const handleDownloadPDF = (service) => {
@@ -415,27 +380,19 @@ const PreviousBills = () => {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
+
+
   const handleFilterByDate = () => {
-    console.log("Filtering by date...");
-    console.log("fromDate:", fromDate);
-    console.log("toDate:", toDate);
-
-    const filteredData = allData.filter((item) => {
-      const currentDate = new Date(item.invoiceDate).getTime();
-      const fromTimestamp = fromDate
-        ? new Date(fromDate).setHours(0, 0, 0, 0)
-        : 0;
-      const toTimestamp = toDate
-        ? new Date(toDate).setHours(23, 59, 59, 999)
-        : Infinity;
-
+    const filteredData = allData.filter((service) => {
+      const currentDate = new Date(service.invoiceDate).getTime();
+      const fromTimestamp = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : 0;
+      const toTimestamp = toDate ? new Date(toDate).setHours(23, 59, 59, 999) : Infinity;
       return currentDate >= fromTimestamp && currentDate <= toTimestamp;
     });
-
-    console.log("Filtered Data:", filteredData);
-
-    setcustomerServicesCus(filteredData);
+    setcustomerServicesCus(filteredData); // Update state with filtered data
   };
+  
+
 
   return (
     <>
