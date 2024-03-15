@@ -1,0 +1,73 @@
+.siva123{
+  background-image: url('https://img.freepik.com/free-photo/office-desktop-with-laptop-business-man_23-2148174087.jpg?w=900&t=st=1710487262~exp=1710487862~hmac=464c60610369a30b7662db539e621a049b38063ba66aed6df75c1e3f117da8c4'); 
+  background-size:100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 550px;
+}
+
+
+.contact-form {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  position: relative;
+  top: 30px; 
+  margin-bottom: 100px;
+}
+  .contact-form h2 {
+    color: #0ecbd5; 
+  }
+  .label {
+    display: block;
+    margin-bottom: 5px;
+    color: black; 
+  }
+  
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  textarea.input {
+    resize: vertical;
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff6200;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  input[type="text"] {
+    margin-left: 1px;
+  }
+  .form-group33 [type="text"]{
+        margin-left: -1px;
+    }

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Nova+Mono&display=swap');
- * {
+
+* {
 	 box-sizing: border-box;
 	 padding: 0;
 	 margin: 0;
@@ -11,6 +12,7 @@
    justify-content: center;
 	 background: lightgray;
 	 font-size: 14px;
+	
 	 font-family: 'Nova Mono', monospace;
 }
  #wrapper {

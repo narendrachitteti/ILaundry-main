@@ -10,7 +10,7 @@ import {
   Footer,
 } from "../sections";
 import Process from "../sections/Process";
-
+import ContactForm from "../sections/ContactForm";
 const Landing = () => {
   return (
     <main className="relative">
@@ -35,11 +35,15 @@ const Landing = () => {
       </section> */}
       <section className="bg-pale-blue padding">
         <CustomerReviews />
-        
       </section>
       {/* <section className="padding-x sm:py-32 py-16 w-full">
         <Subscribe />
       </section> */}
+
+      <section id="contact-us" className="padding">
+        <ContactForm /> 
+      </section>
+
       <section className="bg-black padding-x padding-t pb-8">
         <Footer />
       </section>

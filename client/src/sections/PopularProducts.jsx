@@ -8,7 +8,7 @@ const PopularProducts = () => {
       <motion.div
         animate={{ y: -250 }}
         whileInView={{ y: 0 }}
-        transition={{ ease: "easeInOut", duration: 3 }}
+        transition={{ ease: "easeInOut", duration: 0.5 }}
         className="flex flex-col justify-start gap-2"
       >
         <h2 className="text-4xl font-palanquin font-bold">

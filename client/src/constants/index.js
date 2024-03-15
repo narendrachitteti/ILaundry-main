@@ -42,10 +42,12 @@ import customer16 from "../constants/customer16.jpeg";
 import fold from "../constants/fold.jpeg";
 
 export const navLinks = [
-  { href: "#home", label: "Home" },
-  { href: "#products", label: "Services" },
-  { href: "#about-us", label: "About Us" },
-];
+    { href: "#home", label: "Home" },
+    { href: "#products", label: "Services" },
+    { href: "#about-us", label: "About Us" },
+    { href: "#contact-us", label: "Contact Us" }, 
+  ];
+  
 
 export const shoes = [
   {
