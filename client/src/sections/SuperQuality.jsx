@@ -48,18 +48,17 @@ const SuperQuality = () => {
 
       <div className="section-down">
         <motion.div
-          animate={{ y: 0, scale: 0.4, rotate: 360 }}
-          whileInView={{ y: 0, scale: 1.0, rotate: 0 }}
-          transition={{ ease: "easeInOut", duration: 1 }}
+        
         >
           <img src={aboutsimg1} alt="" />
         </motion.div>
         <motion.div
-          animate={{ x: 0, scale: 1.3 }}
-          whileInView={{ x: 0, scale: 1.0 }}
-          transition={{ ease: "easeInOut", duration: 1 }}
+          // animate={{ x: 0, scale: 1.0 }}
+          // whileInView={{ x: 0, scale: 1.0 }}
+          // transition={{ ease: "easeInOut", duration: 1 }}
           className="right-textone"
         >
+          
           <h1 className="font-palanquin text-4xl capitalize font-bold lg:max-w-lg">
             Clean And Hygiene
           </h1>
