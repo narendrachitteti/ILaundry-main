@@ -10,7 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ReactWhatsapp from "react-whatsapp";
 import axios from "axios";
-// import QRCode from "qrcode.react";
+import QRCode from "qrcode.react";
 import Barcode from 'react-barcode';
 
 
@@ -776,22 +776,15 @@ const Bills = () => {
               {/* <hr /> */}
               <div className="popup-content">
                 <form>
-                  {/* <QRCode
+                  <QRCode
         value={`Invoice No: ${invoiceNo},Date: ${invoiceDate} , clientName: ${clientName} ,clientContact:${clientContact}
         customeraddress:${customeraddress}, items:${selectedItems} , Services:${selectedServices} , quantity:${quantities}
         taxRate:${taxRate} ,discountRate:${discountRate} ,  subTotal:${subTotal} , taxAmount:${taxAmount} , discountRate:${discountRate}, Amount: ${total}`} // Adjust the value as per your data
         size={150} // Adjust the size of the QR code as needed
         level={"H"} // Error correction level (L, M, Q, H)
         includeMargin={true} // Include margin
-      /> */}
-                  <Barcode 
-                    style={{ width: "50px", height: "auto" }}
-                    // value={`Invoice No: ${invoiceNo}, clientName: ${clientName}, clientContact: ${clientContact}`}
-                    value={`clientName: ${clientName}`}
-                    fontSize={10} 
-                    height={50}
-                    // width={50}
-                  />
+      /> 
+                  
                       <label className="nameclass-label">User</label>:
                       <input type="text" value={user ? user.fullName : "Username"} />
                   <label className="nameclass-label">InvoiceNo</label>:
