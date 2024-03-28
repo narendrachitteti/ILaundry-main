@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from "react";
-import * as Components from "./Components";
-import "./Login.css";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-// import { Button } from "./Button"; 
-// import Button from "@material-ui/core/Button";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import * as Components from "./Components";
+import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
-  const [signIn, setSignIn] = React.useState(true);
+  const [signIn, setSignIn] = useState(true);
+  const [staffEmail, setStaffEmail] = useState("");
+  const [staffPassword, setStaffPassword] = useState("");
+  const [staffError, setStaffError] = useState("");
 
   useEffect(() => {
     localStorage.removeItem("mail");
-  });
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
     const formData = new FormData(event.target);
-
+  
     const userData = {
       email: formData.get("email"),
       password: formData.get("password"),
     };
-
+  
     try {
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
@@ -33,76 +34,75 @@ function Login() {
         },
         body: JSON.stringify(userData),
       });
-
+  
       if (response.ok) {
         const enteredEmail = userData.email;
-
+  
         localStorage.setItem("mail", enteredEmail);
-        // Redirect user to InvoiceForm or any desired location
-        navigate("/Bills");
+        toast.success("Master login successful");
+  
+        // Delay navigation for 2 seconds
+        setTimeout(() => {
+          navigate("/Bills");
+        }, 1500);
       } else {
         const errorData = await response.json();
-        alert(errorData.message);
+        toast.error(errorData.message || "Invalid email or password");
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      alert("An error occurred while logging in. Please try again later.");
+      toast.error("An error occurred while logging in. Please try again later.");
     }
   };
-
-  const handleBackButtonClick = () => {
-    navigate(-1);
-  };
-
-  // const navigate = useNavigate();
-  const [staffEmail, setStaffEmail] = useState("");
-  const [staffPassword, setStaffPassword] = useState("");
-  const [staffError, setStaffError] = useState("");
+  
 
   const handleLogin1 = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-
+  
     const userData = {
       email: formData.get("email"),
       password: formData.get("password"),
     };
-
+  
     try {
       const response = await fetch("http://localhost:5000/login/staff", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: staffEmail, password: staffPassword }),
+        body: JSON.stringify(userData),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         const enteredEmail = userData.email;
-
+  
         localStorage.setItem("mail", enteredEmail);
-        if (data.message === "Staff login successful") {
+        toast.success("Staff login successful");
+        setTimeout(() => {
           navigate("/Bills");
-        } else {
-          setStaffError("You are not authorized to access this page.");
-        }
+        }, 1500);
       } else if (response.status === 403) {
         setStaffError("You are not authorized to access this page.");
-      } else {
-        setStaffError(data.message || "Invalid email or password");
+      } 
+      else {
+        toast.error(data.message || "Invalid email or password");
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      setStaffError(
-        "An error occurred while logging in. Please try again later."
-      );
+      toast.error("An error occurred while logging in. Please try again later.");
     }
+  };
+  
+  const handleBackButtonClick = () => {
+    navigate(-1);
   };
 
   return (
     <div>
+      <ToastContainer />
       <div className="complete98">
         <button
           className="cursor-pointer duration-200 hover:scale-125 active:scale-100"
@@ -149,15 +149,12 @@ function Login() {
                   placeholder="Password"
                   required
                 />
-                {/* <Components.Anchor href="#">
-                Forgot your password?
-              </Components.Anchor> */}
                 <Components.Button type="submit">Login</Components.Button>
-                <div style={{ display: "flex" ,height:"25px" , backgroundColor:"orange", borderRadius:"6px" ,width:"100%", padding:"3px" , marginTop:"10px"}}>
-                  <p style={{ color: 'white' }}>Don't have an account?</p>
-                  <Link to="/Register">
+                <div style={{ display: "flex" ,height:"25px" , borderRadius:"6px" ,width:"100%", padding:"3px" , marginTop:"10px"}}>
+                  <p style={{ color: 'black' }}>Don't have an account?</p> &nbsp;&nbsp;
+                  <Link to="/Register" style={{textDecoration:'none' }}>
                     <div >
-                      <p style={{ color: 'white', marginLeft: "10px" }}>Register</p>
+                      <p style={{ color: 'orange',fontWeight:'bold',textDecoration:'none' }}>Register</p>
                     </div>
                   </Link>
                 </div>
@@ -184,11 +181,11 @@ function Login() {
                   required
                 />
                 <Components.Button type="submit">Login</Components.Button>
-                <div style={{ display: "flex" ,height:"25px" , backgroundColor:"orange", borderRadius:"6px" ,width:"100%", padding:"3px" , marginTop:"10px"}}>
-                  <p style={{ color: 'white' }}>Don't have an account?</p>
-                  <Link to="/Register">
+                <div style={{ display: "flex" ,height:"25px" , borderRadius:"6px" ,width:"100%", padding:"3px" , marginTop:"10px"}}>
+                  <p style={{ color: 'black' }}>Don't have an account?</p> &nbsp;&nbsp;
+                  <Link to="/Register" style={{textDecoration:'none' }}>
                     <div >
-                      <p style={{ color: 'white', marginLeft: "10px" }}>Register</p>
+                      <p style={{ color: 'orange',fontWeight:'bold',textDecoration:'none' }}>Register</p>
                     </div>
                   </Link>
                 </div>
