@@ -10,5 +10,6 @@ router.post("/login", UserController.loginUser);
 router.get("/getusers", UserController.getAllUsers);
 router.get("/users/:email", UserController.getUserByEmail);
 router.post("/login/staff", UserController.loginStaff);
+router.get("/api/registerdetails" ,UserController.getAll );
 
 module.exports = router;

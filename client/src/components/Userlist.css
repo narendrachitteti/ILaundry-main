@@ -1,0 +1,52 @@
+/* Userlist.css */
+.overalldiv{
+    height: 100vh;
+    /* opacity: 0.5; */
+    /* background-size: cover; */
+  background: url("https://images.pexels.com/photos/82256/pexels-photo-82256.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1https://image.slidesdocs.com/responsive-images/background/brick-wall-with-3d-rendered-silver-washing-machine-laundry-detergent-and-pile-of-clothes-powerpoint-background_29f01c33d0__960_540.jpg") center/cover;
+}
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: rgb(24, 54, 28);
+    /* color: white; */
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .user-table th,
+  .user-table td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+  }
+  .details{
+    text-align: center;
+    font-size: 30px;
+    padding-top: 20px;
+  }
+  
+  .user-table th {
+    /* background-color: #f2f2f2; */
+
+  }
+  
+  .user-table tbody tr:nth-child(even) {
+    /* background-color: #f2f2f2; */
+  }
+  
+  .user-table tbody tr:hover {
+    background-color: #f6f9f6;
+  }
+  
+  .user-table th:first-child,
+  .user-table td:first-child {
+    border-left: none;
+  }
+  
+  .user-table th:last-child,
+  .user-table td:last-child {
+    border-right: none;
+  }
+  
