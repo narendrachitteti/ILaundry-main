@@ -50,9 +50,11 @@ const PreviousBills = () => {
     try {
       console.log("Fetching Customer Details");
       const response = await axios.get(`${BASE_URL}/api/get-bills`);
-      const billingDataWithUsername = response.data.map(billing => ({
+      const billingDataWithUsername = response.data.map((billing) => ({
         ...billing,
-        username: billing.user.fullName, 
+        username: billing.user.fullName,
+        address: billing.user.address,
+        
       }));
       setcustomerServicesCus(billingDataWithUsername);
       setAllData(billingDataWithUsername);
@@ -60,7 +62,7 @@ const PreviousBills = () => {
       console.error("Error fetching Customer Details:", error);
     }
   };
-  
+
   useEffect(() => {
     console.log("Before API call");
     fetchcustomerServicesCus();
@@ -142,14 +144,15 @@ const PreviousBills = () => {
     }
   };
 
-  const filteredData = customerServicesCus.filter((service
-    ) => {
+  const filteredData = customerServicesCus.filter((service) => {
     return (
       service.invoiceNo.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-        moment(service.invoiceDate).format("YYYY-MM-DD").includes(searchTextCus) ||
-        service.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-        service.clientContact.includes(searchTextCus)
-    )
+      moment(service.invoiceDate)
+        .format("DD-MM-YYYY")
+        .includes(searchTextCus) ||
+      service.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+      service.clientContact.includes(searchTextCus)
+    );
   });
 
   const handleDownloadPDF = (service) => {
@@ -237,6 +240,7 @@ const PreviousBills = () => {
       { label: "Total:", value: service.total },
       { label: "Currency:", value: service.selectedCurrency },
       { label: "Payment Mode:", value: service.selectedPaymentMode },
+      
     ];
 
     if (service.items && service.items.length > 0) {
@@ -381,18 +385,19 @@ const PreviousBills = () => {
     setFile(e.target.files[0]);
   };
 
-
   const handleFilterByDate = () => {
     const filteredData = allData.filter((service) => {
       const currentDate = new Date(service.invoiceDate).getTime();
-      const fromTimestamp = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : 0;
-      const toTimestamp = toDate ? new Date(toDate).setHours(23, 59, 59, 999) : Infinity;
+      const fromTimestamp = fromDate
+        ? new Date(fromDate).setHours(0, 0, 0, 0)
+        : 0;
+      const toTimestamp = toDate
+        ? new Date(toDate).setHours(23, 59, 59, 999)
+        : Infinity;
       return currentDate >= fromTimestamp && currentDate <= toTimestamp;
     });
     setcustomerServicesCus(filteredData); // Update state with filtered data
   };
-  
-
 
   return (
     <>
@@ -440,6 +445,7 @@ const PreviousBills = () => {
               <th className="product-ooi">Staff Name</th>
               <th className="product-ooi">Customer Name</th>
               <th className="product-ooi">Contact</th>
+              <th className="product-ooi">Address</th>
               <th className="product-ooi">D&R</th>
               <th className="product-ooi">D&A</th>
               <th className="product-ooi">T&R</th>
@@ -464,7 +470,7 @@ const PreviousBills = () => {
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
                     {service.invoiceDate
-                      ? moment(service.invoiceDate).format("MM-DD-YYYY")
+                      ? moment(service.invoiceDate, 'DD-MM-YYYY').format("DD-MM-YYYY")
                       : ""}
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
@@ -477,6 +483,9 @@ const PreviousBills = () => {
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
                     {service.clientContact}
+                  </td>
+                  <td onClick={() => handleFieldClick(service)}>
+                    {service.customeraddress}
                   </td>
 
                   <td onClick={() => handleFieldClick(service)}>

@@ -4,6 +4,8 @@ const billsInvoice = async (req, res) => {
   try {
     const count = await Billing.countDocuments();
     const invoiceNumber = `INV${(count + 1).toString().padStart(5, '0')}`;
+
+    const invoiceDate = new Date(req.body.invoiceDate);
     
     const newBilling = new Billing({ 
       user: {

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/types": "^7.24.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
@@ -73,6 +74,7 @@
   },
   "devDependencies": {
     "eslint-plugin-react": "^7.33.2",
-    "tailwindcss": "^3.4.1"
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   }
 }
