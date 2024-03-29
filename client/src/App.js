@@ -14,6 +14,7 @@ import Registration from "./components/Registration/Registration.js";
 import OldLogin from "./components/Registration/OldLogin.js";
 import StaffLogin from "./components/Registration/StaffLogin.js";
 import ContactForm from "./sections/ContactForm.js";
+import Userlist from "./components/Userlist.js";
 
 
 function App() {
@@ -44,7 +45,7 @@ function App() {
             <Route path="/StaffLogin" element={<StaffLogin />} />
             <Route element={<PrivateRoute />}></Route>
             <Route path="/contact" component={ContactForm} />
-
+            <Route path="/Userlist" element={<Userlist/>}/>
             {/* <Route path="/Process" element={<Process/>}/> */}
           </Routes>
         </Router>

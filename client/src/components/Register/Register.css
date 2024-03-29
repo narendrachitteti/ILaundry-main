@@ -1,8 +1,32 @@
 /* registerForm.css */
 
+
+.back-link {
+  display: inline-block;
+  /* margin-bottom: 20px;  */
+}
+
+.back-icon {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  border-radius: 30px;
+  padding: 8px;
+  background-color: #ffffff;
+  z-index: 2;
+  color: #ff4400; 
+  font-size: 24px; 
+  cursor: pointer;
+  margin-right: 10px; 
+}
+
+.back-icon:hover {
+  color: #0056b3; 
+}
+
 .container-abed23s {
   position: relative;
-  height: 100vh;
+  height: 97vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,8 +36,8 @@
 .container-abed23s::before {
   content: "";
   position: absolute;
-  top: 80px;
-  /* top: 0; */
+  /* top: 80px; */
+  top: -25px;
   left: 0;
   right: 0;
   bottom: 0;

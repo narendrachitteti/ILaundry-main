@@ -59,12 +59,12 @@ const Navbar = () => {
           </div>
         </Link>
 
-        {/* <Link to="/Register">
+        <Link to="/Userlist">
           <div className="bills">
             <img src={register} alt="" style={{ height: "2.5rem" }} />
-            <p>Register</p>
+            <p>Registerdetails</p>
           </div>
-        </Link> */}
+        </Link>
         
         <div className="bills">
           <img src={image16} alt="" style={{ height: "2.5rem" }} />

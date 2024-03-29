@@ -1,11 +1,29 @@
 import React, { useState } from "react";
-import "../Register/Register.css";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../Register/Register.css";
 import Navbar from "../Navbar";
 
 function Register() {
   const [error, setError] = useState("");
-  const [userType, setUserType] = useState(""); // State to handle userType
+  const [userType, setUserType] = useState("");
+
+  const validateName = (name) => {
+    return /^[A-Za-z]+$/.test(name);
+  };
+
+  const validateEmail = (email) => {
+    // Regular expression for basic email validation
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
+  const validatePassword = (password) => {
+    // Regular expression for password validation (minimum 8 characters, at least one letter, one number, and one special character)
+    return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password);
+  };
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -15,16 +33,34 @@ function Register() {
     const confirmPassword = formData.get("confirmPassword");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
-    // Combine firstName and lastName into fullName
-    const fullName = `${formData.get("firstName")} ${formData.get("lastName")}`;
+    const firstName = formData.get("firstName");
+    const lastName = formData.get("lastName");
+    const email = formData.get("email");
+
+    if (!validateName(firstName) || !validateName(lastName)) {
+      toast.error("First name and last name should only contain letters");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      toast.error("Invalid email address");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      toast.error("Password should contain at least 8 characters, one letter, one number, and one special character");
+      return;
+    }
+
+    const fullName = `${firstName} ${lastName}`;
 
     const userData = {
-      fullName: fullName, // Include fullName in userData
-      email: formData.get("email"),
+      fullName: fullName,
+      email: email,
       userType: userType,
       password: password,
       confirmPassword: confirmPassword,
@@ -40,7 +76,7 @@ function Register() {
       });
 
       if (response.ok) {
-        alert("Registration successful");
+        toast.success("Registration successful");
         event.target.reset();
         setError("");
       } else {
@@ -56,6 +92,9 @@ function Register() {
   return (
     <>
       {/* <Navbar /> */}
+      <Link to="/" className="back-link">
+        <FontAwesomeIcon icon={faArrowLeft} style={{ width: "25px", height: "25px" }} className="back-icon" />
+      </Link>
       <div className="container-abed23s">
         <div className="Inner-container-abed23s">
           <h1>Registration</h1>
@@ -71,15 +110,15 @@ function Register() {
               name="lastName"
               type="text"
               placeholder="Last Name"
-              className="inputabcd123"
               required
+              className="inputabcd123"
             />
             <input
               name="email"
               type="email"
               placeholder="Email"
-              className="inputabcd123"
               required
+              className="inputabcd123"
             />
             <select
               name="userType"
@@ -92,33 +131,31 @@ function Register() {
               <option value="admin">Admin</option>
               <option value="staff">Staff</option>
             </select>
-            {error && <div className="error-message">{error}</div>}
             <input
               name="password"
               type="password"
               placeholder="Password"
-              className="inputabcd123"
               required
+              className="inputabcd123"
             />
             <input
               name="confirmPassword"
               type="password"
               placeholder="Confirm Password"
-              className="inputabcd123"
               required
+              className="inputabcd123"
             />
-            {/* Select tag for userType */}
-
             <button type="submit" className="buttonabcd123">
               Register
             </button>
-            {/* <p className="already-registered">
-              Already Registered..? &nbsp;&nbsp;
-              <Link to="/Login">Login Here..</Link>
-            </p> */}
           </form>
+          <p className="already-registered">
+            Already Registered..? &nbsp;&nbsp;
+            <Link to="/Login">Login Here..</Link>
+          </p>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }
