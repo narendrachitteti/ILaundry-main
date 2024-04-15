@@ -78,20 +78,34 @@ const getAll = async (req, res) => {
     }
   }
 
-  const getBills = async (req, res) => {
-    try {
-      const bills = await Billing.find({});
-      res.status(200).json(bills);
-    } catch (error) {
-      console.error('Error fetching bills:', error);
-      res.status(500).json({ message: 'An error occurred while fetching bills. Please try again later.' });
-    }
+ 
+const getAllBills = async (req, res) => {
+  try {
+    const fromDate = new Date(req.body.fromDate);
+    const toDate = new Date(req.body.toDate);
+    
+    // Fetch all bills from the database
+    const allBills = await Billing.find({});
+    
+    // Filter bills based on the selected date range
+    const filteredBills = allBills.filter(bill => {
+      const billDate = new Date(bill.invoiceDate);
+      return billDate >= fromDate && billDate <= toDate;
+    });
+    
+    res.status(200).json(filteredBills);
+  } catch (error) {
+    console.error('Error fetching bills:', error);
+    res.status(500).json({ message: 'An error occurred while fetching bills. Please try again later.' });
   }
+};
+
+
 
 module.exports = {
     billsInvoice,
     getAll,
-    getBills,
+    getAllBills,
     getLastInvoiceNumber,
 };
 
