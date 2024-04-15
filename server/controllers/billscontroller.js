@@ -6,7 +6,8 @@ const billsInvoice = async (req, res) => {
     const invoiceNumber = `INV${(count + 1).toString().padStart(5, '0')}`;
 
     const invoiceDate = new Date(req.body.invoiceDate);
-    
+    const deliveryDate = req.body.deliveryDate; // New delivery date
+
     const newBilling = new Billing({ 
       user: {
         userId: req.body.user.userId,
@@ -15,6 +16,10 @@ const billsInvoice = async (req, res) => {
       username: req.body.username,
       invoiceNo: invoiceNumber,
       invoiceDate: req.body.invoiceDate,
+      deliveryDate: deliveryDate, // Assign delivery date
+      pickupdate: req.body.pickupdate, // Assign pickup date
+      store: req.body.store,
+      factory: req.body.factory,
       clientName: req.body.clientName,
       clientContact: req.body.clientContact,
       customeraddress: req.body.customeraddress,

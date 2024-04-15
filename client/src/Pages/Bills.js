@@ -343,7 +343,6 @@ const Bills = () => {
     setTotal(totalAmount);
   };
 
-
   const getCurrencySymbol = (currencyCode) => {
     switch (currencyCode) {
       case "INR":
@@ -371,6 +370,11 @@ const Bills = () => {
       clientName,
       clientContact,
       customeraddress,
+      pickupdate: formatDate(pickupdate), // Include pickup date
+      deliveryDate: formatDate(deliveryDate), // Include delivery date
+      store: selectedStore,
+      factory: selectedFactory,
+      
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
@@ -396,7 +400,6 @@ const Bills = () => {
         : null,
     };
 
-    // Send a POST request to the backend API to save the billing data
     axios
       .post("http://localhost:5000/api/billing", data)
       .then((response) => {
@@ -409,11 +412,10 @@ const Bills = () => {
     togglePopup(true);
   };
 
-
-
   const handleInvoiceDateChange = (selectedDate) => {
     setInvoiceDate(selectedDate);
   };
+
 
   const handledownloadcopy = () => {
     const doc = new jsPDF();
@@ -470,16 +472,26 @@ const Bills = () => {
     setSelectedServices("");
   };
 
-
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
   };
-
-
-
   // const togglePopup = (value) => {
   //   setSelectedPopupItem(value);
   // };
+  
+  const [deliveryDate, setDeliveryDate] = useState(null);
+  const handleDeliveryDateChange = (date) => {
+    setDeliveryDate(date);
+  };
+
+  const [pickupdate, setPickupdate] = useState(null);
+
+  const handlePickupDateChange = (date) => {
+    setPickupdate(date);
+  };
+  const [selectedStore, setSelectedStore] = useState("");
+const [selectedFactory, setSelectedFactory] = useState("");
+
   return (
     <div className="billtotal">
       <div className="nav111">
@@ -495,15 +507,7 @@ const Bills = () => {
             onChange={(e) => setInvoiceNo(e.target.value)}
           />
         </div>
-        {/* <div className="input-group">
-          <label htmlFor="invoiceDate">Invoice Date:</label>
-          <input
-            type="date"
-            id="invoiceDate"
-            value={invoiceDate}
-            onChange={(e) => setInvoiceDate(e.target.value)}
-          />
-        </div> */}
+      
         <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
           {/* Placeholder for your date picker component */}
@@ -542,9 +546,60 @@ const Bills = () => {
             value={customeraddress}
             onChange={(e) => setcustomeraddress(e.target.value)}
           />
-        </div>
+        </div>    
       </div>
-      <div className="table-container">
+<br/>
+      <div className="invoice-form" >
+     
+      <div className="input-group">
+  <label htmlFor="pickupDate">Pickup Date:</label>
+  <DatePicker
+    id="pickupDate"
+    selected={pickupdate}
+    onChange={handlePickupDateChange}
+    dateFormat="dd-MM-yyyy"
+  />
+</div>
+    
+      <div className="input-group">
+        <label htmlFor="invoiceDate">Delivery Date:</label>
+        <DatePicker
+          id="deliveryDate"
+          selected={deliveryDate}
+          onChange={handleDeliveryDateChange}
+          dateFormat="dd-MM-yyyy" // Set the desired date format
+        />
+
+      </div>
+      <div className="input-group">
+  <label htmlFor="store">Store:</label>
+  <select
+    id="store"
+    value={selectedStore}
+    onChange={(e) => setSelectedStore(e.target.value)}
+  >
+    <option value="">Select Store</option>
+    <option value="storein">Store In</option>
+    <option value="storeout">Store Out</option>
+  </select>
+</div>
+
+<div className="input-group">
+  <label htmlFor="factory">Factory:</label>
+  <select
+    id="factory"
+    value={selectedFactory}
+    onChange={(e) => setSelectedFactory(e.target.value)}
+  >
+    <option value="">Select Factory</option>
+    <option value="factoryin">Factory In</option>
+    <option value="factoryout">Factory Out</option>
+  </select>
+</div>
+
+    
+    </div>
+    <div className="table-container">
         <table className="medicine-table">
           <thead>
             <tr>
@@ -745,9 +800,7 @@ const Bills = () => {
               </div>
             </Col>
           </Row>
-          {/* <button className="review-button" onClick={togglePopup}{handleReviewInvoice}>
-            Review Invoice
-          </button> */}
+         
           <button
             className="review-button"
             onClick={() => {
@@ -776,15 +829,18 @@ const Bills = () => {
               {/* <hr /> */}
               <div className="popup-content">
                 <form>
-                  <QRCode
+                  {/* <QRCode
         value={`Invoice No: ${invoiceNo},Date: ${invoiceDate} , clientName: ${clientName} ,clientContact:${clientContact}
         customeraddress:${customeraddress}, items:${selectedItems} , Services:${selectedServices} , quantity:${quantities}
         taxRate:${taxRate} ,discountRate:${discountRate} ,  subTotal:${subTotal} , taxAmount:${taxAmount} , discountRate:${discountRate}, Amount: ${total}`} // Adjust the value as per your data
         size={150} // Adjust the size of the QR code as needed
         level={"H"} // Error correction level (L, M, Q, H)
         includeMargin={true} // Include margin
-      /> 
-                  
+      />       */}
+
+<Barcode value={invoiceNumber.toString()} />
+        
+            
                       <label className="nameclass-label">User</label>:
                       <input type="text" value={user ? user.fullName : "Username"} />
                   <label className="nameclass-label">InvoiceNo</label>:
@@ -794,10 +850,14 @@ const Bills = () => {
                   <label className="nameclass-label">ClientName</label>:
                   <input type="text" value={clientName} />
                   <label className="nameclass-label">clientContact</label>:
-                  <input
-                    type="text"
-                    value={clientContact}
-                  />
+                  <input    type="text"                    value={clientContact}                  />
+
+                  <label className="nameclass-label">Pickup Date</label>:
+                  <input type="text" value={pickupdate} />
+
+                  <label className="nameclass-label">Delivery Date</label>:
+                  <input type="text" value={deliveryDate} />
+
                   <label className='nameclass-label'>customeraddress</label>:
                   <input
                     type="text"
@@ -868,5 +928,4 @@ const Bills = () => {
     </div>
   );
 };
-
 export default Bills;
