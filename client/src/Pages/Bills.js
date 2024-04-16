@@ -521,7 +521,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
           <label htmlFor="clientName">Customer Name:</label>
           <input
             type="text"
-            id="clientName" 
+            id="clientName"
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
           />
@@ -529,16 +529,14 @@ const [selectedFactory, setSelectedFactory] = useState("");
         <div className="input-group">
           <label htmlFor="clientContact">Customer Contact No:</label>
           <input
-    type="tel"
-    maxLength="10"
-    onInput={(e) => (e.target.value = e.target.value.replace(/\D/, "").slice(0, 10))}
-    required
-    id="clientContact"
-    value={clientContact}
-    onChange={(e) => setClientContact(e.target.value)}
-/>
-
-
+            type="tel"
+            pattern="[0-9]*"
+            onInput={(e) => (e.target.value = e.target.value.replace(/\D/, ""))}
+            required
+            id="clientContact"
+            value={clientContact}
+            onChange={(e) => setClientContact(e.target.value)}
+          />
         </div>
         <div className="input-group">
           <label htmlFor="clientContact">Customer Address:</label>
@@ -548,9 +546,60 @@ const [selectedFactory, setSelectedFactory] = useState("");
             value={customeraddress}
             onChange={(e) => setcustomeraddress(e.target.value)}
           />
-        </div>
+        </div>    
       </div>
-      <div className="table-container">
+<br/>
+      <div className="invoice-form" >
+     
+      <div className="input-group">
+  <label htmlFor="pickupDate">Pickup Date:</label>
+  <DatePicker
+    id="pickupDate"
+    selected={pickupdate}
+    onChange={handlePickupDateChange}
+    dateFormat="dd-MM-yyyy"
+  />
+</div>
+    
+      <div className="input-group">
+        <label htmlFor="invoiceDate">Delivery Date:</label>
+        <DatePicker
+          id="deliveryDate"
+          selected={deliveryDate}
+          onChange={handleDeliveryDateChange}
+          dateFormat="dd-MM-yyyy" // Set the desired date format
+        />
+
+      </div>
+      <div className="input-group">
+  <label htmlFor="store">Store:</label>
+  <select
+    id="store"
+    value={selectedStore}
+    onChange={(e) => setSelectedStore(e.target.value)}
+  >
+    <option value="">Select Store</option>
+    <option value="storein">Store In</option>
+    <option value="storeout">Store Out</option>
+  </select>
+</div>
+
+<div className="input-group">
+  <label htmlFor="factory">Factory:</label>
+  <select
+    id="factory"
+    value={selectedFactory}
+    onChange={(e) => setSelectedFactory(e.target.value)}
+  >
+    <option value="">Select Factory</option>
+    <option value="factoryin">Factory In</option>
+    <option value="factoryout">Factory Out</option>
+  </select>
+</div>
+
+    
+    </div>
+    <div className="table-container">
         <table className="medicine-table">
           <thead>
             <tr>
