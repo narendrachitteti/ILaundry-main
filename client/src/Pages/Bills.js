@@ -13,9 +13,7 @@ import axios from "axios";
 import QRCode from "qrcode.react";
 import Barcode from 'react-barcode';
 
-
 const currencies = currencyCodes.data;
-
 
 const Bills = () => {
   const [user, setUser] = useState(null);
@@ -308,7 +306,6 @@ const Bills = () => {
     updateSubtotal(index, value, defaultQuantity);
   };
 
-
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = value;
@@ -416,7 +413,6 @@ const Bills = () => {
     setInvoiceDate(selectedDate);
   };
 
-
   const handledownloadcopy = () => {
     const doc = new jsPDF();
     doc.text("Invoice No: " + invoiceNo, 10, 10);
@@ -475,9 +471,6 @@ const Bills = () => {
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
   };
-  // const togglePopup = (value) => {
-  //   setSelectedPopupItem(value);
-  // };
   
   const [deliveryDate, setDeliveryDate] = useState(null);
   const handleDeliveryDateChange = (date) => {
@@ -799,8 +792,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
                 </span>
               </div>
             </Col>
-          </Row>
-         
+          </Row>     
           <button
             className="review-button"
             onClick={() => {
@@ -811,7 +803,6 @@ const [selectedFactory, setSelectedFactory] = useState("");
             Review Invoice
           </button>
           <p value="userType">{user ? user.fullName : "Username"}</p>
-
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
@@ -829,18 +820,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
               {/* <hr /> */}
               <div className="popup-content">
                 <form>
-                  {/* <QRCode
-        value={`Invoice No: ${invoiceNo},Date: ${invoiceDate} , clientName: ${clientName} ,clientContact:${clientContact}
-        customeraddress:${customeraddress}, items:${selectedItems} , Services:${selectedServices} , quantity:${quantities}
-        taxRate:${taxRate} ,discountRate:${discountRate} ,  subTotal:${subTotal} , taxAmount:${taxAmount} , discountRate:${discountRate}, Amount: ${total}`} // Adjust the value as per your data
-        size={150} // Adjust the size of the QR code as needed
-        level={"H"} // Error correction level (L, M, Q, H)
-        includeMargin={true} // Include margin
-      />       */}
-
-<Barcode value={invoiceNumber.toString()} />
-        
-            
+<Barcode value={invoiceNumber.toString()} />     
                       <label className="nameclass-label">User</label>:
                       <input type="text" value={user ? user.fullName : "Username"} />
                   <label className="nameclass-label">InvoiceNo</label>:
