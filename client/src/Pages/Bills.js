@@ -529,23 +529,27 @@ const [selectedFactory, setSelectedFactory] = useState("");
         <div className="input-group">
           <label htmlFor="clientContact">Customer Contact No:</label>
           <input
-            type="tel"
-            pattern="[0-9]*"
-            onInput={(e) => (e.target.value = e.target.value.replace(/\D/, ""))}
-            required
-            id="clientContact"
-            value={clientContact}
-            onChange={(e) => setClientContact(e.target.value)}
-          />
+    type="tel"
+    maxLength="10"
+    
+    onInput={(e) => (e.target.value = e.target.value.replace(/\D/, "").slice(0, 10))}
+    required
+    id="clientContact"
+    value={clientContact}
+    onChange={(e) => setClientContact(e.target.value)}
+/>
+
         </div>
         <div className="input-group">
           <label htmlFor="clientContact">Customer Address:</label>
           <input
-            type="text"
-            id="clientName"
-            value={customeraddress}
-            onChange={(e) => setcustomeraddress(e.target.value)}
-          />
+    type="text"
+    maxLength="100"
+    id="clientName"
+    value={customeraddress}
+    onChange={(e) => setcustomeraddress(e.target.value.slice(0, 100))}
+/>
+
         </div>    
       </div>
 <br/>
