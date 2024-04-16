@@ -1,36 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../Register/Register.css";
 import Navbar from "../Navbar";
 
 function Register() {
   const [error, setError] = useState("");
   const [userType, setUserType] = useState("");
+  const [storeId, setStoreId] = useState("");
+
+  useEffect(() => {
+    fetchStoreId();
+  }, []);
+
+  const fetchStoreId = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/getNextStoreId");
+      if (response.ok) {
+        const data = await response.json();
+        setStoreId(data.storeId);
+      } else {
+        setError("Failed to fetch store ID");
+      }
+    } catch (error) {
+      console.error("Error fetching store ID:", error);
+      setError("An error occurred while fetching store ID. Please try again later.");
+    }
+  };
 
   const validateName = (name) => {
     return /^[A-Za-z]+$/.test(name);
   };
 
   const validateEmail = (email) => {
-    // Regular expression for basic email validation
     return /\S+@\S+\.\S+/.test(email);
   };
 
   const validatePassword = (password) => {
-    // Regular expression for password validation (minimum 8 characters, at least one letter, one number, and one special character)
     return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password);
   };
 
   const handleRegister = async (event) => {
     event.preventDefault();
 
+
+    if (!storeId) {
+      // You can show a message or toast indicating that the storeId is being fetched
+      setError("Fetching store ID...");
+      return;
+    }
+
     const formData = new FormData(event.target);
     const password = formData.get("password");
     const confirmPassword = formData.get("confirmPassword");
+    const email = formData.get("email");
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
@@ -38,11 +63,9 @@ function Register() {
     }
 
     const firstName = formData.get("firstName");
-    const lastName = formData.get("lastName");
-    const email = formData.get("email");
 
-    if (!validateName(firstName) || !validateName(lastName)) {
-      toast.error("First name and last name should only contain letters");
+    if (!validateName(firstName)) {
+      toast.error("First name should only contain letters");
       return;
     }
 
@@ -56,14 +79,12 @@ function Register() {
       return;
     }
 
-    const fullName = `${firstName} ${lastName}`;
-
     const userData = {
-      fullName: fullName,
+      firstName: firstName,
       email: email,
       userType: userType,
       password: password,
-      confirmPassword: confirmPassword,
+      storeId: storeId,
     };
 
     try {
@@ -99,17 +120,19 @@ function Register() {
         <div className="Inner-container-abed23s">
           <h1>Registration</h1>
           <form className="formContainerabcd123" onSubmit={handleRegister}>
-            <input
-              name="firstName"
+          <input
+              name="storeId"
               type="text"
-              placeholder="First Name"
+              value={storeId}
+              readOnly
+              placeholder="Store ID"
               required
               className="inputabcd123"
             />
             <input
-              name="lastName"
+              name="firstName"
               type="text"
-              placeholder="Last Name"
+              placeholder=" Name"
               required
               className="inputabcd123"
             />
@@ -145,6 +168,7 @@ function Register() {
               required
               className="inputabcd123"
             />
+            
             <button type="submit" className="buttonabcd123">
               Register
             </button>

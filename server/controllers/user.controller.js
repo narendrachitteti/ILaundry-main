@@ -1,32 +1,39 @@
 const User = require("../models/user.model");
-
 exports.registerUser = async (req, res) => {
-  const { fullName, email, userType, password, confirmPassword } = req.body;
+  const { fullName, storeId, userType, email, password, confirmPassword } = req.body;
 
   try {
+    // Check if email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
     }
 
+    // Create a new user instance
     const newUser = new User({
       fullName,
-      email,
+      storeId,
       userType,
+      email,
       password,
       confirmPassword,
     });
 
+    // Save the new user to the database
     await newUser.save();
 
+    // Send success response
     res.status(201).json({ message: "Registration successful" });
   } catch (error) {
+    // Handle errors
     console.error("Error registering user:", error);
     res.status(500).json({
       message: "An error occurred while registering. Please try again later.",
     });
   }
 };
+
+
 
 // exports.loginUser = async (req, res) => {
 //   const { email, password } = req.body;
@@ -47,12 +54,12 @@ exports.registerUser = async (req, res) => {
 // };
 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { storeId, password } = req.body;
 
   try {
-    const user = await User.findOne({ email, password });
+    const user = await User.findOne({ storeId, password });
     if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ message: "Invalid StoreId or password" });
     }
 
     // Check if the user is an admin
@@ -71,6 +78,7 @@ exports.loginUser = async (req, res) => {
     });
   }
 };
+
 
 exports.loginStaff = async (req, res) => {
   const { email, password } = req.body;
@@ -105,20 +113,40 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.getUserByEmail = async (req, res) => {
-  const { email } = req.params;
+// exports.getUserByEmail = async (req, res) => {
+//   const { email } = req.params;
+
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+//     res.status(200).json(user);
+//   } catch (error) {
+//     console.error("Error fetching user by email:", error);
+//     res.status(500).json({
+//       message:
+//         "An error occurred while fetching user by email. Please try again later.",
+//     });
+//   }
+// };
+
+
+
+exports.getUserByStoreId = async (req, res) => {
+  const { storeId } = req.params;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ storeId });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     res.status(200).json(user);
   } catch (error) {
-    console.error("Error fetching user by email:", error);
+    console.error("Error fetching user by storeId:", error);
     res.status(500).json({
       message:
-        "An error occurred while fetching user by email. Please try again later.",
+        "An error occurred while fetching user by storeId. Please try again later.",
     });
   }
 };
@@ -132,3 +160,26 @@ exports.getAll = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while fetching users. Please try again later.' });
   }
 }
+
+exports.getNextStoreId = async (req, res) => {
+  try {
+    // Get the last store ID from the database
+    const lastStore = await User.findOne({}, {}, { sort: { 'storeId': -1 } });
+
+    let nextStoreId;
+    if (lastStore) {
+      // Increment the last store ID
+      const lastIdNumber = parseInt(lastStore.storeId.substring(4));
+      const nextIdNumber = lastIdNumber + 1;
+      nextStoreId = 'STID' + nextIdNumber.toString().padStart(3, '0');
+    } else {
+      // If no store ID exists, start with STID001
+      nextStoreId = 'STID001';
+    }
+
+    res.json({ storeId: nextStoreId });
+  } catch (err) {
+    console.error('Error getting next store ID:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
