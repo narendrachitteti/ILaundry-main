@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const billingSchema = new mongoose.Schema({
@@ -12,6 +11,10 @@ const billingSchema = new mongoose.Schema({
     unique: true,
   },
   invoiceDate: String,
+  pickupdate: String, // New field for pickup date
+  deliveryDate: String, // New field for delivery date
+  store: String,
+  factory: String,
   clientName: String,
   clientContact: String,
   customeraddress: String,
@@ -38,6 +41,7 @@ billingSchema.methods.getFormattedInvoiceDate = function () {
   const year = rawDate.getFullYear();
   return `${day}-${month}-${year}`;
 };
-const billing = mongoose.model("bill", billingSchema);
 
-module.exports = billing;
+const Billing = mongoose.model("Billing", billingSchema);
+
+module.exports = Billing;

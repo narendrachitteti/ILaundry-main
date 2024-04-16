@@ -4,6 +4,7 @@ import './Userlist.css'; // Import CSS file
 
 const Userlist = () => {
     const [details, setDetails] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -17,9 +18,28 @@ const Userlist = () => {
         fetchDetails();
     }, []);
 
+    const handleSearch = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const filteredDetails = details.filter(detail =>
+        detail.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className='overalldiv'>
+            <br/>
             <h1 className='details'> Registerdetails</h1>
+            <br/>
+            <div className='search-container098'>
+            <input  className='search098'
+                type="text"
+                placeholder="Search here ...."
+                value={searchQuery}
+                onChange={handleSearch}
+            />
+            </div>
+            
             <table className="user-table">
                 <thead>
                     <tr>
@@ -31,7 +51,7 @@ const Userlist = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {details.map((detail) => (
+                    {filteredDetails.map((detail) => (
                         <tr key={detail._id}>
                             <td>{detail.firstName}</td>
                             <td>{detail.lastName}</td>
@@ -42,7 +62,7 @@ const Userlist = () => {
                     ))}
                 </tbody>
             </table>
-        </div>
+        </div>   
     );
 };
 

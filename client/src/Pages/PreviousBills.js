@@ -50,23 +50,28 @@ const PreviousBills = () => {
     try {
       console.log("Fetching Customer Details");
       const response = await axios.get(`${BASE_URL}/api/get-bills`);
-      const billingDataWithUsername = response.data.map((billing) => ({
-        ...billing,
-        username: billing.user.fullName,
-        address: billing.user.address,
-        
-      }));
-      setcustomerServicesCus(billingDataWithUsername);
-      setAllData(billingDataWithUsername);
+      if (response && response.data) {
+        const billingDataWithUsername = response.data.map((billing) => ({
+          ...billing,
+          username: billing.user ? billing.user.fullName : "", // Add null check here
+          address: billing.user ? billing.user.address : "", // Add null check here
+        }));
+        setcustomerServicesCus(billingDataWithUsername);
+        setAllData(billingDataWithUsername);
+      } else {
+        console.error("No data received from the server.");
+      }
     } catch (error) {
       console.error("Error fetching Customer Details:", error);
     }
   };
 
+
   useEffect(() => {
     console.log("Before API call");
     fetchcustomerServicesCus();
   }, []);
+
 
   const handleFromDateChange = (e) => {
     setFromDate(e.target.value);
@@ -122,9 +127,10 @@ const PreviousBills = () => {
   };
 
   const handlesearchTextCusChange = (newValue) => {
+    console.log("Search Text:", newValue);
     setsearchTextCus(newValue);
   };
-
+  
   const indexOfLastItem = activePage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
@@ -144,17 +150,20 @@ const PreviousBills = () => {
     }
   };
 
-  const filteredData = customerServicesCus.filter((service) => {
-    return (
-      service.invoiceNo.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-      moment(service.invoiceDate)
-        .format("DD-MM-YYYY")
-        .includes(searchTextCus) ||
-      service.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-      service.clientContact.includes(searchTextCus)
-    );
-  });
+ const filteredData = customerServicesCus.filter((service) => {
+  return (
+    service.invoiceNo.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+    moment(service.invoiceDate)
+      .format("DD-MM-YYYY")
+      .includes(searchTextCus) ||
+    service.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+    service.clientContact.includes(searchTextCus)
+  );
+});
 
+console.log("Filtered Data:", filteredData);
+
+  
   const handleDownloadPDF = (service) => {
     const pdf = new jsPDF();
     pdf.setDrawColor(7, 126, 96); // RGB values for a shade of green
@@ -240,7 +249,7 @@ const PreviousBills = () => {
       { label: "Total:", value: service.total },
       { label: "Currency:", value: service.selectedCurrency },
       { label: "Payment Mode:", value: service.selectedPaymentMode },
-      
+
     ];
 
     if (service.items && service.items.length > 0) {
@@ -310,7 +319,7 @@ const PreviousBills = () => {
     const {
       invoiceNo,
       invoiceDate,
-      staffName,
+      user,
       clientName,
       clientContact,
       subTotal,
@@ -327,7 +336,8 @@ const PreviousBills = () => {
     if (
       invoiceNo &&
       invoiceDate &&
-      staffName &&
+      user &&
+      user.fullName &&
       clientName &&
       clientContact &&
       subTotal &&
@@ -337,7 +347,8 @@ const PreviousBills = () => {
       taxAmount &&
       total &&
       selectedCurrency &&
-      items
+      items &&
+      items.length > 0
     ) {
       const itemList = items
         .map(
@@ -348,8 +359,8 @@ const PreviousBills = () => {
 
       return `
         Invoice No: ${invoiceNo}
-        Invoice Date: ${invoiceDate}
-        Staff Name:${staffName}
+        Invoice Date: ${moment(invoiceDate, 'DD-MM-YYYY').format("DD-MM-YYYY")}
+        Staff Name: ${user.fullName}
         Client Name: ${clientName}
         Client Contact: ${clientContact}
         Subtotal: ${subTotal} ${selectedCurrency}
@@ -386,18 +397,33 @@ const PreviousBills = () => {
   };
 
   const handleFilterByDate = () => {
+    console.log("From Date:", fromDate);
+    console.log("To Date:", toDate);
+    
     const filteredData = allData.filter((service) => {
-      const currentDate = new Date(service.invoiceDate).getTime();
-      const fromTimestamp = fromDate
-        ? new Date(fromDate).setHours(0, 0, 0, 0)
-        : 0;
-      const toTimestamp = toDate
-        ? new Date(toDate).setHours(23, 59, 59, 999)
-        : Infinity;
+      const invoiceDateParts = service.invoiceDate.split('/');
+      const invoiceDate = new Date(`${invoiceDateParts[2]}-${invoiceDateParts[1]}-${invoiceDateParts[0]}`);
+      console.log("Invoice Date:", invoiceDate);
+      
+      if (isNaN(invoiceDate.getTime())) {
+        console.error("Invalid date format:", service.invoiceDate);
+        return false;
+      }
+      
+      const currentDate = invoiceDate.getTime();
+      const fromTimestamp = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : 0;
+      const toTimestamp = toDate ? new Date(toDate).setHours(23, 59, 59, 999) : Infinity;
+      console.log("Current Date:", currentDate);
+      console.log("From Timestamp:", fromTimestamp);
+      console.log("To Timestamp:", toTimestamp);
       return currentDate >= fromTimestamp && currentDate <= toTimestamp;
     });
-    setcustomerServicesCus(filteredData); // Update state with filtered data
+  
+    console.log("Filtered Data:", filteredData);
+    
+    setcustomerServicesCus(filteredData);
   };
+  
 
   return (
     <>
@@ -425,15 +451,9 @@ const PreviousBills = () => {
           </div>
           <div className="date-filter">
             <label>From Date:</label>
-            <input
-              type="date"
-              value={fromDate}
-              onChange={handleFromDateChange}
-            />
-
+            <input type="date" value={fromDate} onChange={handleFromDateChange} />
             <label>To Date:</label>
             <input type="date" value={toDate} onChange={handleToDateChange} />
-
             <button onClick={handleFilterByDate}>Filter</button>
           </div>
         </div>
@@ -465,7 +485,6 @@ const PreviousBills = () => {
               .map((service) => (
                 <tr key={service._id}>
                   <td onClick={() => handleFieldClick(service)}>
-                    {" "}
                     {service.invoiceNo}
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
@@ -474,11 +493,9 @@ const PreviousBills = () => {
                       : ""}
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
-                    {" "}
-                    {service.user.fullName}
+                    {service.user ? service.user.fullName : ""} {/* Add null check */}
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
-                    {" "}
                     {service.clientName}
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
