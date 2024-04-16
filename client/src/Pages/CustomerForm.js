@@ -105,6 +105,8 @@ const CustomerForm = ({ selectedServiceCus, onSubmit, onCancel, onDelete }) => {
 
   const handleChangeCus = (e) => {
     const { name, value } = e.target;
+
+
   
     // Calculate Remaining Amount based on Total Amount, Paid Amount, and Commission Amount
     if (name === "taxAmount" || name === "discountRate" || name === "discountAmount") {
