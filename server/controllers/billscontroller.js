@@ -6,7 +6,8 @@ const billsInvoice = async (req, res) => {
     const invoiceNumber = `INV${(count + 1).toString().padStart(5, '0')}`;
 
     const invoiceDate = new Date(req.body.invoiceDate);
-    
+    const deliveryDate = req.body.deliveryDate; // New delivery date
+
     const newBilling = new Billing({ 
       user: {
         userId: req.body.user.userId,
@@ -15,6 +16,10 @@ const billsInvoice = async (req, res) => {
       username: req.body.username,
       invoiceNo: invoiceNumber,
       invoiceDate: req.body.invoiceDate,
+      deliveryDate: deliveryDate, // Assign delivery date
+      pickupdate: req.body.pickupdate, // Assign pickup date
+      store: req.body.store,
+      factory: req.body.factory,
       clientName: req.body.clientName,
       clientContact: req.body.clientContact,
       customeraddress: req.body.customeraddress,
@@ -78,20 +83,34 @@ const getAll = async (req, res) => {
     }
   }
 
-  const getBills = async (req, res) => {
-    try {
-      const bills = await Billing.find({});
-      res.status(200).json(bills);
-    } catch (error) {
-      console.error('Error fetching bills:', error);
-      res.status(500).json({ message: 'An error occurred while fetching bills. Please try again later.' });
-    }
+ 
+const getAllBills = async (req, res) => {
+  try {
+    const fromDate = new Date(req.body.fromDate);
+    const toDate = new Date(req.body.toDate);
+    
+    // Fetch all bills from the database
+    const allBills = await Billing.find({});
+    
+    // Filter bills based on the selected date range
+    const filteredBills = allBills.filter(bill => {
+      const billDate = new Date(bill.invoiceDate);
+      return billDate >= fromDate && billDate <= toDate;
+    });
+    
+    res.status(200).json(filteredBills);
+  } catch (error) {
+    console.error('Error fetching bills:', error);
+    res.status(500).json({ message: 'An error occurred while fetching bills. Please try again later.' });
   }
+};
+
+
 
 module.exports = {
     billsInvoice,
     getAll,
-    getBills,
+    getAllBills,
     getLastInvoiceNumber,
 };
 
