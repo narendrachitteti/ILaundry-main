@@ -13,9 +13,7 @@ import axios from "axios";
 import QRCode from "qrcode.react";
 import Barcode from 'react-barcode';
 
-
 const currencies = currencyCodes.data;
-
 
 const Bills = () => {
   const [user, setUser] = useState(null);
@@ -308,7 +306,6 @@ const Bills = () => {
     updateSubtotal(index, value, defaultQuantity);
   };
 
-
   const handleQuantityChange = (index, value) => {
     const updatedQuantities = [...quantities];
     updatedQuantities[index] = value;
@@ -416,7 +413,6 @@ const Bills = () => {
     setInvoiceDate(selectedDate);
   };
 
-
   const handledownloadcopy = () => {
     const doc = new jsPDF();
     doc.text("Invoice No: " + invoiceNo, 10, 10);
@@ -475,9 +471,6 @@ const Bills = () => {
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
   };
-  // const togglePopup = (value) => {
-  //   setSelectedPopupItem(value);
-  // };
   
   const [deliveryDate, setDeliveryDate] = useState(null);
   const handleDeliveryDateChange = (date) => {
@@ -521,7 +514,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
           <label htmlFor="clientName">Customer Name:</label>
           <input
             type="text"
-            id="clientName" 
+            id="clientName"
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
           />
@@ -531,6 +524,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
           <input
     type="tel"
     maxLength="10"
+    
     onInput={(e) => (e.target.value = e.target.value.replace(/\D/, "").slice(0, 10))}
     required
     id="clientContact"
@@ -538,19 +532,71 @@ const [selectedFactory, setSelectedFactory] = useState("");
     onChange={(e) => setClientContact(e.target.value)}
 />
 
-
         </div>
         <div className="input-group">
           <label htmlFor="clientContact">Customer Address:</label>
           <input
-            type="text"
-            id="clientName"
-            value={customeraddress}
-            onChange={(e) => setcustomeraddress(e.target.value)}
-          />
-        </div>
+    type="text"
+    maxLength="100"
+    id="clientName"
+    value={customeraddress}
+    onChange={(e) => setcustomeraddress(e.target.value.slice(0, 100))}
+/>
+
+        </div>    
       </div>
-      <div className="table-container">
+<br/>
+      <div className="invoice-form" >
+     
+      <div className="input-group">
+  <label htmlFor="pickupDate">Pickup Date:</label>
+  <DatePicker
+    id="pickupDate"
+    selected={pickupdate}
+    onChange={handlePickupDateChange}
+    dateFormat="dd-MM-yyyy"
+  />
+</div>
+    
+      <div className="input-group">
+        <label htmlFor="invoiceDate">Delivery Date:</label>
+        <DatePicker
+          id="deliveryDate"
+          selected={deliveryDate}
+          onChange={handleDeliveryDateChange}
+          dateFormat="dd-MM-yyyy" // Set the desired date format
+        />
+
+      </div>
+      <div className="input-group">
+  <label htmlFor="store">Store:</label>
+  <select
+    id="store"
+    value={selectedStore}
+    onChange={(e) => setSelectedStore(e.target.value)}
+  >
+    <option value="">Select Store</option>
+    <option value="storein">Store In</option>
+    <option value="storeout">Store Out</option>
+  </select>
+</div>
+
+<div className="input-group">
+  <label htmlFor="factory">Factory:</label>
+  <select
+    id="factory"
+    value={selectedFactory}
+    onChange={(e) => setSelectedFactory(e.target.value)}
+  >
+    <option value="">Select Factory</option>
+    <option value="factoryin">Factory In</option>
+    <option value="factoryout">Factory Out</option>
+  </select>
+</div>
+
+    
+    </div>
+    <div className="table-container">
         <table className="medicine-table">
           <thead>
             <tr>
@@ -750,8 +796,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
                 </span>
               </div>
             </Col>
-          </Row>
-         
+          </Row>     
           <button
             className="review-button"
             onClick={() => {
@@ -762,7 +807,6 @@ const [selectedFactory, setSelectedFactory] = useState("");
             Review Invoice
           </button>
           <p value="userType">{user ? user.fullName : "Username"}</p>
-
           {showPopup && (
             <div className="popup">
               <div className="popup-header">
@@ -780,18 +824,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
               {/* <hr /> */}
               <div className="popup-content">
                 <form>
-                  {/* <QRCode
-        value={`Invoice No: ${invoiceNo},Date: ${invoiceDate} , clientName: ${clientName} ,clientContact:${clientContact}
-        customeraddress:${customeraddress}, items:${selectedItems} , Services:${selectedServices} , quantity:${quantities}
-        taxRate:${taxRate} ,discountRate:${discountRate} ,  subTotal:${subTotal} , taxAmount:${taxAmount} , discountRate:${discountRate}, Amount: ${total}`} // Adjust the value as per your data
-        size={150} // Adjust the size of the QR code as needed
-        level={"H"} // Error correction level (L, M, Q, H)
-        includeMargin={true} // Include margin
-      />       */}
-
-<Barcode value={invoiceNumber.toString()} />
-        
-            
+<Barcode value={invoiceNumber.toString()} />     
                       <label className="nameclass-label">User</label>:
                       <input type="text" value={user ? user.fullName : "Username"} />
                   <label className="nameclass-label">InvoiceNo</label>:
