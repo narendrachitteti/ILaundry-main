@@ -10,6 +10,28 @@ function Login() {
   const navigate = useNavigate();
   const [signIn, setSignIn] = useState(true);
   const [staffError, setStaffError] = useState("");
+  const [area, setArea] = useState("");
+  const [storeId, setStoreId] = useState(""); // Declare storeId state
+
+  const fetchArea = async () => { // Remove storeId parameter from fetchArea function
+    try {
+      const response = await fetch(`http://localhost:5000/area/${storeId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setArea(data.area);
+      } else {
+        setArea(""); // Reset area if not found
+      }
+    } catch (error) {
+      console.error("Error fetching area:", error);
+      setArea(""); // Reset area on error
+    }
+  };
+
+  useEffect(() => {
+    // Fetch area when store ID changes
+    fetchArea();
+  }, [storeId]); // Update useEffect dependency
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -131,6 +153,7 @@ function Login() {
                   type="text"
                   placeholder="Store ID"
                   required
+                  onChange={(e) => setStoreId(e.target.value)} // Update storeId state
                 />
                 <Components.Input
                   name="password"
@@ -177,6 +200,14 @@ function Login() {
                   placeholder="Store ID"
                   required
                 />
+                <Components.Input
+                  type="text"
+                  name="area"
+                  value={area}
+                  readOnly
+                  placeholder="Area"
+                />
+
                 <Components.Input
                   name="password"
                   type="password"

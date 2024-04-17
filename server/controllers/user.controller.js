@@ -1,23 +1,26 @@
 const User = require("../models/user.model");
 exports.registerUser = async (req, res) => {
-  const { fullName, storeId, userType, email, password, confirmPassword } = req.body;
+  const { fullName, storeId, userType, email, password, confirmPassword, area } = req.body;
+
 
   try {
-    // Check if email already exists
-    const existingUser = await User.findOne({ email });
+    // Check if user with the same storeId already exists
+    const existingUser = await User.findOne({ storeId });
     if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
+      return res.status(400).json({ message: "User with the same Store ID already exists" });
     }
 
     // Create a new user instance
     const newUser = new User({
       fullName,
       storeId,
+      area, // Including the area field here
       userType,
       email,
       password,
       confirmPassword,
     });
+    
 
     // Save the new user to the database
     await newUser.save();
@@ -32,6 +35,7 @@ exports.registerUser = async (req, res) => {
     });
   }
 };
+
 
 
 
@@ -181,5 +185,24 @@ exports.getNextStoreId = async (req, res) => {
   } catch (err) {
     console.error('Error getting next store ID:', err);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+exports.getAreaByStoreId = async (req, res) => {
+  const { storeId } = req.params;
+
+  try {
+    const user = await User.findOne({ storeId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Assuming 'area' is a field in your User model
+    const area = user.area;
+    res.status(200).json({ area });
+  } catch (error) {
+    console.error("Error fetching area by storeId:", error);
+    res.status(500).json({
+      message:
+        "An error occurred while fetching area by storeId. Please try again later.",
+    });
   }
 };
