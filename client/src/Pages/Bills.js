@@ -523,6 +523,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
             type="text"
             id="clientName"
             value={clientName}
+            maxLength={20}
             onChange={(e) => setClientName(e.target.value)}
           />
         </div>
@@ -857,7 +858,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
                   <input    type="text"                    value={clientContact}                  />
 
                   <label className="nameclass-label">Pickup Date</label>:
-                  <input type="text" value={pickupdate} />
+                  <input  type="text" value={pickupdate} />
 
                   <label className="nameclass-label">Delivery Date</label>:
                   <input type="text" value={deliveryDate} />
