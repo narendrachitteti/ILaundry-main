@@ -1,5 +1,6 @@
 import React from "react";
 import "./OrdersTable.css";
+import Sidebar from "./Sidebar";
 
 function createData(product, trackingId, date, status) {
   return { product, trackingId, date, status, details: "Details" };
@@ -15,7 +16,9 @@ const rows = [
 
 const OrdersTable = () => {
   return (
+    <div className="dashboard-main-container">
     <div className="orders-table-container">
+      <Sidebar />
       {/* Wrap the table in a container for styling */}
       <h3 className="orders-table-heading">Recent Orders</h3>
       <table className="orders-table">
@@ -40,6 +43,7 @@ const OrdersTable = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

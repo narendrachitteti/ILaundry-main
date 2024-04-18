@@ -55,7 +55,7 @@ function Login() {
         // Handle successful login
         toast.success("Master login successful");
         setTimeout(() => {
-          navigate("/Bills");
+          navigate("/Dashboard");
         }, 1500);
       } else {
         const errorData = await response.json();

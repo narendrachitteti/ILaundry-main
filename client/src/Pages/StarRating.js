@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './StarRating.css';
 import 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
+import Sidebar from "./Sidebar";
 
 const StarRating = ({ onRatingSubmit }) => {
     const [rating, setRating] = useState(0);
@@ -129,7 +130,9 @@ const RatingSystem = () => {
     };
 
     return (
+        
         <div className="rating-system">
+            <Sidebar />
             <h3>Rate Our Services</h3>
             {step < ratingCategories.length ? (
                 <RatingCard

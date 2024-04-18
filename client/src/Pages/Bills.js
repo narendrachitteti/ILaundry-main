@@ -4,7 +4,8 @@ import { GiClothes } from "react-icons/gi";
 import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
+import Sidebar from "./Sidebar";
 import jsPDF from "jspdf";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -486,9 +487,11 @@ const Bills = () => {
 const [selectedFactory, setSelectedFactory] = useState("");
 
   return (
+    <div className="dashboard-main-container">
     <div className="billtotal">
       <div className="nav111">
-        <Navbar />
+      <Sidebar />
+        {/* <Navbar /> */}
       </div>
       <div className="invoice-form">
         <div className="input-group">
@@ -909,6 +912,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
           )}
         </div>
       </center>
+    </div>
     </div>
   );
 };
