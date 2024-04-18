@@ -15,4 +15,8 @@ router.get("/api/registerdetails" ,UserController.getAll );
 router.get('/getNextStoreId', UserController.getNextStoreId);
 router.get("/users/:storeId", UserController.getUserByStoreId);
 
+// New route to fetch area based on storeId
+router.get("/area/:storeId", UserController.getAreaByStoreId);
+
+
 module.exports = router;

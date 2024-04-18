@@ -10,6 +10,28 @@ function Login() {
   const navigate = useNavigate();
   const [signIn, setSignIn] = useState(true);
   const [staffError, setStaffError] = useState("");
+  const [area, setArea] = useState("");
+  const [storeId, setStoreId] = useState(""); // Declare storeId state
+
+  const fetchArea = async () => { // Remove storeId parameter from fetchArea function
+    try {
+      const response = await fetch(`http://localhost:5000/area/${storeId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setArea(data.area);
+      } else {
+        setArea(""); // Reset area if not found
+      }
+    } catch (error) {
+      console.error("Error fetching area:", error);
+      setArea(""); // Reset area on error
+    }
+  };
+
+  useEffect(() => {
+    // Fetch area when store ID changes
+    fetchArea();
+  }, [storeId]); // Update useEffect dependency
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -33,7 +55,7 @@ function Login() {
         // Handle successful login
         toast.success("Master login successful");
         setTimeout(() => {
-          navigate("/Bills");
+          navigate("/Dashboard");
         }, 1500);
       } else {
         const errorData = await response.json();
@@ -131,6 +153,14 @@ function Login() {
                   type="text"
                   placeholder="Store ID"
                   required
+                  onChange={(e) => setStoreId(e.target.value)} // Update storeId state
+                />
+                 <Components.Input
+                  type="text"
+                  name="area"
+                  value={area}
+                  readOnly
+                  placeholder="Area"
                 />
                 <Components.Input
                   name="password"
@@ -169,53 +199,63 @@ function Login() {
             </Components.SignInContainer>
           ) : (
             <Components.SignUpContainer signingIn={signIn}>
-              <Components.Form onSubmit={handleLogin1}>
-                <Components.Title>Staff Login</Components.Title>
-                <Components.Input
-                  name="storeId"
-                  type="text"
-                  placeholder="Store ID"
-                  required
-                />
-                <Components.Input
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  required
-                />
-                <Components.Button type="submit">Login</Components.Button>
-                <div
-                  style={{
-                    display: "flex",
-                    height: "25px",
-                    borderRadius: "6px",
-                    width: "100%",
-                    padding: "3px",
-                    marginTop: "10px",
-                  }}
-                >
-                  <p style={{ color: "black" }}>Don't have an account?</p>{" "}
-                  &nbsp;&nbsp;
-                  <Link to="/Register" style={{ textDecoration: "none" }}>
-                    <div>
-                      <p
-                        style={{
-                          color: "orange",
-                          fontWeight: "bold",
-                          textDecoration: "none",
-                        }}
-                      >
-                        Register
-                      </p>
-                    </div>
-                  </Link>
-                </div>
-
-                {staffError && (
-                  <div className="error-message">{staffError}</div>
-                )}
-              </Components.Form>
-            </Components.SignUpContainer>
+            <Components.Form onSubmit={handleLogin1}>
+              <Components.Title>Staff Login</Components.Title>
+              <Components.Input
+                name="storeId"
+                type="text"
+                placeholder="Store ID"
+                required
+                onChange={(e) => setStoreId(e.target.value)} // Update storeId state
+              />
+              <Components.Input
+                type="text"
+                name="area"
+                value={area}
+                readOnly
+                placeholder="Area"
+              />
+          
+              <Components.Input
+                name="password"
+                type="password"
+                placeholder="Password"
+                required
+              />
+              <Components.Button type="submit">Login</Components.Button>
+              <div
+                style={{
+                  display: "flex",
+                  height: "25px",
+                  borderRadius: "6px",
+                  width: "100%",
+                  padding: "3px",
+                  marginTop: "10px",
+                }}
+              >
+                <p style={{ color: "black" }}>Don't have an account?</p>{" "}
+                &nbsp;&nbsp;
+                <Link to="/Register" style={{ textDecoration: "none" }}>
+                  <div>
+                    <p
+                      style={{
+                        color: "orange",
+                        fontWeight: "bold",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Register
+                    </p>
+                  </div>
+                </Link>
+              </div>
+          
+              {staffError && (
+                <div className="error-message">{staffError}</div>
+              )}
+            </Components.Form>
+          </Components.SignUpContainer>
+          
           )}
 
           <Components.OverlayContainer signingIn={signIn}>

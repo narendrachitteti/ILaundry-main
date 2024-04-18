@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Userlist.css'; // Import CSS file
+// import Navbar from './Navbar';
+import Sidebar from "../Pages/Sidebar";
 
 const Userlist = () => {
     const [details, setDetails] = useState([]);
@@ -27,9 +29,13 @@ const Userlist = () => {
     );
 
     return (
+    <>
+    <div className="dashboard-main-container">
+    <Sidebar />
+        {/* <Navbar/> */}
         <div className='overalldiv'>
             <br/>
-            <h1 className='details'> Registerdetails</h1>
+            <h1 className='details'> Register Details</h1>
             <br/>
             <div className='search-container098'>
             <input  className='search098'
@@ -40,11 +46,11 @@ const Userlist = () => {
             />
             </div>
             
-            <table className="user-table">
+            <table className="lab-service-table_5">
                 <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                    <tr className="product-ooi">
+                        <th>Store ID</th>
+                        {/* <th>Last Name</th> */}
                         <th>Email</th>
                         <th>User Type</th>
                         {/* <th>Action</th> */}
@@ -53,8 +59,8 @@ const Userlist = () => {
                 <tbody>
                     {filteredDetails.map((detail) => (
                         <tr key={detail._id}>
-                            <td>{detail.firstName}</td>
-                            <td>{detail.lastName}</td>
+                            <td>{detail.storeId}</td>
+                            {/* <td>{detail.lastName}</td> */}
                             <td>{detail.email}</td>
                             <td>{detail.userType}</td>
                             {/* <td>{Active}</td> */}
@@ -63,6 +69,8 @@ const Userlist = () => {
                 </tbody>
             </table>
         </div>   
+        </div>
+        </>
     );
 };
 
