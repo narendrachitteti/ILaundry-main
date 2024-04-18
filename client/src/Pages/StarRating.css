@@ -1,0 +1,167 @@
+/* Styling for the star rating component */
+.star-rating {
+    display: inline-flex;
+    cursor: pointer;
+}
+
+.star-filled {
+    color: gold; /* Color of filled stars */
+    font-size: 24px; /* Size of the stars */
+}
+
+.star-empty {
+    color: lightgray; /* Color of empty stars */
+    font-size: 24px; /* Size of the stars */
+}
+.star-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* Styling for the stars */
+.star {
+    transition: color 0.2s;
+    color: #ccc; /* Default color for unfilled stars */
+}
+
+.star.filled {
+    color: #ffc107; /* Gold color for filled stars */
+}
+
+.star:hover {
+    color: #ffdf00; /* Bright gold color on hover */
+}
+
+.star-rating span:hover ~ .star {
+    color: #ccc;
+}
+
+.star:hover,
+.star:hover ~ .star {
+    color: #ffdf00;
+}
+
+/* Styling for the rating system */
+.rating-system {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Styling for each rating card */
+.rating-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 300px;
+    margin: 0 auto;
+}
+
+/* Styling for card images */
+.card-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.star {
+    transition: color 0.2s;
+    color: #ccc; /* Default color for unfilled stars */
+}
+
+.star.filled {
+    color: #ffc107; /* Gold color for filled stars */
+}
+
+.star:hover {
+    color: #ffdf00; /* Bright gold color on hover */
+}
+
+.star-rating span:hover ~ .star {
+    color: #ccc;
+}
+
+.star:hover,
+.star:hover ~ .star {
+    color: #ffdf00;
+}
+
+/* Additional styles for the parent component */
+h3, h4 {
+    margin-bottom: 10px;
+}
+
+p {
+    margin: 5px 0;
+}
+.Ourservice {
+    text-align: center;
+    padding: 20px;
+}
+/* Styling for the refresh button */
+.refresh-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    margin-top: 10px;
+}
+.refresh-button:hover {
+    background-color: #0056b3;
+}
+/* RatingSystem.css */
+
+.rating-system {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h3, h4 {
+    margin-bottom: 10px;
+}
+
+p {
+    margin: 5px 0;
+}
+
+.grouped-reviews-table {
+    margin-bottom: 20px;
+}
+
+.grouped-review-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.grouped-review-table th, .grouped-review-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.grouped-review-table th {
+    background-color: #f2f2f2;
+    color: black;
+}
+
+.grouped-review-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.grouped-review-table tr:hover {
+    background-color: #e8f4f9;
+}
+
+.name-input, .id-input {
+    display: block;
+    margin: 5px 0;
+    padding: 5px;
+    width: 90%;
+}

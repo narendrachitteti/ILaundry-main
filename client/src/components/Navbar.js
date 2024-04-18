@@ -46,6 +46,12 @@ const Navbar = () => {
             style={{ height: "3rem", width: "10rem", marginLeft: "-9%" }}
           />
         </Link>
+        <Link to="/Dashboard">
+          <div className="bills">
+            <img src="https://cdn-icons-png.freepik.com/512/7664/7664156.png" alt="" style={{ height: "2.5rem" }} />
+            <p>Dashboard</p>
+          </div>
+        </Link>
         <Link to="/Bills">
           <div className="bills">
             <img src={image17} alt="" style={{ height: "2.5rem" }} />
