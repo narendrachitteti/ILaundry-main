@@ -1,0 +1,50 @@
+.orders-table-container {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.orders-table-heading {
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+
+.orders-table th {
+  padding: 10px;
+  background-color: black;
+  color: white;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.orders-table tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.orders-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.orders-table tr.status-approved {
+  background-color: #83db83;
+}
+
+.orders-table tr.status-pending {
+  background-color: #8d89d2;
+}
+
+.orders-table tr.status-rejected {
+  background-color: #f18992;
+}
+.orders-table tr.status-delivered {
+  background-color: #d7ea7d;
+}

@@ -15,7 +15,9 @@ import OldLogin from "./components/Registration/OldLogin.js";
 import StaffLogin from "./components/Registration/StaffLogin.js";
 import ContactForm from "./sections/ContactForm.js";
 import Userlist from "./components/Userlist.js";
-
+import Dashboard from "./Pages/Dashboard.js";
+import OrdersTable from "./Pages/OrdersTable.js";
+import StarRating from "./Pages/StarRating.js";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -45,8 +47,11 @@ function App() {
             <Route path="/StaffLogin" element={<StaffLogin />} />
             <Route element={<PrivateRoute />}></Route>
             <Route path="/contact" component={ContactForm} />
-            <Route path="/Userlist" element={<Userlist/>}/>
-            {/* <Route path="/Process" element={<Process/>}/> */}
+            <Route path="/Userlist" element={<Userlist />} />
+
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/rating" element={<StarRating />} />
+            <Route path="/orderstable" element={<OrdersTable />} />
           </Routes>
         </Router>
       )}

@@ -11,6 +11,10 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  area: {
+    type: String,
+    required: true
+  },
   userType: String,
   password: String,
   confirmPassword: String,

@@ -5,11 +5,13 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../Navbar";
+import Select from "react-select";
 
 function Register() {
   const [error, setError] = useState("");
   const [userType, setUserType] = useState("");
   const [storeId, setStoreId] = useState("");
+  const [selectedArea, setSelectedArea] = useState(null);
 
   useEffect(() => {
     fetchStoreId();
@@ -26,9 +28,24 @@ function Register() {
       }
     } catch (error) {
       console.error("Error fetching store ID:", error);
-      setError("An error occurred while fetching store ID. Please try again later.");
+      setError(
+        "An error occurred while fetching store ID. Please try again later."
+      );
     }
   };
+
+  const options = [
+    {
+      value: "Kumaraswamy Layout 1st Stage",
+      label: "Kumaraswamy Layout 1st Stage",
+    },
+    { value: "Jp Nagar", label: "Jp Nagar" },
+    { value: "Rajarajeshwari Nagar", label: "Rajarajeshwari Nagar" },
+    { value: "Hanumantha Nagar", label: "Hanumantha Nagar" },
+    { value: "Banaswadi", label: "Banaswadi" },
+    { value: "Banashankari 3rd Stage", label: "Banashankari 3rd Stage" },
+    { value: "Banashankari 2nd Stage", label: "Banashankari 2nd Stage" },
+  ];
 
   const validateName = (name) => {
     return /^[A-Za-z]+$/.test(name);
@@ -39,12 +56,13 @@ function Register() {
   };
 
   const validatePassword = (password) => {
-    return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password);
+    return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+      password
+    );
   };
 
   const handleRegister = async (event) => {
     event.preventDefault();
-
 
     if (!storeId) {
       // You can show a message or toast indicating that the storeId is being fetched
@@ -75,7 +93,9 @@ function Register() {
     }
 
     if (!validatePassword(password)) {
-      toast.error("Password should contain at least 8 characters, one letter, one number, and one special character");
+      toast.error(
+        "Password should contain at least 8 characters, one letter, one number, and one special character"
+      );
       return;
     }
 
@@ -85,6 +105,7 @@ function Register() {
       userType: userType,
       password: password,
       storeId: storeId,
+      area: selectedArea.value, // This should send the selected area value
     };
 
     try {
@@ -114,13 +135,17 @@ function Register() {
     <>
       {/* <Navbar /> */}
       <Link to="/" className="back-link">
-        <FontAwesomeIcon icon={faArrowLeft} style={{ width: "25px", height: "25px" }} className="back-icon" />
+        <FontAwesomeIcon
+          icon={faArrowLeft}
+          style={{ width: "25px", height: "25px" }}
+          className="back-icon"
+        />
       </Link>
       <div className="container-abed23s">
         <div className="Inner-container-abed23s">
           <h1>Registration</h1>
           <form className="formContainerabcd123" onSubmit={handleRegister}>
-          <input
+            <input
               name="storeId"
               type="text"
               value={storeId}
@@ -129,6 +154,15 @@ function Register() {
               required
               className="inputabcd123"
             />
+            <Select
+              value={selectedArea}
+              onChange={setSelectedArea}
+              options={options}
+              placeholder="Select Area"
+              className="selectabcd1233"
+              required
+            />
+
             <input
               name="firstName"
               type="text"
@@ -168,7 +202,7 @@ function Register() {
               required
               className="inputabcd123"
             />
-            
+
             <button type="submit" className="buttonabcd123">
               Register
             </button>

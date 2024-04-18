@@ -50,7 +50,7 @@
   border-radius: 8px;
   text-align: center;
   z-index: 1;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   h1 {
     font-family: "Times New Roman", Times, serif;
     margin: 10px 0px;
@@ -102,4 +102,12 @@
 .already-registered {
   font-size: medium;
   margin-top: 8px;
+}
+
+.selectabcd1233{
+  width: 75%;
+  margin-left: 12.6%;
+}
+.selectabcd1233:focus{
+  outline: black;
 }
