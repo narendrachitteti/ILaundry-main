@@ -21,7 +21,8 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardDoubleArrowLeft from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRight from "@mui/icons-material/KeyboardDoubleArrowRight";
 import image13 from "../components/images/background.jpg";
-import Navbar from "../components/Navbar.js";
+// import Navbar from "../components/Navbar.js";
+import Sidebar from "./Sidebar";
 import Backbutton from "./Backbutton.js";
 import InvoiceDetailsPopup from "./InvoiceDetailsPopup.js";
 import { autoTable } from "pdfmake/build/pdfmake";
@@ -427,7 +428,9 @@ console.log("Filtered Data:", filteredData);
 
   return (
     <>
-      <Navbar />
+    <div className="dashboard-main-container">
+    <Sidebar />
+      {/* <Navbar /> */}
       <div className="lab-service-table-container_5">
         <div className="flex56">
           <div className="bbb">
@@ -676,6 +679,7 @@ console.log("Filtered Data:", filteredData);
             onDelete={handleDeleteCus}
           />
         </Popup>
+      </div>
       </div>
     </>
   );
