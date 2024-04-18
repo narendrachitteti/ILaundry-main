@@ -85,12 +85,12 @@ exports.loginUser = async (req, res) => {
 
 
 exports.loginStaff = async (req, res) => {
-  const { email, password } = req.body;
+  const { storeId, password } = req.body;
 
   try {
-    const user = await User.findOne({ email, password, userType: "staff" });
+    const user = await User.findOne({ storeId, password, userType: "staff" });
     if (!user) {
-      return res.status(400).json({ message: "you are not Authorized" });
+      return res.status(400).json({ message: "Invalid storeId or password" });
     }
 
     // Authentication successful
@@ -103,6 +103,7 @@ exports.loginStaff = async (req, res) => {
     });
   }
 };
+
 
 exports.getAllUsers = async (req, res) => {
   try {

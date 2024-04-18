@@ -155,6 +155,13 @@ function Login() {
                   required
                   onChange={(e) => setStoreId(e.target.value)} // Update storeId state
                 />
+                 <Components.Input
+                  type="text"
+                  name="area"
+                  value={area}
+                  readOnly
+                  placeholder="Area"
+                />
                 <Components.Input
                   name="password"
                   type="password"
