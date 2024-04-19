@@ -612,7 +612,8 @@ const [selectedFactory, setSelectedFactory] = useState("");
         />
 
       </div>
-      <div className="input-group">
+
+      {/* <div className="input-group">
   <label htmlFor="store">Store:</label>
   <select
     id="store"
@@ -636,7 +637,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
     <option value="factoryin">Factory In</option>
     <option value="factoryout">Factory Out</option>
   </select>
-</div>
+</div> */}
 
     
     </div>

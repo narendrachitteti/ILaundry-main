@@ -56,6 +56,8 @@ const PreviousBills = () => {
           ...billing,
           username: billing.user ? billing.user.fullName : "", // Add null check here
           address: billing.user ? billing.user.address : "", // Add null check here
+          selectedStoreOption: "in", // Initialize with default value "in"
+          selectedFactoryOption: "in", // Initialize with default value "in"
         }));
         setcustomerServicesCus(billingDataWithUsername);
         setAllData(billingDataWithUsername);
@@ -425,6 +427,29 @@ console.log("Filtered Data:", filteredData);
     setcustomerServicesCus(filteredData);
   };
   
+  const [selectedStoreOption, setSelectedStoreOption] = useState("in");
+  const [selectedFactoryOption, setSelectedFactoryOption] = useState("in");
+
+
+  
+  const handleStoreOptionChange = (option, service) => {
+    const updatedServices = [...customerServicesCus];
+    const index = updatedServices.findIndex((s) => s._id === service._id);
+    if (index !== -1) {
+      updatedServices[index].selectedStoreOption = option;
+      setcustomerServicesCus(updatedServices);
+    }
+  };
+  
+  const handleFactoryOptionChange = (option, service) => {
+    const updatedServices = [...customerServicesCus];
+    const index = updatedServices.findIndex((s) => s._id === service._id);
+    if (index !== -1) {
+      updatedServices[index].selectedFactoryOption = option;
+      setcustomerServicesCus(updatedServices);
+    }
+  };
+  
 
   return (
     <>
@@ -476,10 +501,15 @@ console.log("Filtered Data:", filteredData);
               <th className="product-ooi">Subtotal </th>
               <th className="product-ooi">Currency</th>
               <th className="product-ooi">Items</th>
-              <th className="product-ooi">Actions</th>
+              <th className="product-ooi">Actions</th>             
               <th className="product-ooi">Pay Mode</th>
+              <th className='thbilling87' colSpan="2">Store (In/Out)</th>
+              <th className="product-ooi" colSpan="2">Factory (In/Out)</th>
               {/* <th className="product-ooi">Staff Name</th> */}
             </tr>
+
+          
+
           </thead>
           <tbody>
             {filteredData
@@ -616,9 +646,49 @@ console.log("Filtered Data:", filteredData);
                     </div>
                   </td>
                   <td>{service.selectedPaymentMode}</td>
-                  {/* <td onClick={() => handleFieldClick(service)}>
-                    {service.username}
-                  </td> */}
+                
+            <td colSpan="2">
+            <label>
+                  <input
+                    type="radio"
+                    value="in"
+                    checked={service.selectedStoreOption === "in"}
+                    onChange={() => handleStoreOptionChange("in", service)}
+                  />
+                  In
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    value="out"
+                    checked={service.selectedStoreOption === "out"}
+                    onChange={() => handleStoreOptionChange("out", service)}
+                  />
+                  Out
+                </label>
+            </td>
+
+            <td colSpan="2">
+            <label>
+                  <input
+                    type="radio"
+                    value="in"
+                    checked={service.selectedFactoryOption === "in"}
+                    onChange={() => handleFactoryOptionChange("in", service)}
+                  />
+                  In
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    value="out"
+                    checked={service.selectedFactoryOption === "out"}
+                    onChange={() => handleFactoryOptionChange("out", service)}
+                  />
+                  Out
+                </label>
+            </td>
+           
                 </tr>
               ))}
           </tbody>
