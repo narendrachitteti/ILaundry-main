@@ -44,6 +44,22 @@
     }
   }
    
+/* 
+  .preeditbu{
+    background-color: green;
+    height: auto;
+    width: 70%;
+    gap: 1%;
+    color: white;
+  }
+
+  .predeletebu{
+    background-color: red;
+    height: auto;
+    width: 70%;
+    gap: 1%;
+    color: white;
+  } */
    .product-ooi{
      color: white;
    }
@@ -419,7 +435,7 @@
  
      border: none;
      border-radius: 4px;
-     padding: 8px 16px;
+     padding: 8px 10px;
      cursor: pointer;
      transition: background-color 0.3s;
      margin: 6px;

@@ -18,6 +18,7 @@ import Userlist from "./components/Userlist.js";
 import Dashboard from "./Pages/Dashboard.js";
 import OrdersTable from "./Pages/OrdersTable.js";
 import StarRating from "./Pages/StarRating.js";
+import StaffNavbar from "./components/StaffNavbar.js";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -52,6 +53,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/rating" element={<StarRating />} />
             <Route path="/orderstable" element={<OrdersTable />} />
+
+            <Route path="/stafflogin" element={<StaffNavbar/>}/>
           </Routes>
         </Router>
       )}
