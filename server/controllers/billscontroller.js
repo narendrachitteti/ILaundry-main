@@ -106,10 +106,27 @@ const getAllBills = async (req, res) => {
 };
 
 
+const deleteBilling = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedBilling = await Billing.findByIdAndDelete(id);
+    if (!deletedBilling) {
+      return res.status(404).json({ message: "Billing record not found" });
+    }
+    res.status(200).json({ message: "Billing record deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting billing record:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+
 
 module.exports = {
     billsInvoice,
     getAll,
+    deleteBilling,
     getAllBills,
     getLastInvoiceNumber,
 };

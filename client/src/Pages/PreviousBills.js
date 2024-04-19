@@ -145,12 +145,17 @@ const PreviousBills = () => {
     );
   };
 
-  const handleDeleteCus = async () => {
+  const handleDeleteCus = async (serviceId) => {
     try {
-      await axios.delete(`${BASE_URL}/invoice/${selectedServiceCus._id}`);
-      fetchcustomerServicesCus();
+      await axios.delete(`${BASE_URL}/api/billing/${serviceId}`);
+      // Update local state after successful deletion
+      setcustomerServicesCus((prevServices) =>
+        prevServices.filter((service) => service._id !== serviceId)
+      );
+      setSelectedInvoice(null); // Close any open popups if needed
     } catch (error) {
       console.error("Error deleting Customer Details:", error);
+      // Handle error or show notification to user
     }
   };
 
@@ -506,6 +511,7 @@ console.log("Filtered Data:", filteredData);
               <th className="product-ooi">Pay Mode</th>
               <th className='thbilling87' colSpan="2">Store (In/Out)</th>
               <th className="product-ooi" colSpan="2">Factory (In/Out)</th>
+              <th className="product-ooi">Status</th>             
               {/* <th className="product-ooi">Staff Name</th> */}
             </tr>
 
@@ -688,6 +694,13 @@ console.log("Filtered Data:", filteredData);
                   />
                   Out
                 </label>
+            </td>
+            <td>
+              <button className="preeditbu">Edit</button>
+              <button className="predeletebu" onClick={() => handleDeleteCus(service._id)}>
+  Delete
+</button>
+
             </td>
            
                 </tr>
