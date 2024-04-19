@@ -1,18 +1,23 @@
-/* Styling for the star rating component */
-.star-rating {
-    display: inline-flex;
-    cursor: pointer;
+/* Main container styling */
+.maincontainer {
+    /* display: flex; */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    width: 100%;
 }
 
-.star-filled {
-    color: gold; /* Color of filled stars */
-    font-size: 24px; /* Size of the stars */
+.sidebar {
+    width: 20%;
+    margin-right: 20px;
+    padding: 10px;
+    border-right: 1px solid #ccc;
 }
 
-.star-empty {
-    color: lightgray; /* Color of empty stars */
-    font-size: 24px; /* Size of the stars */
-}
+/* Star rating styling */
 .star-rating {
     display: flex;
     align-items: center;
@@ -21,7 +26,6 @@
     cursor: pointer;
 }
 
-/* Styling for the stars */
 .star {
     transition: color 0.2s;
     color: #ccc; /* Default color for unfilled stars */
@@ -31,7 +35,8 @@
     color: #ffc107; /* Gold color for filled stars */
 }
 
-.star:hover {
+.star:hover,
+.star:hover ~ .star {
     color: #ffdf00; /* Bright gold color on hover */
 }
 
@@ -39,18 +44,23 @@
     color: #ccc;
 }
 
-.star:hover,
-.star:hover ~ .star {
-    color: #ffdf00;
-}
-
-/* Styling for the rating system */
+/* Rating system styling */
 .rating-system {
     text-align: center;
     padding: 20px;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    border-radius: 10px;
 }
 
-/* Styling for each rating card */
+/* Title styling */
+h3, h4 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Card styling */
 .rating-card {
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -59,50 +69,59 @@
     text-align: center;
     width: 300px;
     margin: 0 auto;
+    background-color: #fff;
 }
 
-/* Styling for card images */
+/* Card images styling */
 .card-image {
     width: 100%;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.star {
-    transition: color 0.2s;
-    color: #ccc; /* Default color for unfilled stars */
-}
-
-.star.filled {
-    color: #ffc107; /* Gold color for filled stars */
-}
-
-.star:hover {
-    color: #ffdf00; /* Bright gold color on hover */
-}
-
-.star-rating span:hover ~ .star {
-    color: #ccc;
-}
-
-.star:hover,
-.star:hover ~ .star {
-    color: #ffdf00;
-}
-
-/* Additional styles for the parent component */
-h3, h4 {
-    margin-bottom: 10px;
-}
-
-p {
-    margin: 5px 0;
-}
-.Ourservice {
-    text-align: center;
+/* Chart container */
+.chart-container {
+    margin-top: 20px;
     padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
 }
-/* Styling for the refresh button */
+
+/* Grouped reviews table */
+.grouped-reviews-table {
+    margin-top: 20px;
+}
+
+.grouped-review-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+
+.grouped-review-table th, .grouped-review-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.grouped-review-table th {
+    background-color: #f2f2f2;
+    color: black;
+}
+
+.grouped-review-table tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+.grouped-review-table tr:hover {
+    background-color: #e8f4f9;
+}
+
+/* Button styling */
 .refresh-button {
     background-color: #007bff;
     color: white;
@@ -112,56 +131,19 @@ p {
     border: none;
     margin-top: 10px;
 }
+
 .refresh-button:hover {
     background-color: #0056b3;
 }
-/* RatingSystem.css */
 
-.rating-system {
-    margin: 20px;
-    font-family: Arial, sans-serif;
-}
+/* Additional responsive styles */
+@media (max-width: 768px) {
+    .rating-card {
+        width: 100%;
+        padding: 10px;
+    }
 
-h3, h4 {
-    margin-bottom: 10px;
-}
-
-p {
-    margin: 5px 0;
-}
-
-.grouped-reviews-table {
-    margin-bottom: 20px;
-}
-
-.grouped-review-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-}
-
-.grouped-review-table th, .grouped-review-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-.grouped-review-table th {
-    background-color: #f2f2f2;
-    color: black;
-}
-
-.grouped-review-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.grouped-review-table tr:hover {
-    background-color: #e8f4f9;
-}
-
-.name-input, .id-input {
-    display: block;
-    margin: 5px 0;
-    padding: 5px;
-    width: 90%;
+    .grouped-review-table th, .grouped-review-table td {
+        padding: 6px;
+    }
 }

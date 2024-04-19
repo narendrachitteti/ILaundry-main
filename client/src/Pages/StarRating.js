@@ -130,7 +130,7 @@ const RatingSystem = () => {
     };
 
     return (
-        
+        <div className='maincontainer'>
         <div className="rating-system">
             <Sidebar />
             <h3>Rate Our Services</h3>
@@ -181,6 +181,7 @@ const RatingSystem = () => {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     );
