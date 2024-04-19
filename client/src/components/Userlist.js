@@ -6,12 +6,18 @@ import Navbar from './Navbar';
 const Userlist = () => {
     const [details, setDetails] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [activeUsers, setActiveUsers] = useState([]);
+    const [showPopup, setShowPopup] = useState(false);
+    const [selectedStoreId, setSelectedStoreId] = useState(null);
 
     useEffect(() => {
         const fetchDetails = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/api/registerdetails');
                 setDetails(response.data);
+                // Check if store IDs are active and set activeUsers accordingly
+                const activeStoreIds = response.data.map(detail => detail.storeId);
+                setActiveUsers(activeStoreIds);
             } catch (error) {
                 console.error('Error fetching details:', error);
             }
@@ -23,13 +29,30 @@ const Userlist = () => {
         setSearchQuery(event.target.value);
     };
 
+    const handleActivate = (storeId) => {
+        setSelectedStoreId(storeId);
+        if (!activeUsers.includes(storeId)) {
+            setActiveUsers(prevActiveUsers => [...prevActiveUsers, storeId]);
+        }
+    };
+
+    const handleDeactivate = (storeId) => {
+        setSelectedStoreId(storeId);
+        if (activeUsers.includes(storeId)) {
+            setShowPopup(true);
+        }
+    };
+
+    const handlePopupClose = () => {
+        setShowPopup(false);
+    };
+
     const filteredDetails = details.filter(detail =>
-        detail.email.toLowerCase().includes(searchQuery.toLowerCase())
+        detail.email && detail.email.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
     <>
-    {/* <Sidebar /> */}
         <Navbar/>
         <div className='overalldiv'>
             <br/>
@@ -66,7 +89,7 @@ const Userlist = () => {
                     ))}
                 </tbody>
             </table>
-        </div>  
+        </div>   
         </>
     );
 };
