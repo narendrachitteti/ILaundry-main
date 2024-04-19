@@ -120,7 +120,7 @@
   align-items: center;
 }
 
-.popup-content {
+.popup-content { 
   background-color: rgb(171, 160, 160);
   padding: 20px;
   border-radius: 8px;
