@@ -416,24 +416,69 @@ const Bills = () => {
 
   const handledownloadcopy = () => {
     const doc = new jsPDF();
-    doc.text("Invoice No: " + invoiceNo, 10, 10);
-    doc.text("Invoice Date: " + formatDate(invoiceDate), 10, 20);
-    doc.text("Client Name: " + clientName, 10, 30);
-    doc.text("Client Contact: " + clientContact, 10, 40);
-    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
-    doc.text("Total: " + total, 10, 50);
-    doc.text("TaxAmount: " + taxAmount, 10, 60);
+
+    // Add GST number to the top left corner
+    const gstNumber = "GSTIN29ABCDE1234F1ZW";
+    doc.setFontSize(10);
+    doc.text(gstNumber, 10, 20);
+
+    // Add logo to the top right corner
+    const logoUrl = "./logo.png";
+    const logoWidth = 50; // Adjust as needed
+    const logoHeight = 20; // Adjust as needed
+    doc.addImage(logoUrl, "PNG", doc.internal.pageSize.getWidth() - logoWidth - 10, 10, logoWidth, logoHeight);
+
+    // Add a heading for the invoice
+    doc.setFontSize(16);
+    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, 40, { align: "center" });
+
+    // Define the data for the table
+    const tableData = [
+        ["Invoice No:", invoiceNo],
+        ["Invoice Date:", formatDate(invoiceDate)],
+        ["Client Name:", clientName],
+        ["Client Contact:", clientContact],
+        ["Selected Item:", selectedPopupItem],
+        ["Total:", total],
+        ["Tax Amount:", taxAmount]
+    ];
+
+    // Set up styles for the table
+    const tableStyles = {
+        fontSize: 10,
+        fontStyle: 'normal', // normal, bold, italic
+        textColor: [0, 0, 0], // Black color
+        cellPadding: 5
+    };
+
+    // Set up column widths
+    const columnWidths = [70, 200];
+
+    // Add border around the content
+    const margin = 10;
+    const contentWidth = doc.internal.pageSize.getWidth() - 2 * margin;
+    const contentHeight = doc.internal.pageSize.getHeight() - 2 * margin;
+    doc.setDrawColor(0); // Black border
+    doc.rect(margin, margin + 30, contentWidth, contentHeight - 30); // Adjust position for GST number
+
+    // Add the table to the PDF
+    doc.autoTable({
+        body: tableData,
+        startY: 70, // Start below the heading
+        startX: margin,
+        styles: tableStyles,
+        columnStyles: {
+            0: { fontStyle: 'bold' }, // Make the first column bold
+            1: { fontStyle: 'normal' } // Make the second column normal
+        },
+        columnWidth: columnWidths,
+        margin: { top: 50 } // Add margin to avoid overlapping with the heading and logo
+    });
 
     // Save the PDF file
     doc.save("Laundry Invoice.pdf");
+};
 
-    // Convert the PDF blob to a file and send it via WhatsApp
-    const pdfBlob = doc.output('blob');
-    const pdfFile = new File([pdfBlob], "Laundry Invoice.pdf", { type: "application/pdf" });
-
-    // Send the PDF file via WhatsApp
-    sendPDFViaWhatsApp(pdfFile);
-  };
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
