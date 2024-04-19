@@ -8,6 +8,7 @@ import { MdGroups } from "react-icons/md";
 import { BsFileEarmarkSpreadsheet } from "react-icons/bs";
 import { IoNewspaper } from "react-icons/io5";
 import { FaSearchLocation } from "react-icons/fa";
+import Navbar from "../components/Navbar";
 
 // Import the OrdersTable component
 import OrdersTable from "./OrdersTable";
@@ -47,13 +48,12 @@ const Dashboard = () => {
       setStats({
         totalCustomers: data.totalCustomers,
         totalShops: data.totalShops,
-        totalOrders: data.totalOrders,
+        totalStores: data.totalStores,
         todayOrders: data.todayOrders,
         completedOrders: data.completedOrders,
         newOrders: data.newOrders,
         pickupOrders: data.pickupOrders,
         deliveredOrders: data.deliveredOrders,
-        urgentOrders: data.urgentOrders,
         location: data.location,
       });
     } catch (error) {
@@ -79,6 +79,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-main-container">
       <Sidebar />
+      {/* <Navbar /> */}
       <div className="dashboard-container">
         <h2 className="dashcol">Master Dashboard</h2>
 
@@ -207,18 +208,10 @@ const Dashboard = () => {
             <div className="stat-card">
               <h3>
                 <span className="stat-heading">
-                   Urgent Orders <IoNewspaper />
+                   Total Stores <MdGroups />
                 </span>
               </h3>
-              <p>{stats.urgentOrders}</p>
-            </div>
-            <div className="stat-card">
-              <h3>
-                <span className="stat-heading">
-                   Total Shops <MdGroups />
-                </span>
-              </h3>
-              <p>{stats.totalShops}</p>
+              <p>{stats.totalStores}</p>
             </div>
           </div>
           <div className="stat-card location-card">
@@ -239,7 +232,7 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        <OrdersTable />
+        {/* <OrdersTable /> */}
       </div>
     </div>
   );

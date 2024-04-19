@@ -6,12 +6,14 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../Navbar";
 import Select from "react-select";
+import './Register.css';
 
 function Register() {
   const [error, setError] = useState("");
   const [userType, setUserType] = useState("");
   const [storeId, setStoreId] = useState("");
   const [selectedArea, setSelectedArea] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
     fetchStoreId();
@@ -61,6 +63,11 @@ function Register() {
     );
   };
 
+  const validatePhoneNumber = (phoneNumber) => {
+    // Validate phone number format as per your requirement
+    return /^\d{10}$/.test(phoneNumber);
+  };
+
   const handleRegister = async (event) => {
     event.preventDefault();
 
@@ -80,9 +87,9 @@ function Register() {
       return;
     }
 
-    const firstName = formData.get("firstName");
+    const name = formData.get("name");
 
-    if (!validateName(firstName)) {
+    if (!validateName(name)) {
       toast.error("First name should only contain letters");
       return;
     }
@@ -99,13 +106,19 @@ function Register() {
       return;
     }
 
+    if (!validatePhoneNumber(phoneNumber)) {
+      toast.error("Invalid phone number");
+      return;
+    }
+
     const userData = {
-      firstName: firstName,
+      name: name,
       email: email,
       userType: userType,
       password: password,
       storeId: storeId,
       area: selectedArea.value, // This should send the selected area value
+      phoneNumber: phoneNumber, // Include the phone number in userData
     };
 
     try {
@@ -164,7 +177,7 @@ function Register() {
             />
 
             <input
-              name="firstName"
+              name="name" // Changed from "firstName"
               type="text"
               placeholder=" Name"
               required
@@ -174,6 +187,15 @@ function Register() {
               name="email"
               type="email"
               placeholder="Email"
+              required
+              className="inputabcd123"
+            />
+            <input
+              name="phoneNumber"
+              type="text"
+              placeholder="Phone Number"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               required
               className="inputabcd123"
             />

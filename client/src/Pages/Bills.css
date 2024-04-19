@@ -1,4 +1,5 @@
 /* Bills.css */
+
 .billtotal{
    
     height:100%;
@@ -220,6 +221,6 @@
     display: flex;
   }
   .selectpaymentmode{
-    width: 96%;
+    width: 97%;
     padding: 10px;
   }

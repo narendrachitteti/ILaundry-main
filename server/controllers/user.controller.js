@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 exports.registerUser = async (req, res) => {
   const { fullName, storeId, userType, email, password, confirmPassword, area } = req.body;
 
+
   try {
     // Check if user with the same storeId already exists
     const existingUser = await User.findOne({ storeId });
@@ -11,13 +12,14 @@ exports.registerUser = async (req, res) => {
 
     // Create a new user instance
     const newUser = new User({
-      fullName, // Include fullName
+      fullName,
       storeId,
       area,
       userType,
       email,
       password,
       confirmPassword,
+      phoneNumber,
     });
 
     // Save the new user to the database

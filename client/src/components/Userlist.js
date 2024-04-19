@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Userlist.css'; // Import CSS file
 import Navbar from './Navbar';
+// import Sidebar from "../Pages/Sidebar";
 
 const Userlist = () => {
     const [details, setDetails] = useState([]);
@@ -52,63 +53,44 @@ const Userlist = () => {
     );
 
     return (
-        <>
-            <Navbar />
-            <br />
-            <br />
-            <br />
-            <div className='overalldiv'>
-                <br />
-                <h1 className='details'>Register Details</h1>
-                <br />
-                <div className='search-container098'>
-                    <input className='search098'
-                        type="text"
-                        placeholder="Search here ...."
-                        value={searchQuery}
-                        onChange={handleSearch}
-                    />
-                </div>
-
-                <table className="lab-service-table_5">
-                    <thead>
-                        <tr className="product-ooi">
-                            <th>Store ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>User Type</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredDetails.map((detail) => (
-                            <tr key={detail._id}>
-                                <td>{detail.storeId}</td>
-                                <td>{detail.lastName}</td>
-                                <td>{detail.email}</td>
-                                <td>{detail.userType}</td>
-                                <td>
-                                    {activeUsers.includes(detail.storeId) ? (
-                                        <button className='button-active'>Active</button>
-                                    ) : (
-                                        <button onClick={() => handleActivate(detail.storeId)} className='button-active'>Activate</button>
-                                    )}
-                                    <button onClick={() => handleDeactivate(detail.storeId)} className='button-inactive'>Inactive</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                {showPopup && (
-                    <div className="popup">
-                        <div className="popup-content">
-                            <span className="close" onClick={handlePopupClose}>&times;</span>
-                            <p>User is already active!</p>
-                        </div>
-                    </div>
-                )}
+    <>
+        <Navbar/>
+        <div className='overalldiv'>
+            <br/>
+            <h1 className='details'> Register Details</h1>
+            <br/>
+            <div className='search-container098'>
+            <input  className='search098'
+                type="text"
+                placeholder="Search here ...."
+                value={searchQuery}
+                onChange={handleSearch}
+            />
             </div>
+            
+            <table className="lab-service-table_5">
+                <thead>
+                    <tr className="product-ooi">
+                        <th>Store ID</th>
+                        {/* <th>Last Name</th> */}
+                        <th>Email</th>
+                        <th>User Type</th>
+                        {/* <th>Action</th> */}
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredDetails.map((detail) => (
+                        <tr key={detail._id}>
+                            <td>{detail.storeId}</td>
+                            {/* <td>{detail.lastName}</td> */}
+                            <td>{detail.email}</td>
+                            <td>{detail.userType}</td>
+                            {/* <td>{Active}</td> */}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>   
         </>
     );
 };

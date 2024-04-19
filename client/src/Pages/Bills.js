@@ -5,6 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { Row, Col } from "react-bootstrap";
 import currencyCodes from "currency-codes";
 import Navbar from "../components/Navbar";
+// import Sidebar from "./Sidebar";
 import jsPDF from "jspdf";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -415,24 +416,65 @@ const Bills = () => {
 
   const handledownloadcopy = () => {
     const doc = new jsPDF();
-    doc.text("Invoice No: " + invoiceNo, 10, 10);
-    doc.text("Invoice Date: " + formatDate(invoiceDate), 10, 20);
-    doc.text("Client Name: " + clientName, 10, 30);
-    doc.text("Client Contact: " + clientContact, 10, 40);
-    doc.text("Selected Item: " + selectedPopupItem, 10, 60);
-    doc.text("Total: " + total, 10, 50);
-    doc.text("TaxAmount: " + taxAmount, 10, 60);
+
+    // Define the data for the table
+    const tableData = [
+        ["Invoice No:", invoiceNo],
+        ["Invoice Date:", formatDate(invoiceDate)],
+        ["Client Name:", clientName],
+        ["Client Contact:", clientContact],
+        ["Selected Item:", selectedPopupItem],
+        ["Total:", total],
+        ["Tax Amount:", taxAmount]
+    ];
+
+    // Set up styles for the table
+    const tableStyles = {
+        fontSize: 10,
+        fontStyle: 'normal', // normal, bold, italic
+        textColor: [128, 128, 128], // Grey color
+        cellPadding: 5
+    };
+
+    // Set up column widths
+    const columnWidths = [70, 200];
+
+    // Add border around the content
+    const margin = 10;
+    const contentWidth = doc.internal.pageSize.getWidth() - 2 * margin;
+    const contentHeight = doc.internal.pageSize.getHeight() - 2 * margin;
+    doc.setDrawColor(0); // Black border
+    doc.rect(margin, margin, contentWidth, contentHeight); // Adjusted position for the border
+
+    // Add GST number inside the border, aligned to the right, and bold
+    const gstNumber = "GSTIN:29ABCDE1234F1ZW";
+    const gstTextWidth = doc.getStringUnitWidth(gstNumber) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text(gstNumber, doc.internal.pageSize.getWidth() - margin - gstTextWidth + 20, margin + 5); // Adjusted position for GST number
+
+    // Add a heading for the invoice inside the border, centered, and bold
+    doc.setFont("bold");
+    doc.setFontSize(18);
+    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 40, { align: "center" }); // Adjusted position for the heading
+
+    // Add the table to the PDF
+    doc.autoTable({
+        body: tableData,
+        startY: margin + 60, // Start below the heading
+        startX: margin,
+        styles: tableStyles,
+        columnStyles: {
+            0: { fontStyle: 'bold' }, // Make the first column bold
+            1: { fontStyle: 'normal' } // Make the second column normal
+        },
+        columnWidth: columnWidths,
+        margin: { top: margin + 50 } // Add margin to avoid overlapping with the heading and GST number
+    });
 
     // Save the PDF file
     doc.save("Laundry Invoice.pdf");
-
-    // Convert the PDF blob to a file and send it via WhatsApp
-    const pdfBlob = doc.output('blob');
-    const pdfFile = new File([pdfBlob], "Laundry Invoice.pdf", { type: "application/pdf" });
-
-    // Send the PDF file via WhatsApp
-    sendPDFViaWhatsApp(pdfFile);
-  };
+};
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
@@ -488,6 +530,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
   return (
     <div className="billtotal">
       <div className="nav111">
+      {/* <Sidebar /> */}
         <Navbar />
       </div>
       <div className="invoice-form">
@@ -516,6 +559,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
             type="text"
             id="clientName"
             value={clientName}
+            maxLength={20}
             onChange={(e) => setClientName(e.target.value)}
           />
         </div>
@@ -837,7 +881,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
                   <input    type="text"                    value={clientContact}                  />
 
                   <label className="nameclass-label">Pickup Date</label>:
-                  <input type="text" value={pickupdate} />
+                  <input  type="text" value={pickupdate} />
 
                   <label className="nameclass-label">Delivery Date</label>:
                   <input type="text" value={deliveryDate} />

@@ -13,7 +13,8 @@ function Login() {
   const [area, setArea] = useState("");
   const [storeId, setStoreId] = useState(""); // Declare storeId state
 
-  const fetchArea = async () => { // Remove storeId parameter from fetchArea function
+  const fetchArea = async () => {
+    // Remove storeId parameter from fetchArea function
     try {
       const response = await fetch(`http://localhost:5000/area/${storeId}`);
       if (response.ok) {
@@ -55,7 +56,7 @@ function Login() {
         // Handle successful login
         toast.success("Master login successful");
         setTimeout(() => {
-          navigate("/Bills");
+          navigate("/Dashboard");
         }, 1500);
       } else {
         const errorData = await response.json();
@@ -155,7 +156,7 @@ function Login() {
                   required
                   onChange={(e) => setStoreId(e.target.value)} // Update storeId state
                 />
-                 <Components.Input
+                <Components.Input
                   type="text"
                   name="area"
                   value={area}
@@ -172,7 +173,7 @@ function Login() {
                 <div
                   style={{
                     display: "flex",
-                    height: "25px",
+                    height: "40px",
                     borderRadius: "6px",
                     width: "100%",
                     padding: "3px",
@@ -206,6 +207,7 @@ function Login() {
                   type="text"
                   placeholder="Store ID"
                   required
+                  onChange={(e) => setStoreId(e.target.value)} // Update storeId state
                 />
                 <Components.Input
                   type="text"
@@ -232,7 +234,7 @@ function Login() {
                     marginTop: "10px",
                   }}
                 >
-                  <p style={{ color: "black" }}>Don't have an account?</p>{" "}
+                  <p className="user-login-donthave-account" style={{ color: "black" }}>Don't have an account?</p>{" "}
                   &nbsp;&nbsp;
                   <Link to="/Register" style={{ textDecoration: "none" }}>
                     <div>

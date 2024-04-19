@@ -1,4 +1,14 @@
+.main-container {
+  display: flex; /* Use flexbox to align Sidebar and table side by side */
+}
+
+.sidebar {
+  width: 20%; /* Adjust the width as needed */
+  margin-right: 10px; /* Add space between Sidebar and table */
+}
+
 .orders-table-container {
+  width: 80%; /* Adjust the width as needed */
   margin-top: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -45,6 +55,7 @@
 .orders-table tr.status-rejected {
   background-color: #f18992;
 }
+
 .orders-table tr.status-delivered {
   background-color: #d7ea7d;
 }
