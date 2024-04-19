@@ -13,6 +13,7 @@ import ReactWhatsapp from "react-whatsapp";
 import axios from "axios";
 import QRCode from "qrcode.react";
 import Barcode from 'react-barcode';
+import StaffNavbar from "../components/StaffNavbar";
 
 const currencies = currencyCodes.data;
 
@@ -490,7 +491,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
     <div className="billtotal">
       <div className="nav111">
       {/* <Sidebar /> */}
-        <Navbar />
+        <StaffNavbar />
       </div>
       <div className="invoice-form">
         <div className="input-group">

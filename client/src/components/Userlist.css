@@ -1,8 +1,8 @@
 /* Userlist.css */
 .overalldiv{
-    height: 100vh;
-    /* opacity: 0.5; */
-    /* background-size: cover; */
+  position: relative;
+  top: 70px;
+    height: auto;
   background: url("https://t3.ftcdn.net/jpg/03/29/17/78/360_F_329177878_ij7ooGdwU9EKqBFtyJQvWsDmYSfI1evZ.jpg") center/cover;
 }
 .user-table {
@@ -24,7 +24,7 @@
     /* margin-left: 10px;/ */
   }
   .details{
-    text-align: start;
+    text-align: center;
     font-size: 1.8 rem;
     padding-top: 20px;
     color: #528575;

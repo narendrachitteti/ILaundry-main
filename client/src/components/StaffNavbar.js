@@ -7,10 +7,11 @@ import image17 from "../components/images/customer.jpg";
 import register from "../components/images/register.png";
 import { IoLogOutOutline } from "react-icons/io5";
 
+
 import "../Styles/Navbar.css";
 import axios from "axios";
 import { BASE_URL } from "../Helper/Helper";
-const Navbar = () => {
+const StaffNavbar = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
@@ -33,6 +34,7 @@ const Navbar = () => {
     navigate("/");
     localStorage.removeItem("mail");
   };
+  
 
   return (
     <div>
@@ -44,34 +46,13 @@ const Navbar = () => {
             style={{ height: "3rem", width: "10rem", marginLeft: "-9%" }}
           />
         </Link>
-        <Link to="/Dashboard">
+        {/* <Link to="/Dashboard">
           <div className="bills">
-            <img
-              src="https://cdn-icons-png.freepik.com/512/7664/7664156.png"
-              alt=""
-              style={{ height: "2.5rem" }}
-            />
+            <img src="https://cdn-icons-png.freepik.com/512/7664/7664156.png" alt="" style={{ height: "2.5rem" }} />
             <p>Dashboard</p>
           </div>
-        </Link>
-        <Link to="/orderstable">
-          <div className="bills">
-            <p>Recent Orders</p>
-          </div>
-        </Link>
-        <Link to="/rating">
-          <div className="bills">
-            <p>Customer Reviews</p>
-          </div>
-        </Link>
-
-        <Link to="/Userlist">
-          <div className="bills">
-            <p>Register Details</p>
-          </div>
-        </Link>
-
-        {/* <Link to="/Bills">
+        </Link> */}
+        <Link to="/Bills">
           <div className="bills">
             <img src={image17} alt="" style={{ height: "2.5rem" }} />
             <p>Customer Bills</p>
@@ -82,15 +63,15 @@ const Navbar = () => {
             <img src={image15} alt="" style={{ height: "2.5rem" }} />
             <p>Previous Bills</p>
           </div>
-        </Link>*/}
+        </Link>
 
         {/* <Link to="/Userlist">
           <div className="bills">
             <img src={register} alt="" style={{ height: "2.5rem" }} />
             <p>Registerdetails</p>
           </div>
-        </Link>  */}
-
+        </Link> */}
+        
         <div className="bills">
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
           <p>Profile</p>
@@ -105,9 +86,11 @@ const Navbar = () => {
             </p>
           </div>
         </div>
+
+        
       </div>
     </div>
   );
 };
 
-export default Navbar;
+export default StaffNavbar;

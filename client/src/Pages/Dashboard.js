@@ -78,8 +78,8 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-main-container">
-      <Sidebar />
-      {/* <Navbar /> */}
+      {/* <Sidebar /> */}
+      <Navbar />
       <div className="dashboard-container">
         <h2 className="dashcol">Master Dashboard</h2>
 

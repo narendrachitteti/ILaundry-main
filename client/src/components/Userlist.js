@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Userlist.css'; // Import CSS file
 import Navbar from './Navbar';
-// import Sidebar from "../Pages/Sidebar";
 
 const Userlist = () => {
     const [details, setDetails] = useState([]);

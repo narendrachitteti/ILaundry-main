@@ -27,6 +27,7 @@ import Backbutton from "./Backbutton.js";
 import InvoiceDetailsPopup from "./InvoiceDetailsPopup.js";
 import { autoTable } from "pdfmake/build/pdfmake";
 import "jspdf-autotable";
+import StaffNavbar from "../components/StaffNavbar.js";
 
 const PreviousBills = () => {
   const [customerServicesCus, setcustomerServicesCus] = useState([]);
@@ -429,7 +430,7 @@ console.log("Filtered Data:", filteredData);
   return (
     <>
     {/* <Sidebar /> */}
-      <Navbar />
+      <StaffNavbar/>
       <div className="lab-service-table-container_5">
         <div className="flex56">
           <div className="bbb">

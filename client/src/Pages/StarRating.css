@@ -4,8 +4,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    margin: 0 auto;
+    /* padding: 20px; */
+    /* margin: 0 auto; */
     max-width: 1200px;
     width: 100%;
 }
@@ -46,11 +46,13 @@
 
 /* Rating system styling */
 .rating-system {
+    position: relative;
+    top: 90px;
     text-align: center;
     padding: 20px;
     margin-bottom: 20px;
     font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
+    background-color: #e3dddd;
     border-radius: 10px;
 }
 
