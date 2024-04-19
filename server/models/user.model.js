@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  fullName: String, // Update to use fullName instead of firstName and lastName
+  name: String, // Update to use fullName instead of firstName and lastName
   email: {
     type: String,
     unique: true,
@@ -10,6 +10,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true
+  },
+  phoneNumber:{
+    type:Number,
+    required: true
   },
   area: {
     type: String,

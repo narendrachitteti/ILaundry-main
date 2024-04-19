@@ -1,6 +1,6 @@
 const User = require("../models/user.model");
 exports.registerUser = async (req, res) => {
-  const { fullName, storeId, userType, email, password, confirmPassword, area } = req.body;
+  const { name, storeId, userType, email, password, confirmPassword, area, phoneNumber } = req.body;
 
 
   try {
@@ -12,13 +12,14 @@ exports.registerUser = async (req, res) => {
 
     // Create a new user instance
     const newUser = new User({
-      fullName,
+      name,
       storeId,
       area, // Including the area field here
       userType,
       email,
       password,
       confirmPassword,
+      phoneNumber,
     });
     
 
