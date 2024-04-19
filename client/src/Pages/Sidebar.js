@@ -28,9 +28,7 @@ const Sidebar = () => {
                 <Link to="/rating" className="sidebar-link">
                     Customer Reviews
                 </Link>
-                <Link to="" className="sidebar-link">
-                    LogOut
-                </Link>
+                
             </div>
             
         </div>
