@@ -199,61 +199,63 @@ function Login() {
             </Components.SignInContainer>
           ) : (
             <Components.SignUpContainer signingIn={signIn}>
-              <Components.Form onSubmit={handleLogin1}>
-                <Components.Title>Staff Login</Components.Title>
-                <Components.Input
-                  name="storeId"
-                  type="text"
-                  placeholder="Store ID"
-                  required
-                />
-                <Components.Input
-                  type="text"
-                  name="area"
-                  value={area}
-                  readOnly
-                  placeholder="Area"
-                />
-
-                <Components.Input
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  required
-                />
-                <Components.Button type="submit">Login</Components.Button>
-                <div
-                  style={{
-                    display: "flex",
-                    height: "25px",
-                    borderRadius: "6px",
-                    width: "100%",
-                    padding: "3px",
-                    marginTop: "10px",
-                  }}
-                >
-                  <p style={{ color: "black" }}>Don't have an account?</p>{" "}
-                  &nbsp;&nbsp;
-                  <Link to="/Register" style={{ textDecoration: "none" }}>
-                    <div>
-                      <p
-                        style={{
-                          color: "orange",
-                          fontWeight: "bold",
-                          textDecoration: "none",
-                        }}
-                      >
-                        Register
-                      </p>
-                    </div>
-                  </Link>
-                </div>
-
-                {staffError && (
-                  <div className="error-message">{staffError}</div>
-                )}
-              </Components.Form>
-            </Components.SignUpContainer>
+            <Components.Form onSubmit={handleLogin1}>
+              <Components.Title>Staff Login</Components.Title>
+              <Components.Input
+                name="storeId"
+                type="text"
+                placeholder="Store ID"
+                required
+                onChange={(e) => setStoreId(e.target.value)} // Update storeId state
+              />
+              <Components.Input
+                type="text"
+                name="area"
+                value={area}
+                readOnly
+                placeholder="Area"
+              />
+          
+              <Components.Input
+                name="password"
+                type="password"
+                placeholder="Password"
+                required
+              />
+              <Components.Button type="submit">Login</Components.Button>
+              <div
+                style={{
+                  display: "flex",
+                  height: "25px",
+                  borderRadius: "6px",
+                  width: "100%",
+                  padding: "3px",
+                  marginTop: "10px",
+                }}
+              >
+                <p style={{ color: "black" }}>Don't have an account?</p>{" "}
+                &nbsp;&nbsp;
+                <Link to="/Register" style={{ textDecoration: "none" }}>
+                  <div>
+                    <p
+                      style={{
+                        color: "orange",
+                        fontWeight: "bold",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Register
+                    </p>
+                  </div>
+                </Link>
+              </div>
+          
+              {staffError && (
+                <div className="error-message">{staffError}</div>
+              )}
+            </Components.Form>
+          </Components.SignUpContainer>
+          
           )}
 
           <Components.OverlayContainer signingIn={signIn}>
