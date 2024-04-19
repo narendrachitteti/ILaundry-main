@@ -115,14 +115,11 @@ const PreviousBills = () => {
   const handleAddCusOrUpdate = async (formData) => {
     try {
       if (selectedServiceCus) {
-        await axios.put(
-          `${BASE_URL}/invoice/${selectedServiceCus._id}`,
-          formData
-        );
+        await axios.put(`${BASE_URL}/invoice/${selectedServiceCus._id}`, formData);
       } else {
         await axios.post(`${BASE_URL}/invoice/`, formData);
       }
-      fetchcustomerServicesCus();
+      fetchcustomerServicesCus(); // Refresh data after update
       setselectedServiceCus(null);
       setAddPopupOpenCus(false);
     } catch (error) {
@@ -696,8 +693,10 @@ console.log("Filtered Data:", filteredData);
                 </label>
             </td>
             <td>
-              <button className="preeditbu">Edit</button>
-              <button className="predeletebu" onClick={() => handleDeleteCus(service._id)}>
+            <button className="edit-button_5" onClick={() => handleEditCus(service)}>
+    Edit
+  </button>
+                <button className="delete-button_5" onClick={() => handleDeleteCus(service._id)}>
   Delete
 </button>
 
