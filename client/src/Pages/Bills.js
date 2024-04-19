@@ -414,11 +414,13 @@ const Bills = () => {
     setInvoiceDate(selectedDate);
   };
 
+
   const handledownloadcopy = () => {
     const doc = new jsPDF();
 
     // Define the data for the table
     const tableData = [
+        ["Particulars", "Amount"],
         ["Invoice No:", invoiceNo],
         ["Invoice Date:", formatDate(invoiceDate)],
         ["Client Name:", clientName],
@@ -432,19 +434,21 @@ const Bills = () => {
     const tableStyles = {
         fontSize: 10,
         fontStyle: 'normal', // normal, bold, italic
-        textColor: [128, 128, 128], // Grey color
-        cellPadding: 5
+        textColor: [64, 64, 64], // Dark grey color
+        cellPadding: 3,
+        lineWidth: 0.5, // Border width
+        lineColor: [192, 192, 192] // Grey border color
     };
 
     // Set up column widths
-    const columnWidths = [70, 200];
+    const columnWidths = [100, 80]; // Adjusted width for the "Amount" column
 
     // Add border around the content
     const margin = 10;
     const contentWidth = doc.internal.pageSize.getWidth() - 2 * margin;
     const contentHeight = doc.internal.pageSize.getHeight() - 2 * margin;
     doc.setDrawColor(0); // Black border
-    doc.rect(margin, margin, contentWidth, contentHeight); // Adjusted position for the border
+    doc.rect(margin, margin, contentWidth, contentHeight); // Adjusted position for the main border
 
     // Add GST number inside the border, aligned to the right, and bold
     const gstNumber = "GSTIN:29ABCDE1234F1ZW";
@@ -456,25 +460,64 @@ const Bills = () => {
     // Add a heading for the invoice inside the border, centered, and bold
     doc.setFont("bold");
     doc.setFontSize(18);
-    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 40, { align: "center" }); // Adjusted position for the heading
+    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 50, { align: "center" }); // Adjusted position for the heading
 
-    // Add the table to the PDF
+    // Add margin from the main border
+    const tableMargin = 0;
+    const tableX = margin + tableMargin;
+    const tableY = margin + 60 + tableMargin; // Adjusted position for the heading
+
+    // Add the table heading row with background color
     doc.autoTable({
-        body: tableData,
-        startY: margin + 60, // Start below the heading
-        startX: margin,
+        head: [["Particulars", {content: "Amount", styles: {halign: 'left'}}]], // Align "Amount" to the left
+        startY: tableY,
+        startX: tableX,
+        styles: { 
+            fontStyle: 'bold', 
+            fillColor: [102, 244, 174], 
+            textColor: [0, 0, 0],
+            lineColor: [192, 192, 192], // Grey border color for heading row
+            cellPadding: [3, 4] // Increase cell padding by 1px
+        },
+        columnStyles: { 0: { cellWidth: 100 }, 1: { cellWidth: 80 } },
+        draw: true // Draw borders
+    });
+
+    // Add the table data to the PDF without background color
+    doc.autoTable({
+        body: tableData.slice(1), // Exclude the first row (heading)
+        startY: doc.lastAutoTable.finalY, // Start below the heading row
+        startX: tableX,
         styles: tableStyles,
         columnStyles: {
-            0: { fontStyle: 'bold' }, // Make the first column bold
+            0: { fontStyle: 'normal' }, // Make the first column normal
             1: { fontStyle: 'normal' } // Make the second column normal
         },
         columnWidth: columnWidths,
-        margin: { top: margin + 50 } // Add margin to avoid overlapping with the heading and GST number
+        margin: { top: tableMargin }, // Add margin from the heading row
+        draw: true // Draw borders
     });
+
+    // Add "signature or stamp" after the table
+    const signatureStampText = "Signature or Stamp";
+    const signatureStampTextWidth = doc.getStringUnitWidth(signatureStampText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    const signatureStampX = doc.internal.pageSize.getWidth() - margin - signatureStampTextWidth - 0; // Adjusted position to the right corner
+    const signatureStampY = doc.lastAutoTable.finalY + 30; // Adjusted position below the table
+    doc.setFontSize(12); // Smaller font size for signature
+    doc.text(signatureStampText, signatureStampX, signatureStampY);
+
+    // Add "****This is system generated bill****" at the end of the page center
+    const generatedBillText = "****This is system generated bill****";
+    const generatedBillTextWidth = doc.getStringUnitWidth(generatedBillText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    const generatedBillTextX = (doc.internal.pageSize.getWidth() - generatedBillTextWidth) / 2;
+    const generatedBillTextY = doc.internal.pageSize.getHeight() - margin - 5; // Leave some margin from the bottom
+    doc.setFontSize(14); // Restore font size for generated bill text
+    doc.text(generatedBillText, generatedBillTextX, generatedBillTextY);
 
     // Save the PDF file
     doc.save("Laundry Invoice.pdf");
 };
+
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
