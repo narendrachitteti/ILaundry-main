@@ -431,7 +431,7 @@ const Bills = () => {
     // Define the data for the table
     const tableData = [
       ["Particulars", "Details"],
-      ["Invoice No:", invoiceNo],
+      ["Invoice No:", invoiceNumber],
       ["Invoice Date:", formatDate(invoiceDate)],
       ["Client Name:", clientName],
       ["Client Contact:", clientContact],

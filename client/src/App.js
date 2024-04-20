@@ -19,6 +19,7 @@ import Dashboard from "./Pages/Dashboard.js";
 import OrdersTable from "./Pages/OrdersTable.js";
 import StarRating from "./Pages/StarRating.js";
 import StaffNavbar from "./components/StaffNavbar.js";
+import TotalCustomer from "./Pages/TotalCustomers.js";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -53,6 +54,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/rating" element={<StarRating />} />
             <Route path="/orderstable" element={<OrdersTable />} />
+            <Route path="/TotalCustomer" element={<TotalCustomer/>}/>
 
             <Route path="/stafflogin" element={<StaffNavbar/>}/>
           </Routes>
