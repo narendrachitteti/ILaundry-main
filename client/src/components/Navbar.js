@@ -72,7 +72,7 @@ const Navbar = () => {
           </div>
         </Link>
 
-        {/* <Link to="/Bills">
+      <Link to="/Bills">
           <div className="bills">
             <img src={image17} alt="" style={{ height: "2.5rem" }} />
             <p>Customer Bills</p>
