@@ -13,13 +13,16 @@
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 120px;
+    color: black;
+    min-width: 200px;
+    max-height: 220px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px,
     rgba(48, 48, 48, 0.5) 5px 10px 15px;
-    padding: 15px 18px;
+    padding: 8px 8px;
     z-index: 1;
     top: 2.5rem;
-    left: 0;
+    border-radius: 20px;
+    left: -6rem;
   }
   
   .dropdown-content p {
@@ -27,7 +30,7 @@
   }
   .dropdown-content p:hover {
     background-color:rgb(65, 119, 141);
-    color: white;
+    color: rgb(255, 255, 255);
     
   }
   .dropdown-content:hover {
