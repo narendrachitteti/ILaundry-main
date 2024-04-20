@@ -14,6 +14,9 @@ import axios from "axios";
 import QRCode from "qrcode.react";
 import Barcode from 'react-barcode';
 import StaffNavbar from "../components/StaffNavbar";
+import { Canvg } from 'canvg';
+
+const canvgInstance = new Canvg(/* parameters */);
 
 const currencies = currencyCodes.data;
 
@@ -415,21 +418,28 @@ const Bills = () => {
     setInvoiceDate(selectedDate);
   };
 
-
   const handledownloadcopy = () => {
     const doc = new jsPDF();
 
+
     // Define the data for the table
     const tableData = [
-        ["Particulars", "Amount"],
-        ["Invoice No:", invoiceNo],
-        ["Invoice Date:", formatDate(invoiceDate)],
-        ["Client Name:", clientName],
-        ["Client Contact:", clientContact],
-        ["Selected Item:", selectedPopupItem],
-        ["Total:", total],
-        ["Tax Amount:", taxAmount]
-    ];
+      ["Particulars", "Amount"],
+      ["Invoice No:", invoiceNumber],
+      ["Invoice Date:", formatDate(invoiceDate)],
+      ["Client Name:", clientName],
+      ["Client Contact no:", clientContact],
+      ["Pickup Date:", formatDate(pickupdate)], // Assuming pickupdate is a Date object
+      ["Delivery Date:", formatDate(deliveryDate)], // Assuming deliveryDate is a Date object
+      ["Selected Item:", selectedPopupItem],
+      ["Quantity:",quantities],
+      // ["Price per item:",price],
+      ["Subtotal:",subTotal],
+      ["Discount:", discountAmount],
+      ["Tax:",taxAmount],
+      ["Total:", total]
+  ];
+  
 
     // Set up styles for the table
     const tableStyles = {
@@ -518,7 +528,6 @@ const Bills = () => {
     // Save the PDF file
     doc.save("Laundry Invoice.pdf");
 };
-
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
@@ -626,7 +635,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
           <input
     type="text"
     maxLength="100"
-    id="clientName"
+    id="clientaddress"
     value={customeraddress}
     onChange={(e) => setcustomeraddress(e.target.value.slice(0, 100))}
 />
