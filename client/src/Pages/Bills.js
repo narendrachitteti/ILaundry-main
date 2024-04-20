@@ -14,9 +14,6 @@ import axios from "axios";
 import QRCode from "qrcode.react";
 import Barcode from 'react-barcode';
 import StaffNavbar from "../components/StaffNavbar";
-import { Canvg } from 'canvg';
-
-const canvgInstance = new Canvg(/* parameters */);
 
 const currencies = currencyCodes.data;
 
@@ -418,9 +415,9 @@ const Bills = () => {
     setInvoiceDate(selectedDate);
   };
 
+
   const handledownloadcopy = () => {
     const doc = new jsPDF();
-
 
     // Define the data for the table
     const tableData = [
@@ -528,6 +525,7 @@ const Bills = () => {
     // Save the PDF file
     doc.save("Laundry Invoice.pdf");
 };
+
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
