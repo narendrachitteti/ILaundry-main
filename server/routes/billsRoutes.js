@@ -67,7 +67,7 @@
 
 const express = require("express");
 const router = express.Router();
-const billsController = require("../controllers/billsController");
+const billsController = require("./controllers/billsController");
 
 // Create or update a billing record
 router.post("/billing", billsController.createOrUpdateBilling);

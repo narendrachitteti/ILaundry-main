@@ -42,7 +42,7 @@ const Dashboard = () => {
   // Fetch data function
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/dashboard`);
+      const response = await axios.get(`${BASE_URL}/api/get-bills`);
       const data = response.data;
 
       setStats({

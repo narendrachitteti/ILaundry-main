@@ -14,6 +14,8 @@ import axios from "axios";
 import QRCode from "qrcode.react";
 import Barcode from 'react-barcode';
 import StaffNavbar from "../components/StaffNavbar";
+import JsBarcode from 'jsbarcode';
+import ilaundry from "../assets/images/ilaundry.jpg";
 
 const currencies = currencyCodes.data;
 
@@ -419,24 +421,29 @@ const Bills = () => {
   const handledownloadcopy = () => {
     const doc = new jsPDF();
 
+    const imgWidth = 40;
+    const imgHeight = 15;
+    const imgX = doc.internal.pageSize.getWidth() - imgWidth - 155;
+    const imgY = 15;
+    doc.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
+
+
     // Define the data for the table
     const tableData = [
-      ["Particulars", "Amount"],
-      ["Invoice No:", invoiceNumber],
-      ["Invoice Date:", formatDate(invoiceDate)],
-      ["Client Name:", clientName],
-      ["Client Contact no:", clientContact],
-      ["Pickup Date:", formatDate(pickupdate)], // Assuming pickupdate is a Date object
-      ["Delivery Date:", formatDate(deliveryDate)], // Assuming deliveryDate is a Date object
-      ["Selected Item:", selectedPopupItem],
-      ["Quantity:",quantities],
-      // ["Price per item:",price],
-      ["Subtotal:",subTotal],
-      ["Discount:", discountAmount],
-      ["Tax:",taxAmount],
-      ["Total:", total]
-  ];
-  
+        ["Particulars", "Details"],
+        ["Invoice No:", invoiceNumber],
+        ["Invoice Date:", formatDate(invoiceDate)],
+        ["Client Name:", clientName],
+        ["Client Contact no:", clientContact],
+        ["Pickup Date:", formatDate(pickupdate)], // Assuming pickupdate is a Date object
+        ["Delivery Date:", formatDate(deliveryDate)], // Assuming deliveryDate is a Date object
+        ["Selected Item:", selectedPopupItem],
+        ["Quantity:", quantities],
+        ["Subtotal:", subTotal],
+        ["Discount:", discountAmount],
+        ["Tax:", taxAmount],
+        ["Total:", total]
+    ];
 
     // Set up styles for the table
     const tableStyles = {
@@ -447,9 +454,6 @@ const Bills = () => {
         lineWidth: 0.5, // Border width
         lineColor: [192, 192, 192] // Grey border color
     };
-
-    // Set up column widths
-    const columnWidths = [100, 80]; // Adjusted width for the "Amount" column
 
     // Add border around the content
     const margin = 10;
@@ -475,19 +479,22 @@ const Bills = () => {
     const tableX = margin + tableMargin;
     const tableY = margin + 60 + tableMargin; // Adjusted position for the heading
 
+    // Calculate equal column width
+    const columnWidth = (contentWidth - 2 * tableMargin) / 2;
+
     // Add the table heading row with background color
     doc.autoTable({
-        head: [["Particulars", {content: "Amount", styles: {halign: 'left'}}]], // Align "Amount" to the left
+        head: [["Particulars", "Details"]],
         startY: tableY,
         startX: tableX,
-        styles: { 
-            fontStyle: 'bold', 
-            fillColor: [102, 244, 174], 
+        styles: {
+            fontStyle: 'bold',
+            fillColor: [102, 244, 174],
             textColor: [0, 0, 0],
             lineColor: [192, 192, 192], // Grey border color for heading row
             cellPadding: [3, 4] // Increase cell padding by 1px
         },
-        columnStyles: { 0: { cellWidth: 100 }, 1: { cellWidth: 80 } },
+        columnStyles: { 0: { cellWidth: columnWidth }, 1: { cellWidth: columnWidth } },
         draw: true // Draw borders
     });
 
@@ -501,7 +508,7 @@ const Bills = () => {
             0: { fontStyle: 'normal' }, // Make the first column normal
             1: { fontStyle: 'normal' } // Make the second column normal
         },
-        columnWidth: columnWidths,
+        columnWidth: columnWidth,
         margin: { top: tableMargin }, // Add margin from the heading row
         draw: true // Draw borders
     });
@@ -522,10 +529,34 @@ const Bills = () => {
     doc.setFontSize(14); // Restore font size for generated bill text
     doc.text(generatedBillText, generatedBillTextX, generatedBillTextY);
 
-    // Save the PDF file
-    doc.save("Laundry Invoice.pdf");
-};
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = 200; // Set canvas width
+    canvas.height = 100; // Set canvas height
 
+    // Generate the barcode onto the canvas
+    JsBarcode(canvas, invoiceNumber.toString(), {
+        format: 'CODE128', // Adjust barcode format as needed
+        width: 2, // Adjust barcode width
+        height: 50, // Adjust barcode height
+    });
+
+    // Convert the canvas to a data URL representing the image
+    const dataURL = canvas.toDataURL();
+
+    // Adjust position for the barcode
+    const barcodeWidth = 70; // Adjust the width of the barcode image
+    const barcodeHeight = 35; // Adjust the height of the barcode image
+    const barcodeMargin = 2;
+    const barcodeX = doc.internal.pageSize.getWidth() - margin - barcodeWidth - barcodeMargin; // Adjusted position for barcode
+    const barcodeY = margin + 5 + 2; // Adjusted position below GST number with margin of 20px
+
+    // Embed the image into the PDF
+    doc.addImage(dataURL, 'JPEG', barcodeX, barcodeY, barcodeWidth, barcodeHeight);
+
+    // Save the PDF file
+    doc.save('Laundry Invoice.pdf');
+};
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
