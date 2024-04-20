@@ -7,34 +7,38 @@ import image17 from "../components/images/customer.jpg";
 import register from "../components/images/register.png";
 import { IoLogOutOutline } from "react-icons/io5";
 
-
 import "../Styles/Navbar.css";
 import axios from "axios";
 import { BASE_URL } from "../Helper/Helper";
 const StaffNavbar = () => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState("");
 
   useEffect(() => {
-    const storedEmail = localStorage.getItem("mail");
-    if (storedEmail) {
-      axios
-        .get(`${BASE_URL}/users/${storedEmail}`)
-        .then((response) => {
+    const fetchUserDetails = async () => {
+      const storedStoreId = localStorage.getItem("storeId");
+      if (storedStoreId) {
+        try {
+          const response = await axios.get(
+            `${BASE_URL}/users/${storedStoreId}`
+          );
+          console.log("User data from backend:", response.data); // Log the response data
           setUser(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching user by email:", error);
-        });
-    }
-  }, []);
+        } catch (error) {
+          console.error("Error fetching user by storeId:", error);
+        }
+      }
+    };
+
+    fetchUserDetails();
+  }, []); // Empty dependency array to only call this effect once on component mount
 
   const logout = () => {
-    navigate("/");
-    localStorage.removeItem("mail");
+    localStorage.removeItem("storeId");
+    setUser({}); // Clear user data
+    navigate("/"); // Navigate to the login page
   };
-  
 
   return (
     <div>
@@ -71,13 +75,14 @@ const StaffNavbar = () => {
             <p>Registerdetails</p>
           </div>
         </Link> */}
-        
+
         <div className="bills">
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
           <p>Profile</p>
           <div className="dropdown-content">
             {/* <p>{`${user?.firstName} ${user?.lastName}`}</p> */}
-            <p>{user?.fullName}</p>
+            <p>Name: {user?.name}</p>
+            <p>Store ID: {user?.storeId}</p>
             <p
               onClick={logout}
               style={{ display: "flex", alignItems: "center", gap: "1rem" }}
@@ -86,8 +91,6 @@ const StaffNavbar = () => {
             </p>
           </div>
         </div>
-
-        
       </div>
     </div>
   );
