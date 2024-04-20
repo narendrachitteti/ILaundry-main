@@ -468,7 +468,7 @@ const Bills = () => {
   // Add a heading for the invoice inside the border, centered, and bold
   doc.setFont("bold");
   doc.setFontSize(18);
-  doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 40, { align: "center" }); // Adjusted position for the heading
+  doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 50, { align: "center" }); // Adjusted position for the heading
   
   // Add margin from the main border
   const tableMargin = 0;

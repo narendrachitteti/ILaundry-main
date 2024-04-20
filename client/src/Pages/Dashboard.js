@@ -44,15 +44,20 @@ const Dashboard = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [users, setUsers] = useState([]);
 
-  
-      // Fetch user data from the API endpoint
-      const response = await axios.get(`${BASE_URL}/api/registerdetails`);
-      // Update the users state with the fetched data
-      setUsers(response.data);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch user data from the API endpoint
+        const response = await axios.get(`${BASE_URL}/api/registerdetails`);
+        // Update the users state with the fetched data
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Fetch total stores data function
   const fetchTotalStores = async () => {
@@ -66,6 +71,17 @@ const Dashboard = () => {
       fetchUserData();
     } catch (error) {
       console.error("Error fetching total stores:", error);
+    }
+  };
+
+  // Fetch user data function
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/registerdetails`);
+      // Update the users state with the fetched data
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
     }
   };
 
