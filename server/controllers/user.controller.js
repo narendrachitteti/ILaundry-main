@@ -22,7 +22,7 @@ exports.registerUser = async (req, res) => {
 
     // Create a new user instance
     const newUser = new User({
-      fullName,
+      name,
       storeId,
       area,
       userType,
@@ -111,12 +111,10 @@ exports.getAll = async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
-    res
-      .status(500)
-      .json({
-        message:
-          "An error occurred while fetching users. Please try again later.",
-      });
+    res.status(500).json({
+      message:
+        "An error occurred while fetching users. Please try again later.",
+    });
   }
 };
 
@@ -162,7 +160,6 @@ exports.getAreaByStoreId = async (req, res) => {
   }
 };
 
-
 exports.getUserByStoreId = async (req, res) => {
   try {
     const storeId = req.params.storeId;
@@ -174,5 +171,18 @@ exports.getUserByStoreId = async (req, res) => {
   } catch (error) {
     console.error("Error fetching user by storeId:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+exports.getTotalStores = async (req, res) => {
+  try {
+    const totalStores = await User.countDocuments();
+    res.status(200).json({ totalStores });
+  } catch (error) {
+    console.error("Error fetching total stores:", error);
+    res.status(500).json({
+      message: "An error occurred while fetching total stores. Please try again later.",
+    });
   }
 };

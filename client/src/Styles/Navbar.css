@@ -1,40 +1,49 @@
 .bills {
-    position: relative;
-    display: inline-block;
-    display: flex;
-    cursor: pointer; /* Add cursor pointer for better UX */
-  }
-  
-  .bills:hover .dropdown-content {
-    display: block;
-  }
-  
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    color: black;
-    min-width: 200px;
-    max-height: 220px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px,
-    rgba(48, 48, 48, 0.5) 5px 10px 15px;
-    padding: 8px 8px;
-    z-index: 1;
-    top: 2.5rem;
-    border-radius: 20px;
-    left: -6rem;
-  }
-  
-  .dropdown-content p {
-    margin: 1;
-  }
-  .dropdown-content p:hover {
-    background-color:rgb(65, 119, 141);
-    color: rgb(255, 255, 255);
-    
-  }
-  .dropdown-content:hover {
-    background-color: #e0e0e0; /* Change to the desired background color */
-    /* Add any other styling for the hover effect */
-  }
-  
+  position: relative;
+  display: inline-block;
+  display: flex;
+  cursor: pointer; /* Add cursor pointer for better UX */
+}
+
+/* Apply hover effect to .bills */
+.bills:hover .dropdown-content {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dropdown-content {
+  display: block;
+  position: absolute;
+  background-color: #f9f9f9;
+  color: black;
+  min-width: 200px;
+  max-height: 220px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px, rgba(48, 48, 48, 0.5) 5px 10px 15px;
+  padding: 8px 8px;
+  z-index: 1;
+  top: 2.5rem;
+  border-radius: 20px;
+  left: -8rem;
+
+  /* Add cool animation */
+  transition: max-height 0.5s ease-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dropdown-content p {
+  margin: 1;
+}
+
+.dropdown-content p:hover {
+  background-color: rgb(65, 119, 141);
+  color: rgb(255, 255, 255);
+}
+
+/* Add background color change on dropdown hover */
+.dropdown-content:hover {
+  background-color: #e0e0e0; /* Change to the desired background color */
+  /* Add any other styling for the hover effect */
+}
