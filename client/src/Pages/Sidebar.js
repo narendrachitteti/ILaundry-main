@@ -13,7 +13,7 @@ const Sidebar = () => {
                 <Link to="/Dashboard" className="sidebar-link">
                     Dashboard
                 </Link>
-                <Link to="/Bills" className="sidebar-link">
+                {/* <Link to="/Bills" className="sidebar-link">
                     Customer Bills
                 </Link>
                 <Link to="/PreviousBills" className="sidebar-link">
@@ -21,7 +21,7 @@ const Sidebar = () => {
                 </Link>
                 <Link to="/Userlist" className="sidebar-link">
                 Registerdetails
-                </Link>
+                </Link> */}
                 <Link to="/orderstable" className="sidebar-link">
                     Recent Orders
                 </Link>

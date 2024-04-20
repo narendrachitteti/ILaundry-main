@@ -13,6 +13,10 @@ import ReactWhatsapp from "react-whatsapp";
 import axios from "axios";
 import QRCode from "qrcode.react";
 import Barcode from 'react-barcode';
+import StaffNavbar from "../components/StaffNavbar";
+import { Canvg } from 'canvg';
+
+const canvgInstance = new Canvg(/* parameters */);
 
 const currencies = currencyCodes.data;
 
@@ -417,68 +421,113 @@ const Bills = () => {
   const handledownloadcopy = () => {
     const doc = new jsPDF();
 
-    // Add GST number to the top left corner
-    const gstNumber = "GSTIN29ABCDE1234F1ZW";
-    doc.setFontSize(10);
-    doc.text(gstNumber, 10, 20);
-
-    // Add logo to the top right corner
-    const logoUrl = "./logo.png";
-    const logoWidth = 50; // Adjust as needed
-    const logoHeight = 20; // Adjust as needed
-    doc.addImage(logoUrl, "PNG", doc.internal.pageSize.getWidth() - logoWidth - 10, 10, logoWidth, logoHeight);
-
-    // Add a heading for the invoice
-    doc.setFontSize(16);
-    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, 40, { align: "center" });
 
     // Define the data for the table
     const tableData = [
-        ["Invoice No:", invoiceNo],
-        ["Invoice Date:", formatDate(invoiceDate)],
-        ["Client Name:", clientName],
-        ["Client Contact:", clientContact],
-        ["Selected Item:", selectedPopupItem],
-        ["Total:", total],
-        ["Tax Amount:", taxAmount]
-    ];
+      ["Particulars", "Amount"],
+      ["Invoice No:", invoiceNumber],
+      ["Invoice Date:", formatDate(invoiceDate)],
+      ["Client Name:", clientName],
+      ["Client Contact no:", clientContact],
+      ["Pickup Date:", formatDate(pickupdate)], // Assuming pickupdate is a Date object
+      ["Delivery Date:", formatDate(deliveryDate)], // Assuming deliveryDate is a Date object
+      ["Selected Item:", selectedPopupItem],
+      ["Quantity:",quantities],
+      // ["Price per item:",price],
+      ["Subtotal:",subTotal],
+      ["Discount:", discountAmount],
+      ["Tax:",taxAmount],
+      ["Total:", total]
+  ];
+  
 
     // Set up styles for the table
     const tableStyles = {
         fontSize: 10,
         fontStyle: 'normal', // normal, bold, italic
-        textColor: [0, 0, 0], // Black color
-        cellPadding: 5
+        textColor: [64, 64, 64], // Dark grey color
+        cellPadding: 3,
+        lineWidth: 0.5, // Border width
+        lineColor: [192, 192, 192] // Grey border color
     };
 
     // Set up column widths
-    const columnWidths = [70, 200];
+    const columnWidths = [100, 80]; // Adjusted width for the "Amount" column
 
     // Add border around the content
     const margin = 10;
     const contentWidth = doc.internal.pageSize.getWidth() - 2 * margin;
     const contentHeight = doc.internal.pageSize.getHeight() - 2 * margin;
     doc.setDrawColor(0); // Black border
-    doc.rect(margin, margin + 30, contentWidth, contentHeight - 30); // Adjust position for GST number
+    doc.rect(margin, margin, contentWidth, contentHeight); // Adjusted position for the main border
 
-    // Add the table to the PDF
+    // Add GST number inside the border, aligned to the right, and bold
+    const gstNumber = "GSTIN:29ABCDE1234F1ZW";
+    const gstTextWidth = doc.getStringUnitWidth(gstNumber) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text(gstNumber, doc.internal.pageSize.getWidth() - margin - gstTextWidth + 20, margin + 5); // Adjusted position for GST number
+
+    // Add a heading for the invoice inside the border, centered, and bold
+    doc.setFont("bold");
+    doc.setFontSize(18);
+    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 50, { align: "center" }); // Adjusted position for the heading
+
+    // Add margin from the main border
+    const tableMargin = 0;
+    const tableX = margin + tableMargin;
+    const tableY = margin + 60 + tableMargin; // Adjusted position for the heading
+
+    // Add the table heading row with background color
     doc.autoTable({
-        body: tableData,
-        startY: 70, // Start below the heading
-        startX: margin,
+        head: [["Particulars", {content: "Amount", styles: {halign: 'left'}}]], // Align "Amount" to the left
+        startY: tableY,
+        startX: tableX,
+        styles: { 
+            fontStyle: 'bold', 
+            fillColor: [102, 244, 174], 
+            textColor: [0, 0, 0],
+            lineColor: [192, 192, 192], // Grey border color for heading row
+            cellPadding: [3, 4] // Increase cell padding by 1px
+        },
+        columnStyles: { 0: { cellWidth: 100 }, 1: { cellWidth: 80 } },
+        draw: true // Draw borders
+    });
+
+    // Add the table data to the PDF without background color
+    doc.autoTable({
+        body: tableData.slice(1), // Exclude the first row (heading)
+        startY: doc.lastAutoTable.finalY, // Start below the heading row
+        startX: tableX,
         styles: tableStyles,
         columnStyles: {
-            0: { fontStyle: 'bold' }, // Make the first column bold
+            0: { fontStyle: 'normal' }, // Make the first column normal
             1: { fontStyle: 'normal' } // Make the second column normal
         },
         columnWidth: columnWidths,
-        margin: { top: 50 } // Add margin to avoid overlapping with the heading and logo
+        margin: { top: tableMargin }, // Add margin from the heading row
+        draw: true // Draw borders
     });
+
+    // Add "signature or stamp" after the table
+    const signatureStampText = "Signature or Stamp";
+    const signatureStampTextWidth = doc.getStringUnitWidth(signatureStampText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    const signatureStampX = doc.internal.pageSize.getWidth() - margin - signatureStampTextWidth - 0; // Adjusted position to the right corner
+    const signatureStampY = doc.lastAutoTable.finalY + 30; // Adjusted position below the table
+    doc.setFontSize(12); // Smaller font size for signature
+    doc.text(signatureStampText, signatureStampX, signatureStampY);
+
+    // Add "****This is system generated bill****" at the end of the page center
+    const generatedBillText = "****This is system generated bill****";
+    const generatedBillTextWidth = doc.getStringUnitWidth(generatedBillText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    const generatedBillTextX = (doc.internal.pageSize.getWidth() - generatedBillTextWidth) / 2;
+    const generatedBillTextY = doc.internal.pageSize.getHeight() - margin - 5; // Leave some margin from the bottom
+    doc.setFontSize(14); // Restore font size for generated bill text
+    doc.text(generatedBillText, generatedBillTextX, generatedBillTextY);
 
     // Save the PDF file
     doc.save("Laundry Invoice.pdf");
 };
-
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
@@ -535,7 +584,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
     <div className="billtotal">
       <div className="nav111">
       {/* <Sidebar /> */}
-        <Navbar />
+        <StaffNavbar />
       </div>
       <div className="invoice-form">
         <div className="input-group">
@@ -586,7 +635,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
           <input
     type="text"
     maxLength="100"
-    id="clientName"
+    id="clientaddress"
     value={customeraddress}
     onChange={(e) => setcustomeraddress(e.target.value.slice(0, 100))}
 />
@@ -616,7 +665,8 @@ const [selectedFactory, setSelectedFactory] = useState("");
         />
 
       </div>
-      <div className="input-group">
+
+      {/* <div className="input-group">
   <label htmlFor="store">Store:</label>
   <select
     id="store"
@@ -640,7 +690,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
     <option value="factoryin">Factory In</option>
     <option value="factoryout">Factory Out</option>
   </select>
-</div>
+</div> */}
 
     
     </div>

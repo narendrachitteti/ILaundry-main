@@ -78,71 +78,13 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-main-container">
-      <Sidebar />
-      {/* <Navbar /> */}
+      {/* <Sidebar /> */}
+      <Navbar />
       <div className="dashboard-container">
         <h2 className="dashcol">Master Dashboard</h2>
 
-        <div className="cards-container">
-          {/* Sales Card */}
-          <div
-            className="card-container sales-card"
-            onClick={() => handleCardClick("sales")}
-          >
-            <div className="icon">&#36;</div> {/* Dollar sign icon for sales */}
-            <div
-              className="progress-circle"
-              style={{
-                "--percentage": `${stats.salesPercentage}%`, // Assuming you have a salesPercentage variable in stats
-              }}
-            >
-              <div className="progress-inner">{stats.salesPercentage}%</div>
-            </div>
-            <div className="card-amount">${stats.salesAmount}</div>
-            <div className="card-title">Sales</div>
-            <div className="card-label">Last 24 hours</div>
-            {/* Display sales amount */}
-          </div>
-
-          {/* Revenue Card */}
-          <div
-            className="card-container revenue-card"
-            onClick={() => handleCardClick("revenue")}
-          >
-            <div className="icon">&#128176;</div>{" "}
-            {/* Money bag icon for revenue */}
-            <div
-              className="progress-circle"
-              style={{
-                "--percentage": `${stats.revenuePercentage}%`, // Assuming you have a revenuePercentage variable in stats
-              }}
-            >
-              <div className="progress-inner">{stats.revenuePercentage}%</div>
-            </div>
-            <div className="card-amount">${stats.revenueAmount}</div>
-            <div className="card-title">Revenue</div>
-            <div className="card-label">Last 24 hours</div>
-          </div>
-
-          <div
-            className="card-container expenses-card"
-            onClick={() => handleCardClick("expenses")}
-          >
-            <div className="icon">&#128178;</div>
-            <div
-              className="progress-circle"
-              style={{
-                "--percentage": `${stats.expensesPercentage}%`,
-              }}
-            >
-              <div className="progress-inner">{stats.expensesPercentage}%</div>
-            </div>
-            <div className="card-amount">${stats.expensesAmount}</div>
-            <div className="card-title">Expenses</div>
-            <div className="card-label">Last 24 hours</div>
-          </div>
-        </div>
-
+        {/* Cards container has been removed, along with the sales, revenue, and expenses cards */}
+        
         <div className="stats-container">
           <div className="row">
             <div className="stat-card">
@@ -181,7 +123,7 @@ const Dashboard = () => {
           </div>
 
           <div className="row">
-            <div className="stat-card">
+            {/* <div className="stat-card">
               <h3>
                 <span className="stat-heading">
                   New Orders  <IoNewspaper />
@@ -204,7 +146,7 @@ const Dashboard = () => {
                 </span>
               </h3>
               <p>{stats.deliveredOrders}</p>
-            </div>
+            </div> */}
             <div className="stat-card">
               <h3>
                 <span className="stat-heading">

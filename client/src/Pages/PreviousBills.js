@@ -27,6 +27,7 @@ import Backbutton from "./Backbutton.js";
 import InvoiceDetailsPopup from "./InvoiceDetailsPopup.js";
 import { autoTable } from "pdfmake/build/pdfmake";
 import "jspdf-autotable";
+import StaffNavbar from "../components/StaffNavbar.js";
 
 const PreviousBills = () => {
   const [customerServicesCus, setcustomerServicesCus] = useState([]);
@@ -56,6 +57,8 @@ const PreviousBills = () => {
           ...billing,
           username: billing.user ? billing.user.fullName : "", // Add null check here
           address: billing.user ? billing.user.address : "", // Add null check here
+          selectedStoreOption: "in", // Initialize with default value "in"
+          selectedFactoryOption: "in", // Initialize with default value "in"
         }));
         setcustomerServicesCus(billingDataWithUsername);
         setAllData(billingDataWithUsername);
@@ -112,14 +115,11 @@ const PreviousBills = () => {
   const handleAddCusOrUpdate = async (formData) => {
     try {
       if (selectedServiceCus) {
-        await axios.put(
-          `${BASE_URL}/invoice/${selectedServiceCus._id}`,
-          formData
-        );
+        await axios.put(`${BASE_URL}/invoice/${selectedServiceCus._id}`, formData);
       } else {
         await axios.post(`${BASE_URL}/invoice/`, formData);
       }
-      fetchcustomerServicesCus();
+      fetchcustomerServicesCus(); // Refresh data after update
       setselectedServiceCus(null);
       setAddPopupOpenCus(false);
     } catch (error) {
@@ -142,12 +142,17 @@ const PreviousBills = () => {
     );
   };
 
-  const handleDeleteCus = async () => {
+  const handleDeleteCus = async (serviceId) => {
     try {
-      await axios.delete(`${BASE_URL}/invoice/${selectedServiceCus._id}`);
-      fetchcustomerServicesCus();
+      await axios.delete(`${BASE_URL}/api/billing/${serviceId}`);
+      // Update local state after successful deletion
+      setcustomerServicesCus((prevServices) =>
+        prevServices.filter((service) => service._id !== serviceId)
+      );
+      setSelectedInvoice(null); // Close any open popups if needed
     } catch (error) {
       console.error("Error deleting Customer Details:", error);
+      // Handle error or show notification to user
     }
   };
 
@@ -425,11 +430,34 @@ console.log("Filtered Data:", filteredData);
     setcustomerServicesCus(filteredData);
   };
   
+  const [selectedStoreOption, setSelectedStoreOption] = useState("in");
+  const [selectedFactoryOption, setSelectedFactoryOption] = useState("in");
+
+
+  
+  const handleStoreOptionChange = (option, service) => {
+    const updatedServices = [...customerServicesCus];
+    const index = updatedServices.findIndex((s) => s._id === service._id);
+    if (index !== -1) {
+      updatedServices[index].selectedStoreOption = option;
+      setcustomerServicesCus(updatedServices);
+    }
+  };
+  
+  const handleFactoryOptionChange = (option, service) => {
+    const updatedServices = [...customerServicesCus];
+    const index = updatedServices.findIndex((s) => s._id === service._id);
+    if (index !== -1) {
+      updatedServices[index].selectedFactoryOption = option;
+      setcustomerServicesCus(updatedServices);
+    }
+  };
+  
 
   return (
     <>
     {/* <Sidebar /> */}
-      <Navbar />
+      <StaffNavbar/>
       <div className="lab-service-table-container_5">
         <div className="flex56">
           <div className="bbb">
@@ -476,10 +504,16 @@ console.log("Filtered Data:", filteredData);
               <th className="product-ooi">Subtotal </th>
               <th className="product-ooi">Currency</th>
               <th className="product-ooi">Items</th>
-              <th className="product-ooi">Actions</th>
+              <th className="product-ooi">Actions</th>             
               <th className="product-ooi">Pay Mode</th>
+              <th className='thbilling87' colSpan="2">Store (In/Out)</th>
+              <th className="product-ooi" colSpan="2">Factory (In/Out)</th>
+              <th className="product-ooi">Status</th>             
               {/* <th className="product-ooi">Staff Name</th> */}
             </tr>
+
+          
+
           </thead>
           <tbody>
             {filteredData
@@ -616,9 +650,58 @@ console.log("Filtered Data:", filteredData);
                     </div>
                   </td>
                   <td>{service.selectedPaymentMode}</td>
-                  {/* <td onClick={() => handleFieldClick(service)}>
-                    {service.username}
-                  </td> */}
+                
+            <td colSpan="2">
+            <label>
+                  <input
+                    type="radio"
+                    value="in"
+                    checked={service.selectedStoreOption === "in"}
+                    onChange={() => handleStoreOptionChange("in", service)}
+                  />
+                  In
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    value="out"
+                    checked={service.selectedStoreOption === "out"}
+                    onChange={() => handleStoreOptionChange("out", service)}
+                  />
+                  Out
+                </label>
+            </td>
+
+            <td colSpan="2">
+            <label>
+                  <input
+                    type="radio"
+                    value="in"
+                    checked={service.selectedFactoryOption === "in"}
+                    onChange={() => handleFactoryOptionChange("in", service)}
+                  />
+                  In
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    value="out"
+                    checked={service.selectedFactoryOption === "out"}
+                    onChange={() => handleFactoryOptionChange("out", service)}
+                  />
+                  Out
+                </label>
+            </td>
+            <td>
+            <button className="edit-button_5" onClick={() => handleEditCus(service)}>
+    Edit
+  </button>
+                <button className="delete-button_5" onClick={() => handleDeleteCus(service._id)}>
+  Delete
+</button>
+
+            </td>
+           
                 </tr>
               ))}
           </tbody>

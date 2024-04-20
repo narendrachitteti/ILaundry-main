@@ -22,9 +22,9 @@ exports.registerUser = async (req, res) => {
 
     // Create a new user instance
     const newUser = new User({
-      name,
+      fullName,
       storeId,
-      area, // Including the area field here
+      area,
       userType,
       email,
       password,

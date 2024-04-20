@@ -22,8 +22,8 @@ function Registration() {
     }
 
     const userData = {
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
+      Name: formData.get("Name"),
+      // lastName: formData.get("lastName"),
       email: formData.get("email"),
       userType: userType, // Include userType in userData
       password: password,
@@ -62,19 +62,19 @@ function Registration() {
           <h1>Registration</h1>
           <form className="formContainerabcd123" onSubmit={handleRegister}>
             <input
-              name="firstName"
+              name="Name"
               type="text"
               placeholder="First Name"
               required
               className="inputabcd123"
             />
-            <input
+            {/* <input
               name="lastName"
               type="text"
               placeholder="Last Name"
               className="inputabcd123"
               required
-            />
+            /> */}
             <input
               name="email"
               type="email"
