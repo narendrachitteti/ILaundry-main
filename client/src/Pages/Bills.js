@@ -394,8 +394,8 @@ const Bills = () => {
       user: user
         ? {
           userId: user._id,
-          username: user.username,
-          fullName: user.fullName,
+          username: user.name,
+          name: user.name,
         }
         : null,
     };
@@ -871,6 +871,7 @@ useEffect(() => {
           </div>
           <div className="popup-content456">
             <form>
+            <Barcode value={invoiceNumber.toString()} /> 
               <div className="data-placeholder">
                 <label className="nameclass-label">User:</label>
                 <span>{user?.name }</span>

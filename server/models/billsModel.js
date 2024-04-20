@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const billingSchema = new mongoose.Schema({
   user: {
     userId: String,
-    fullName: String,
+    name: String,
   },
   username: String,
   invoiceNo: {
