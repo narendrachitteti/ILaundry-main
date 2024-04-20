@@ -516,7 +516,7 @@ console.log("Filtered Data:", filteredData);
               <th className="product-ooi">Pay Mode</th>
               <th className='thbilling87' >Store (In/Out)</th>
               <th className="product-ooi" >Factory (In/Out)</th>
-              <th className="product-ooi">Status</th>             
+              {/* <th className="product-ooi">Status</th>              */}
               {/* <th className="product-ooi">Staff Name</th> */}
             </tr>
 
@@ -705,7 +705,7 @@ console.log("Filtered Data:", filteredData);
         </div>
 </td>
 
-            <td>
+            {/* <td>
             <button className="itembtn" onClick={() => handleEditCus(service)}>
             <span>
             <FaEdit />
@@ -753,7 +753,7 @@ console.log("Filtered Data:", filteredData);
                       </svg>
 </button>
 
-            </td>
+            </td> */}
            
                 </tr>
               ))}
