@@ -16,6 +16,7 @@ import Barcode from 'react-barcode';
 import StaffNavbar from "../components/StaffNavbar";
 import JsBarcode from 'jsbarcode';
 import ilaundry from "../assets/images/ilaundry.jpg";
+import { BASE_URL } from "../Helper/Helper";
 
 const currencies = currencyCodes.data;
 
@@ -395,8 +396,8 @@ const Bills = () => {
       user: user
         ? {
           userId: user._id,
-          username: user.username,
-          fullName: user.fullName,
+          username: user.name,
+          name: user.name,
         }
         : null,
     };
@@ -417,7 +418,6 @@ const Bills = () => {
     setInvoiceDate(selectedDate);
   };
 
-
   const handledownloadcopy = () => {
     const doc = new jsPDF();
 
@@ -430,133 +430,129 @@ const Bills = () => {
 
     // Define the data for the table
     const tableData = [
-        ["Particulars", "Details"],
-        ["Invoice No:", invoiceNumber],
-        ["Invoice Date:", formatDate(invoiceDate)],
-        ["Client Name:", clientName],
-        ["Client Contact no:", clientContact],
-        ["Pickup Date:", formatDate(pickupdate)], // Assuming pickupdate is a Date object
-        ["Delivery Date:", formatDate(deliveryDate)], // Assuming deliveryDate is a Date object
-        ["Selected Item:", selectedPopupItem],
-        ["Quantity:", quantities],
-        ["Subtotal:", subTotal],
-        ["Discount:", discountAmount],
-        ["Tax:", taxAmount],
-        ["Total:", total]
-    ];
-
-    // Set up styles for the table
-    const tableStyles = {
-        fontSize: 10,
-        fontStyle: 'normal', // normal, bold, italic
-        textColor: [64, 64, 64], // Dark grey color
-        cellPadding: 3,
-        lineWidth: 0.5, // Border width
-        lineColor: [192, 192, 192] // Grey border color
-    };
-
-    // Add border around the content
-    const margin = 10;
-    const contentWidth = doc.internal.pageSize.getWidth() - 2 * margin;
-    const contentHeight = doc.internal.pageSize.getHeight() - 2 * margin;
-    doc.setDrawColor(0); // Black border
-    doc.rect(margin, margin, contentWidth, contentHeight); // Adjusted position for the main border
-
-    // Add GST number inside the border, aligned to the right, and bold
-    const gstNumber = "GSTIN:29ABCDE1234F1ZW";
-    const gstTextWidth = doc.getStringUnitWidth(gstNumber) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.text(gstNumber, doc.internal.pageSize.getWidth() - margin - gstTextWidth + 20, margin + 5); // Adjusted position for GST number
-
-    // Add a heading for the invoice inside the border, centered, and bold
-    doc.setFont("bold");
-    doc.setFontSize(18);
-    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 50, { align: "center" }); // Adjusted position for the heading
-
-    // Add margin from the main border
-    const tableMargin = 0;
-    const tableX = margin + tableMargin;
-    const tableY = margin + 60 + tableMargin; // Adjusted position for the heading
-
-    // Calculate equal column width
-    const columnWidth = (contentWidth - 2 * tableMargin) / 2;
-
-    // Add the table heading row with background color
-    doc.autoTable({
-        head: [["Particulars", "Details"]],
-        startY: tableY,
-        startX: tableX,
-        styles: {
-            fontStyle: 'bold',
-            fillColor: [102, 244, 174],
-            textColor: [0, 0, 0],
-            lineColor: [192, 192, 192], // Grey border color for heading row
-            cellPadding: [3, 4] // Increase cell padding by 1px
-        },
-        columnStyles: { 0: { cellWidth: columnWidth }, 1: { cellWidth: columnWidth } },
-        draw: true // Draw borders
-    });
-
-    // Add the table data to the PDF without background color
-    doc.autoTable({
-        body: tableData.slice(1), // Exclude the first row (heading)
-        startY: doc.lastAutoTable.finalY, // Start below the heading row
-        startX: tableX,
-        styles: tableStyles,
-        columnStyles: {
-            0: { fontStyle: 'normal' }, // Make the first column normal
-            1: { fontStyle: 'normal' } // Make the second column normal
-        },
-        columnWidth: columnWidth,
-        margin: { top: tableMargin }, // Add margin from the heading row
-        draw: true // Draw borders
-    });
-
-    // Add "signature or stamp" after the table
-    const signatureStampText = "Signature or Stamp";
-    const signatureStampTextWidth = doc.getStringUnitWidth(signatureStampText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-    const signatureStampX = doc.internal.pageSize.getWidth() - margin - signatureStampTextWidth - 0; // Adjusted position to the right corner
-    const signatureStampY = doc.lastAutoTable.finalY + 30; // Adjusted position below the table
-    doc.setFontSize(12); // Smaller font size for signature
-    doc.text(signatureStampText, signatureStampX, signatureStampY);
-
-    // Add "****This is system generated bill****" at the end of the page center
-    const generatedBillText = "****This is system generated bill****";
-    const generatedBillTextWidth = doc.getStringUnitWidth(generatedBillText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-    const generatedBillTextX = (doc.internal.pageSize.getWidth() - generatedBillTextWidth) / 2;
-    const generatedBillTextY = doc.internal.pageSize.getHeight() - margin - 5; // Leave some margin from the bottom
-    doc.setFontSize(14); // Restore font size for generated bill text
-    doc.text(generatedBillText, generatedBillTextX, generatedBillTextY);
-
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    canvas.width = 200; // Set canvas width
-    canvas.height = 100; // Set canvas height
-
-    // Generate the barcode onto the canvas
-    JsBarcode(canvas, invoiceNumber.toString(), {
-        format: 'CODE128', // Adjust barcode format as needed
-        width: 2, // Adjust barcode width
-        height: 50, // Adjust barcode height
-    });
-
-    // Convert the canvas to a data URL representing the image
-    const dataURL = canvas.toDataURL();
-
-    // Adjust position for the barcode
-    const barcodeWidth = 70; // Adjust the width of the barcode image
-    const barcodeHeight = 35; // Adjust the height of the barcode image
-    const barcodeMargin = 2;
-    const barcodeX = doc.internal.pageSize.getWidth() - margin - barcodeWidth - barcodeMargin; // Adjusted position for barcode
-    const barcodeY = margin + 5 + 2; // Adjusted position below GST number with margin of 20px
-
-    // Embed the image into the PDF
-    doc.addImage(dataURL, 'JPEG', barcodeX, barcodeY, barcodeWidth, barcodeHeight);
-
-    // Save the PDF file
-    doc.save('Laundry Invoice.pdf');
-};
+      ["Particulars", "Details"],
+      ["Invoice No:", invoiceNo],
+      ["Invoice Date:", formatDate(invoiceDate)],
+      ["Client Name:", clientName],
+      ["Client Contact:", clientContact],
+      ["Selected Item:", selectedPopupItem],
+      ["Total:", total],
+      ["Tax Amount:", taxAmount]
+  ];
+  
+  // Set up styles for the table
+  const tableStyles = {
+      fontSize: 10,
+      fontStyle: 'normal', // normal, bold, italic
+      textColor: [128, 128, 128], // Grey color
+      cellPadding: 5
+  };
+  
+  // Set up column widths
+  const columnWidths = [70, 200];
+  
+  // Add border around the content
+  const margin = 10;
+  const contentWidth = doc.internal.pageSize.getWidth() - 2 * margin;
+  const contentHeight = doc.internal.pageSize.getHeight() - 2 * margin;
+  doc.setDrawColor(0); // Black border
+  doc.rect(margin, margin, contentWidth, contentHeight); // Adjusted position for the border
+  
+  // Add GST number inside the border, aligned to the right, and bold
+  const gstNumber = "GSTIN:29ABCDE1234F1ZW";
+  const gstTextWidth = doc.getStringUnitWidth(gstNumber) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text(gstNumber, doc.internal.pageSize.getWidth() - margin - gstTextWidth + 20, margin + 5); // Adjusted position for GST number
+  
+  // Add a heading for the invoice inside the border, centered, and bold
+  doc.setFont("bold");
+  doc.setFontSize(18);
+  doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 40, { align: "center" }); // Adjusted position for the heading
+  
+  // Add margin from the main border
+  const tableMargin = 0;
+  const tableX = margin + tableMargin;
+  const tableY = margin + 60 + tableMargin; // Adjusted position for the heading
+  
+  // Calculate equal column width
+  const columnWidth = (contentWidth - 2 * tableMargin) / 2;
+  
+  // Add the table heading row with background color
+  doc.autoTable({
+      head: [["Particulars", "Details"]],
+      startY: tableY,
+      startX: tableX,
+      styles: {
+          fontStyle: 'bold',
+          fillColor: [102, 244, 174],
+          textColor: [0, 0, 0],
+          lineColor: [192, 192, 192], // Grey border color for heading row
+          cellPadding: [3, 4] // Increase cell padding by 1px
+      },
+      columnStyles: { 0: { cellWidth: columnWidth }, 1: { cellWidth: columnWidth } },
+      draw: true // Draw borders
+  });
+  
+  // Add the table data to the PDF without background color
+  doc.autoTable({
+      body: tableData.slice(1), // Exclude the first row (heading)
+      startY: doc.lastAutoTable.finalY, // Start below the heading row
+      startX: tableX,
+      styles: tableStyles,
+      columnStyles: {
+          0: { fontStyle: 'bold' }, // Make the first column bold
+          1: { fontStyle: 'normal' } // Make the second column normal
+      },
+      columnWidth: columnWidth,
+      margin: { top: tableMargin }, // Add margin from the heading row
+      draw: true // Draw borders
+  });
+  
+  // Add "signature or stamp" after the table
+  const signatureStampText = "Signature or Stamp";
+  const signatureStampTextWidth = doc.getStringUnitWidth(signatureStampText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+  const signatureStampX = doc.internal.pageSize.getWidth() - margin - signatureStampTextWidth - 0; // Adjusted position to the right corner
+  const signatureStampY = doc.lastAutoTable.finalY + 30; // Adjusted position below the table
+  doc.setFontSize(12); // Smaller font size for signature
+  doc.text(signatureStampText, signatureStampX, signatureStampY);
+  
+  // Add "****This is system generated bill****" at the end of the page center
+  const generatedBillText = "****This is system generated bill****";
+  const generatedBillTextWidth = doc.getStringUnitWidth(generatedBillText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+  const generatedBillTextX = (doc.internal.pageSize.getWidth() - generatedBillTextWidth) / 2;
+  const generatedBillTextY = doc.internal.pageSize.getHeight() - margin - 5; // Leave some margin from the bottom
+  doc.setFontSize(14); // Restore font size for generated bill text
+  doc.text(generatedBillText, generatedBillTextX, generatedBillTextY);
+  
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  canvas.width = 200; // Set canvas width
+  canvas.height = 100; // Set canvas height
+  
+  // Generate the barcode onto the canvas
+  JsBarcode(canvas, invoiceNumber.toString(), {
+      format: 'CODE128', // Adjust barcode format as needed
+      width: 2, // Adjust barcode width
+      height: 50, // Adjust barcode height
+  });
+  
+  // Convert the canvas to a data URL representing the image
+  const dataURL = canvas.toDataURL();
+  
+  // Adjust position for the barcode
+  const barcodeWidth = 70; // Adjust the width of the barcode image
+  const barcodeHeight = 35; // Adjust the height of the barcode image
+  const barcodeMargin = 2;
+  const barcodeX = doc.internal.pageSize.getWidth() - margin - barcodeWidth - barcodeMargin; // Adjusted position for barcode
+  const barcodeY = margin + 5 + 2; // Adjusted position below GST number with margin of 20px
+  
+  // Embed the image into the PDF
+  doc.addImage(dataURL, 'JPEG', barcodeX, barcodeY, barcodeWidth, barcodeHeight);
+  
+  // Save the PDF file
+  doc.save('Laundry Invoice.pdf');
+  };  
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
@@ -608,6 +604,31 @@ const Bills = () => {
   };
   const [selectedStore, setSelectedStore] = useState("");
 const [selectedFactory, setSelectedFactory] = useState("");
+
+
+const currentDate = new Date();
+const formattedDate = currentDate.toLocaleDateString(); // Convert to a string
+
+// const [user, setUser] = useState("");
+
+useEffect(() => {
+  const fetchUserDetails = async () => {
+    const storedStoreId = localStorage.getItem("storeId");
+    if (storedStoreId) {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/users/${storedStoreId}`
+        );
+        console.log("User data from backend:", response.data); // Log the response data
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user by storeId:", error);
+      }
+    }
+  };
+
+  fetchUserDetails();
+}, []); // Empty dependency array to only call this effect once on component mount
 
   return (
     <div className="billtotal">
@@ -664,7 +685,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
           <input
     type="text"
     maxLength="100"
-    id="clientaddress"
+    id="clientName"
     value={customeraddress}
     onChange={(e) => setcustomeraddress(e.target.value.slice(0, 100))}
 />
@@ -695,31 +716,7 @@ const [selectedFactory, setSelectedFactory] = useState("");
 
       </div>
 
-      {/* <div className="input-group">
-  <label htmlFor="store">Store:</label>
-  <select
-    id="store"
-    value={selectedStore}
-    onChange={(e) => setSelectedStore(e.target.value)}
-  >
-    <option value="">Select Store</option>
-    <option value="storein">Store In</option>
-    <option value="storeout">Store Out</option>
-  </select>
-</div>
-
-<div className="input-group">
-  <label htmlFor="factory">Factory:</label>
-  <select
-    id="factory"
-    value={selectedFactory}
-    onChange={(e) => setSelectedFactory(e.target.value)}
-  >
-    <option value="">Select Factory</option>
-    <option value="factoryin">Factory In</option>
-    <option value="factoryout">Factory Out</option>
-  </select>
-</div> */}
+  
 
     
     </div>
@@ -933,106 +930,100 @@ const [selectedFactory, setSelectedFactory] = useState("");
           >
             Review Invoice
           </button>
-          <p value="userType">{user ? user.fullName : "Username"}</p>
+          <p value="userType">{user?.name }</p>
           {showPopup && (
-            <div className="popup">
-              <div className="popup-header">
-                Billing Data
-                <button
-                  className="close-button"
-                  onClick={() => {
-                    togglePopup(true);
-                    resetFields();
-                  }}
-                >
-                  X
+          <div className="popup34">
+          <div className="popup-header34">
+            Billing Data
+            <button
+              className="close-button34"
+              onClick={() => {
+                togglePopup(true);
+                resetFields();
+              }}
+            >
+              X
+            </button>
+          </div>
+          <div className="popup-content456">
+            <form>
+            <Barcode value={invoiceNumber.toString()} /> 
+              <div className="data-placeholder">
+                <label className="nameclass-label">User:</label>
+                <span>{user?.name }</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">InvoiceNo:</label>
+                <span>{invoiceNumber}</span>
+              </div>
+              <label className="nameclass-label">InvoiceDate</label>:
+                  <input type="text" value={invoiceDate} />
+              <div className="data-placeholder">
+                <label className="nameclass-label">ClientName:</label>
+                <span>{clientName}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">ClientContact:</label>
+                <span>{clientContact}</span>
+              </div>
+              <div className="data-placeholder">
+              <label className="nameclass-label">Pickup Date</label>:
+                  <input  type="text" value={pickupdate} />
+              </div>
+              <div className="data-placeholder">
+              <label className="nameclass-label">Delivery Date</label>:
+                  <input type="text" value={deliveryDate} />
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Customer Address:</label>
+                <span>{customeraddress}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Item:</label>
+                <span>{selectedItems}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Services:</label>
+                <span>{selectedServices}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Quantity:</label>
+                <span>{quantities}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Tax Rate:</label>
+                <span>{taxRate}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Discount Rate:</label>
+                <span>{discountRate}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Subtotal:</label>
+                <span>{subTotal}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Tax Amount:</label>
+                <span>{taxAmount}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Discount Amount:</label>
+                <span>{discountAmount}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">Total:</label>
+                <span>{total}</span>
+              </div>
+              <div className="merge-karthik-bill">
+                <button className="downloadcopy">Send Copy</button>
+                <button className="downloadcopy" onClick={handledownloadcopy}>
+                  Download Copy
                 </button>
               </div>
-              {/* <hr /> */}
-              <div className="popup-content">
-                <form>
-<Barcode value={invoiceNumber.toString()} />     
-                      <label className="nameclass-label">User</label>:
-                      <input type="text" value={user ? user.fullName : "Username"} />
-                  <label className="nameclass-label">InvoiceNo</label>:
-                  <input type="text" value={invoiceNumber} readOnly />
-                  <label className="nameclass-label">InvoiceDate</label>:
-                  <input type="text" value={invoiceDate} />
-                  <label className="nameclass-label">ClientName</label>:
-                  <input type="text" value={clientName} />
-                  <label className="nameclass-label">clientContact</label>:
-                  <input    type="text"                    value={clientContact}                  />
-
-                  <label className="nameclass-label">Pickup Date</label>:
-                  <input  type="text" value={pickupdate} />
-
-                  <label className="nameclass-label">Delivery Date</label>:
-                  <input type="text" value={deliveryDate} />
-
-                  <label className='nameclass-label'>customeraddress</label>:
-                  <input
-                    type="text"
-                    value={customeraddress} 
-                  />
-                  <label className='nameclass-label'>item</label>:
-                  <input
-                    type="text"
-                    value={selectedItems}
-                    readOnly
-                  />
-                  <label className='nameclass-label'>Services</label>:
-                  <input
-                    type="text"
-                    value={selectedServices}
-                  />
-                  <label className='nameclass-label'>quantity</label>:
-                  <input
-                    type="text"
-                    value={quantities}
-                  />
-                  <label className='nameclass-label'>TaxRate</label>:
-                  <input
-                    type="text"
-                    value={taxRate}
-                  />
-                  <label className='nameclass-label'>discountRate</label>:
-                  <input
-                    type="text"
-                    value={discountRate}
-                  />
-                  <label className='nameclass-label'>subTotal</label>:
-                  <input
-                    type="text"
-                    value={subTotal}
-                  />
-                  <label className='nameclass-label'>taxAmount</label>:
-                  <input
-                    type="text"
-
-                    value={taxAmount}
-                  />
-                  <label className='nameclass-label'>discountAmount</label>:
-                  <input
-                    type="text"
-                    value={discountAmount}
-                  />
-                  <label className='nameclass-label'>total</label>:
-                  <input
-                    type="text"
-                    value={total}
-                  />
-                  <div className="merge-karthik-bill">
-                    <button className="downloadcopy">Send Copy</button>
-                    <button
-                      className="downloadcopy"
-                      onClick={handledownloadcopy}
-                    >
-                      Download Copy
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+            </form>
+          </div>
+        </div>
+        
           )}
         </div>
       </center>
