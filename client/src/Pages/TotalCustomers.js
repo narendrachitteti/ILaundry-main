@@ -20,7 +20,7 @@ const TotalCustomers = () => {
   };
 
   return (
-    <div>
+    <div className="invoices-data">
       <h2>Total Invoices: {invoices.length}</h2>
       <ul className="invoices-list">
         {invoices.map((invoice, index) => (
