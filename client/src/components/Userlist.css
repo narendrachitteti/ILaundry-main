@@ -1,8 +1,8 @@
 /* Userlist.css */
 .overalldiv{
-    height: 100vh;
-    /* opacity: 0.5; */
-    /* background-size: cover; */
+  position: relative;
+  top: 70px;
+    height: auto;
   background: url("https://t3.ftcdn.net/jpg/03/29/17/78/360_F_329177878_ij7ooGdwU9EKqBFtyJQvWsDmYSfI1evZ.jpg") center/cover;
 }
 .user-table {
@@ -24,7 +24,7 @@
     /* margin-left: 10px;/ */
   }
   .details{
-    text-align: start;
+    text-align: center;
     font-size: 1.8 rem;
     padding-top: 20px;
     color: #528575;
@@ -66,4 +66,74 @@
   .user-table td:last-child {
     border-right: none;
   }
+  /* Userlist.css */
+
+/* Button styles */
+.button-active{
+  padding: 6px 6px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: -20px;
+}
+.button-inactive {
+  padding: 6px 6px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  font-weight: bold;
+  
+}
+
+.button-active:hover,
+.button-inactive:hover {
+  background-color: #201c98; /* Green */
+}
+
+.button-active {
+  background-color: #350e98; /* Green */
+  color: white;
+}
+
+.button-inactive {
+  background-color: #f44336; /* Red */
+  color: white;
+}
+
+/* Popup styles */
+/* .popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+/* .popup-content {
+  background-color: rgb(171, 160, 160);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+} */
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
   

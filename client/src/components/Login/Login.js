@@ -55,6 +55,7 @@ function Login() {
       if (response.ok) {
         // Handle successful login
         toast.success("Master login successful");
+        localStorage.setItem("storeId", formData.get("storeId")); 
         setTimeout(() => {
           navigate("/Dashboard");
         }, 1500);
@@ -91,6 +92,7 @@ function Login() {
       if (response.ok) {
         // Handle successful login
         toast.success("Staff login successful");
+        localStorage.setItem("storeId", formData.get("storeId"));
         setTimeout(() => {
           navigate("/Bills");
         }, 1500);

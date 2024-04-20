@@ -7,35 +7,32 @@ import image17 from "../components/images/customer.jpg";
 import register from "../components/images/register.png";
 import { IoLogOutOutline } from "react-icons/io5";
 
+
 import "../Styles/Navbar.css";
 import axios from "axios";
 import { BASE_URL } from "../Helper/Helper";
-
-const Navbar = () => {
+const StaffNavbar = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState("");
+
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      const storedStoreId = localStorage.getItem("storeId");
-      if (storedStoreId) {
-        try {
-          const response = await axios.get(`${BASE_URL}/users/${storedStoreId}`);
-          console.log("User data from backend:", response.data); // Log the response data
+    const storedEmail = localStorage.getItem("mail");
+    if (storedEmail) {
+      axios
+        .get(`${BASE_URL}/users/${storedEmail}`)
+        .then((response) => {
           setUser(response.data);
-        } catch (error) {
-          console.error("Error fetching user by storeId:", error);
-        }
-      }
-    };
-
-    fetchUserDetails();
-  }, []); // Empty dependency array to only call this effect once on component mount
+        })
+        .catch((error) => {
+          console.error("Error fetching user by email:", error);
+        });
+    }
+  }, []);
 
   const logout = () => {
-    localStorage.removeItem("storeId");
-    setUser({}); // Clear user data
-    navigate("/"); // Navigate to the login page
+    navigate("/");
+    localStorage.removeItem("mail");
   };
   
 
@@ -49,30 +46,13 @@ const Navbar = () => {
             style={{ height: "3rem", width: "10rem", marginLeft: "-9%" }}
           />
         </Link>
-        <Link to="/Dashboard">
+        {/* <Link to="/Dashboard">
           <div className="bills">
             <img src="https://cdn-icons-png.freepik.com/512/7664/7664156.png" alt="" style={{ height: "2.5rem" }} />
             <p>Dashboard</p>
           </div>
-        </Link>
-        <Link to="/orderstable">
-          <div className="bills">
-            <p>Recent Orders</p>
-          </div>
-        </Link>
-        <Link to="/rating">
-          <div className="bills">
-            <p>Customer Reviews</p>
-          </div>
-        </Link>
-
-        <Link to="/Userlist">
-          <div className="bills">
-            <p>Register Details</p>
-          </div>
-        </Link>
-
-        {/* <Link to="/Bills">
+        </Link> */}
+        <Link to="/Bills">
           <div className="bills">
             <img src={image17} alt="" style={{ height: "2.5rem" }} />
             <p>Customer Bills</p>
@@ -85,19 +65,19 @@ const Navbar = () => {
           </div>
         </Link>
 
-        <Link to="/Userlist">
+        {/* <Link to="/Userlist">
           <div className="bills">
             <img src={register} alt="" style={{ height: "2.5rem" }} />
             <p>Registerdetails</p>
           </div>
-        </Link>
+        </Link> */}
         
         <div className="bills">
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
           <p>Profile</p>
           <div className="dropdown-content">
-            <p>Name: {user?.name}</p>
-            <p>Store ID: {user?.storeId}</p>
+            {/* <p>{`${user?.firstName} ${user?.lastName}`}</p> */}
+            <p>{user?.fullName}</p>
             <p
               onClick={logout}
               style={{ display: "flex", alignItems: "center", gap: "1rem" }}
@@ -106,9 +86,11 @@ const Navbar = () => {
             </p>
           </div>
         </div>
+
+        
       </div>
     </div>
   );
 };
 
-export default Navbar;
+export default StaffNavbar;
