@@ -1,5 +1,5 @@
 .invoices-data {
-    padding-top: 120px; /* Adjust this value based on your navbar height */
+    padding-top: 110px; /* Adjust this value based on your navbar height */
   }
   
   .invoices-data h2 {
@@ -33,4 +33,22 @@
   .invoices-table thead {
     background-color: #49f0a2; /* Background color for table header */
   }
+  .pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
   
+  .pagination button {
+    background-color: #49f0a2;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .pagination button.active {
+    background-color: #578373; /* Active button color */
+  }

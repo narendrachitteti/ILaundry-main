@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar.js";
 const TotalCustomers = () => {
   const [invoices, setInvoices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [invoicesPerPage] = useState(7); // Number of invoices to display per page
+  const [invoicesPerPage] = useState(6); // Number of invoices to display per page
 
   useEffect(() => {
     fetchInvoices();
