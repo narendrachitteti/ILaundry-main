@@ -1,4 +1,8 @@
-.invoices-data h2 {
+.invoices-data {
+    padding-top: 120px; /* Adjust this value based on your navbar height */
+  }
+  
+  .invoices-data h2 {
     padding-left: 20px;
     padding-top: 20px;
     font-size: 24px;
