@@ -48,22 +48,16 @@ function Login() {
             body: JSON.stringify({ storeId }),
         });
 
-        if (response.ok) {
-            const responseData = await response.json();
-            if (responseData.active) {
-                // User is active, proceed to dashboard
-                toast.success('Login successful');
-                setTimeout(() => {
-                    navigate('/Dashboard');
-                }, 1500);
-            } else {
-                // User is inactive, display error message
-                toast.error('User must be activated to log in');
-            }
-        } else {
-            const errorData = await response.json();
-            toast.error(errorData.message || 'Invalid storeId or password');
-        }
+      if (response.ok) {
+        // Handle successful login
+        toast.success("Master login successful");
+        setTimeout(() => {
+          navigate("/Dashboard");
+        }, 1500);
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Invalid storeId or password");
+      }
     } catch (error) {
         console.error('Error logging in:', error);
         toast.error('An error occurred while logging in. Please try again later.');
@@ -93,6 +87,7 @@ function Login() {
       if (response.ok) {
         // Handle successful login
         toast.success("Staff login successful");
+        localStorage.setItem("storeId", formData.get("storeId"));
         setTimeout(() => {
           navigate("/Bills");
         }, 1500);

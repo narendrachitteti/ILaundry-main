@@ -1,18 +1,28 @@
 const User = require("../models/user.model");
 exports.registerUser = async (req, res) => {
-  const { fullName, storeId, userType, email, password, confirmPassword, area } = req.body;
-
+  const {
+    name,
+    storeId,
+    userType,
+    email,
+    password,
+    confirmPassword,
+    area,
+    phoneNumber,
+  } = req.body;
 
   try {
     // Check if user with the same storeId already exists
     const existingUser = await User.findOne({ storeId });
     if (existingUser) {
-      return res.status(400).json({ message: "User with the same Store ID already exists" });
+      return res
+        .status(400)
+        .json({ message: "User with the same Store ID already exists" });
     }
 
     // Create a new user instance
     const newUser = new User({
-      fullName,
+      name,
       storeId,
       area,
       userType,
@@ -57,8 +67,6 @@ exports.registerUser = async (req, res) => {
 //   }
 // };
 
-
-
 exports.loginUser = async (req, res) => {
   const { storeId, password } = req.body;
 
@@ -85,7 +93,6 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-
 exports.loginStaff = async (req, res) => {
   const { storeId, password } = req.body;
 
@@ -105,7 +112,6 @@ exports.loginStaff = async (req, res) => {
   }
 };
 
-
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -118,7 +124,6 @@ exports.getAllUsers = async (req, res) => {
     });
   }
 };
-
 
 // exports.getUserByEmail = async (req, res) => {
 //   const { email } = req.params;
@@ -140,7 +145,6 @@ exports.getAllUsers = async (req, res) => {
 
 
 
-
 exports.getUserByStoreId = async (req, res) => {
   const { storeId } = req.params;
 
@@ -159,38 +163,39 @@ exports.getUserByStoreId = async (req, res) => {
   }
 };
 
-
 exports.getAll = async (req, res) => {
   try {
     const users = await User.find({});
     res.status(200).json(users);
   } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ message: 'An error occurred while fetching users. Please try again later.' });
+    console.error("Error fetching users:", error);
+    res.status(500).json({
+      message:
+        "An error occurred while fetching users. Please try again later.",
+    });
   }
 }
-
 
 exports.getNextStoreId = async (req, res) => {
   try {
     // Get the last store ID from the database
-    const lastStore = await User.findOne({}, {}, { sort: { 'storeId': -1 } });
+    const lastStore = await User.findOne({}, {}, { sort: { storeId: -1 } });
 
     let nextStoreId;
     if (lastStore) {
       // Increment the last store ID
       const lastIdNumber = parseInt(lastStore.storeId.substring(4));
       const nextIdNumber = lastIdNumber + 1;
-      nextStoreId = 'STID' + nextIdNumber.toString().padStart(3, '0');
+      nextStoreId = "STID" + nextIdNumber.toString().padStart(3, "0");
     } else {
       // If no store ID exists, start with STID001
-      nextStoreId = 'STID001';
+      nextStoreId = "STID001";
     }
 
     res.json({ storeId: nextStoreId });
   } catch (err) {
-    console.error('Error getting next store ID:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error getting next store ID:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -211,49 +216,6 @@ exports.getAreaByStoreId = async (req, res) => {
     res.status(500).json({
       message:
         "An error occurred while fetching area by storeId. Please try again later.",
-    });
-  }
-};
-
-
-
-exports.activateUser = async (req, res) => {
-  const { storeId } = req.body;
-  try {
-    // Find the user by storeId
-    const user = await User.findOne({ storeId });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    // Update user's activation status to true
-    user.active = true;
-    await user.save();
-    res.status(200).json({ message: "User activated successfully" });
-  } catch (error) {
-    console.error("Error activating user:", error);
-    res.status(500).json({
-      message: "An error occurred while activating user. Please try again later.",
-    });
-  }
-};
-
-// Deactivate user endpoint
-exports.deactivateUser = async (req, res) => {
-  const { storeId } = req.body;
-  try {
-    // Find the user by storeId
-    const user = await User.findOne({ storeId });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    // Update user's activation status to false
-    user.active = false;
-    await user.save();
-    res.status(200).json({ message: "User deactivated successfully" });
-  } catch (error) {
-    console.error("Error deactivating user:", error);
-    res.status(500).json({
-      message: "An error occurred while deactivating user. Please try again later.",
     });
   }
 };

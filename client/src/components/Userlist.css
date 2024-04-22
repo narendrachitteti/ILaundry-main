@@ -106,7 +106,7 @@
 }
 
 /* Popup styles */
-.popup {
+/* .popup {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -118,15 +118,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
-.popup-content { 
+.popup-content {
   background-color: rgb(171, 160, 160);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   text-align: center;
-}
+} */
 
 .close {
   position: absolute;

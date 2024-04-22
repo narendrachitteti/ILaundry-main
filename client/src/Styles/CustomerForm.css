@@ -1,4 +1,4 @@
-.Main-Details-popupcon {
+/* .Main-Details-popupcon {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
@@ -305,4 +305,115 @@
     border-color: #1b1c1e;
     box-shadow: 0 0 20px #08090c80;
   }
-  
+   */
+
+
+
+
+
+
+
+   /* CustomerForm.css */
+
+.Main-Details-popupcon {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.Details-popupcon {
+  width: 400px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.content {
+  width: 100%;
+}
+
+.user-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.input-box {
+  position: relative;
+}
+
+.details {
+  font-size: 14px;
+  color: #333;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-con {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-123-abc {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.buttoncd {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.svg-wrapper-1 {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.svg-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+span {
+  vertical-align: middle;
+}
