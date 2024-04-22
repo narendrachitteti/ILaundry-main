@@ -8,14 +8,13 @@ const Userlist = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeUsers, setActiveUsers] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
-    const [selectedStoreId, setSelectedStoreId] = useState(null);
+    const [popupMessage, setPopupMessage] = useState('');
 
     useEffect(() => {
         const fetchDetails = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/api/registerdetails');
                 setDetails(response.data);
-                // Check if store IDs are active and set activeUsers accordingly
                 const activeStoreIds = response.data.map(detail => detail.storeId);
                 setActiveUsers(activeStoreIds);
             } catch (error) {
@@ -29,18 +28,21 @@ const Userlist = () => {
         setSearchQuery(event.target.value);
     };
 
-    const handleActivate = (storeId) => {
-        setSelectedStoreId(storeId);
-        if (!activeUsers.includes(storeId)) {
-            setActiveUsers(prevActiveUsers => [...prevActiveUsers, storeId]);
+    const handleActivate = async (storeId) => {
+        try {
+            const response = await axios.post('http://localhost:5000/api/activateUser', { storeId });
+            if (response.status === 200) {
+                setActiveUsers(prevActiveUsers => [...prevActiveUsers, storeId]);
+                setPopupMessage('');
+            }
+        } catch (error) {
+            console.error('Error activating user:', error);
         }
     };
 
     const handleDeactivate = (storeId) => {
-        setSelectedStoreId(storeId);
-        if (activeUsers.includes(storeId)) {
-            setShowPopup(true);
-        }
+        setShowPopup(true);
+        setPopupMessage('User is inactive!'); // Set the message for the popup
     };
 
     const handlePopupClose = () => {
@@ -52,44 +54,64 @@ const Userlist = () => {
     );
 
     return (
-    <>
-        <Navbar/>
-        <div className='overalldiv'>
-            <br/>
-            <h1 className='details'> Register Details</h1>
-            <br/>
-            <div className='search-container098'>
-            <input  className='search098'
-                type="text"
-                placeholder="Search here ...."
-                value={searchQuery}
-                onChange={handleSearch}
-            />
-            </div>
-            
-            <table className="lab-service-table_5">
-                <thead>
-                    <tr className="product-ooi">
-                        <th>Store ID</th>
-                        {/* <th>Last Name</th> */}
-                        <th>Email</th>
-                        <th>User Type</th>
-                        {/* <th>Action</th> */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredDetails.map((detail) => (
-                        <tr key={detail._id}>
-                            <td>{detail.storeId}</td>
-                            {/* <td>{detail.lastName}</td> */}
-                            <td>{detail.email}</td>
-                            <td>{detail.userType}</td>
-                            {/* <td>{Active}</td> */}
+        <>
+            <Navbar />
+            <br />
+            <br />
+            <br />
+            <div className='overalldiv'>
+                <br />
+                <h1 className='details'>Register Details</h1>
+                <br />
+                <div className='search-container098'>
+                    <input
+                        className='search098'
+                        type="text"
+                        placeholder="Search here ...."
+                        value={searchQuery}
+                        onChange={handleSearch}
+                    />
+                </div>
+
+                <table className="lab-service-table_5">
+                    <thead>
+                        <tr className="product-ooi">
+                            <th>Store ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>User Type</th>
+                            <th>Action</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>   
+                    </thead>
+                    <tbody>
+                        {filteredDetails.map((detail) => (
+                            <tr key={detail._id}>
+                                <td>{detail.storeId}</td>
+                                <td>{detail.lastName}</td>
+                                <td>{detail.email}</td>
+                                <td>{detail.userType}</td>
+                                <td>
+                                    {activeUsers.includes(detail.storeId) ? (
+                                        <button className='button-active'>Active</button>
+                                    ) : (
+                                        <button onClick={() => handleActivate(detail.storeId)} className='button-active'>Activate</button>
+                                    )}
+                                    <button onClick={() => handleDeactivate(detail.storeId)} className='button-inactive'>Inactive</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                {showPopup && (
+                    <div className="popup">
+                        <div className="popup-content">
+                            <span className="close" onClick={handlePopupClose}>&times;</span>
+                            <p>{popupMessage}</p>
+                        </div>
+                    </div>
+                )}
+            </div>
         </>
     );
 };
