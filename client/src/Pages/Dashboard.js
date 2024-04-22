@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import "./Dashboard.css";
@@ -11,17 +10,24 @@ import { IoNewspaper } from "react-icons/io5";
 import { FaSearchLocation } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 
-const POPUP_CLASSNAME = "dashboard-popup";
+// Import the OrdersTable component
+import OrdersTable from "./OrdersTable";
 
 const Dashboard = () => {
+  // State variables
   const [stats, setStats] = useState({
     totalCustomers: 0,
-    totalStores: 0,
-    // Other stats...
+    totalShops: 0,
+    totalOrders: 0,
+    todayOrders: 0,
+    completedOrders: 0,
+    newOrders: 0,
+    pickupOrders: 0,
+    deliveredOrders: 0,
+    urgentOrders: 0,
+    location: "",
   });
-
   const [showLocations, setShowLocations] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
   const [locations] = useState([
     "RR Nagar",
     "Marathahalli",
@@ -32,205 +38,192 @@ const Dashboard = () => {
     "Malleshwaram",
   ]);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [users, setUsers] = useState([]);
 
-  const navigate = useNavigate();
+  // Fetch data function
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('${BASE_URL}/api/dashboard');
+      const data = response.data;
 
+      setStats({
+        totalCustomers: data.totalCustomers,
+        totalShops: data.totalShops,
+        totalStores: data.totalStores,
+        todayOrders: data.todayOrders,
+        completedOrders: data.completedOrders,
+        newOrders: data.newOrders,
+        pickupOrders: data.pickupOrders,
+        deliveredOrders: data.deliveredOrders,
+        location: data.location,
+      });
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    }
+  };
+
+  // Fetch data when component mounts
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/registerdetails`);
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
     fetchData();
   }, []);
 
-  const [totalCustomers, setTotalCustomers] = useState(0);
-
-  useEffect(() => {
-    const fetchTotalCustomers = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/get-bills`);
-        const totalCustomers = response.data.length; // Assuming the response is an array of customer data
-        setTotalCustomers(totalCustomers);
-      } catch (error) {
-        console.error("Error fetching total customers:", error);
-      }
-    };
-
-    fetchTotalCustomers();
-  }, []);
-
+  // Handle location click
   const handleLocationClick = () => {
     setShowLocations((prev) => !prev);
   };
 
+  // Handle card click
   const handleCardClick = (card) => {
     setSelectedCard(card);
-    if (card === "totalStores") {
-      setShowPopup(true);
-    }
-  };
-
-  const navigateToTotalCustomers = () => {
-    navigate("/TotalCustomer");
-  };
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
   };
 
   return (
     <div className="dashboard-main-container">
+      {/* <Sidebar /> */}
       <Navbar />
       <div className="dashboard-container">
         <h2 className="dashcol">Master Dashboard</h2>
-        <div className="stats-container">
+
+        {/* Cards container has been removed, along with the sales, revenue, and expenses cards */}
+
+        <div className="stats-container" >
+
           <div className="row">
-          <div className="stat-card" onClick={navigateToTotalCustomers}>
+            <div className="total-customers">
               <h3>
-                <span className="stat-heading">
-                  <FaPeopleGroup /> Total Customers
-                </span>
+                <div className="custom1">
+                <div className="icons">
+                <FaPeopleGroup />
+                  </div>
+                  <div>
+                  Total Customers
+                  </div>
+
+                  {/* <span> <FaPeopleGroup /> </span>Total Customers */}
+                </div>
               </h3>
-            <p>{totalCustomers}</p>
-          </div>
-            <div className="stat-card">
+              <p>{stats.totalCustomers}</p>
+            </div>
+            <div className="complete-order">
               <h3>
-                <span className="stat-heading">
-                  <IoNewspaper /> Completed Orders
-                </span>
+                <div className="custom1">
+                
+                <div className="icons">
+                <IoNewspaper /> 
+                  </div>
+                  <div>
+                  Completed Orders
+                  </div>
+
+                  {/* <span><IoNewspaper /> </span>Completed Orders */}
+                </div>
               </h3>
               <p>{stats.completedOrders}</p>
             </div>
 
-            <div className="stat-card">
+            <div className="total-orders">
               <h3>
-                <span className="stat-heading">
-                  <BsFileEarmarkSpreadsheet /> Total Orders
-                </span>
+                <div className="custom1">
+                <div className="icons">
+                 <BsFileEarmarkSpreadsheet /> 
+                  </div>
+                  <div>
+                  Total Orders
+                  </div>
+
+                  {/* <span> <BsFileEarmarkSpreadsheet /> </span>Total Orders */}
+                </div>
               </h3>
               <p>{stats.totalOrders}</p>
-            </div>
-            <div className="stat-card">
+
+            </div >
+            <div className="today-orders">
               <h3>
-                <span class="stat-heading">
-                  <IoNewspaper /> Today Orders
-                </span>
+                <div class="custom1">
+          
+                  <div className="icons">
+                  <IoNewspaper />
+                  </div>
+                  <div>
+                  Today Orders 
+                  </div>
+                  {/* <span><IoNewspaper /></span> Today Orders */}
+                </div>
               </h3>
               <p>{stats.todayOrders}</p>
             </div>
-          </div>
-
-          <div className="row">
-            <div
-              className="stat-card"
-              onClick={() => handleCardClick("totalStores")}
-            >
+            <div className="total-stores">
               <h3>
-                <span className="stat-heading">
-                  Total Stores <MdGroups />
-                </span>
+                <div className="custom1">
+                  <div className="icons">
+                  <MdGroups />
+                  </div>
+                  <div>
+                  Total Stores
+                  </div>
+
+                  {/* <span> <MdGroups /></span>Total Stores */}
+                </div>
               </h3>
               <p>{stats.totalStores}</p>
             </div>
           </div>
-          <div className="stat-card location-card">
-            <h3 onClick={handleLocationClick} style={{ cursor: "pointer" }}>
-              <span className="stat-heading">
-                Location <FaSearchLocation />
-              </span>
-            </h3>
-            <p>{stats.location}</p>
-            {showLocations && (
-              <div className="locations-dropdown">
-                {locations.map((location, index) => (
-                  <div key={index} className="location-item">
-                    {location}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+
+
+
+
         </div>
-        {/* Popup */}
-        {showPopup && (
-          <div className={`${POPUP_CLASSNAME} popup`}>
-            <div className={`${POPUP_CLASSNAME}-inner popup-inner`}>
-              {/* Close icon */}
-              <div
-                className={`${POPUP_CLASSNAME}-close`}
-                onClick={handleClosePopup}
-              >
-                <svg
-                  className={`${POPUP_CLASSNAME}-close-icon`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </div>
-              <h2 className="dashboard-h2-heading">All Stores</h2>
 
-              {/* Search text field and icon */}
-              <div className={`${POPUP_CLASSNAME}-search`}>
-                <input type="text" placeholder="Search..." />
-                <svg
-                  className={`${POPUP_CLASSNAME}-search-icon`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-              </div>
-
-              {/* Table */}
-              <table className={`${POPUP_CLASSNAME}-table`}>
-                <thead>
-                  <tr>
-                    <th>StoreId</th>
-                    <th>Area</th>
-                    <th>Name</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                    <th>User Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* Map over data and populate table rows */}
-                  {users.map((user) => (
-                    <tr key={user.storeId}>
-                      <td>{user.storeId}</td>
-                      <td>{user.area}</td>
-                      <td>{user.name}</td>
-                      <td>{user.phoneNumber}</td>
-                      <td>{user.email}</td>
-                      <td>{user.userType}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        {/* <div className="row"> */}
+        {/* <div className="stat-card">
+              <h3>
+                <span className="stat-heading">
+                  New Orders  <IoNewspaper />
+                </span>
+              </h3>
+              <p>{stats.newOrders}</p>
             </div>
-          </div>
-        )}
-        {/* <OrdersTable /> */}
+            <div className="stat-card">
+              <h3>
+                <span className="stat-heading">
+                   Pickup Orders <IoNewspaper />
+                </span>
+              </h3>
+              <p>{stats.pickupOrders}</p>
+            </div>
+            <div className="stat-card">
+              <h3>
+                <span className="stat-heading">
+                  Delivered Orders <IoNewspaper />
+                </span>
+              </h3>
+              <p>{stats.deliveredOrders}</p>
+            </div> */}
+
+        {/* </div> */}
+        {
+          /*
+           <div className="stat-card location-card">
+                    <h3 onClick={handleLocationClick} style={{ cursor: "pointer" }}>
+                      <span className="stat-heading">
+                        Location <FaSearchLocation />
+                      </span>
+                    </h3>
+                    <p>{stats.location}</p>
+                    {showLocations && (
+                      <div className="locations-dropdown">
+                        {locations.map((location, index) => (
+                          <div key={index} className="location-item">
+                            {location}
+                          </div>
+                        ))}
+                      </div> 
+                    )}
+                  </div>*/
+        }
       </div>
+      {/* <OrdersTable /> */}
     </div>
+
   );
 };
 
