@@ -1,10 +1,13 @@
 .invoices-data {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
     padding: 20px;
   }
   
   .invoices-data h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 32px;
+    color: #343a40;
+    margin-bottom: 20px;
   }
   
   .invoices-list {
@@ -13,17 +16,26 @@
   }
   
   .invoice-item {
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 15px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
   }
   
   .invoice-item p {
-    margin: 5px 0;
+    margin: 10px 0;
+    font-size: 18px;
+    color: #495057;
   }
   
   .invoice-item.even {
-    background-color: #e0e0e0;
+    background-color: #f1f1f1;
+  }
+  
+  .invoice-item p:first-child {
+    font-size: 24px;
+    color: #007bff;
+    font-weight: bold;
   }
   
