@@ -22,25 +22,44 @@ const TotalCustomers = () => {
   return (
     <div className="invoices-data">
       <h2>Total Invoices: {invoices.length}</h2>
-      <ul className="invoices-list">
-        {invoices.map((invoice, index) => (
-          <li key={invoice._id} className={`invoice-item ${index % 2 === 0 ? 'even' : 'odd'}`}>
-            <p>Invoice Number: {invoice.invoiceNo}</p>
-            <p>Invoice Date: {invoice.invoiceDate}</p>
-            <p>Client Name: {invoice.clientName}</p>
-            <p>Client Contact: {invoice.clientContact}</p>
-            <p>Subtotal: {invoice.subTotal}</p>
-            <p>Discount Rate: {invoice.discountRate}</p>
-            <p>Discount Amount: {invoice.discountAmount}</p>
-            <p>Tax Rate: {invoice.taxRate}</p>
-            <p>Tax Amount: {invoice.taxAmount}</p>
-            <p>Total: {invoice.total}</p>
-            <p>Selected Currency: {invoice.selectedCurrency}</p>
-            <p>Selected Payment Mode: {invoice.selectedPaymentMode}</p>
-            {/* Add more details as needed */}
-          </li>
-        ))}
-      </ul>
+      <table className="invoices-table">
+        <thead>
+          <tr>
+            <th>Invoice Number</th>
+            <th>Invoice Date</th>
+            <th>Client Name</th>
+            <th>Client Contact</th>
+            <th>Subtotal</th>
+            <th>Discount Rate</th>
+            <th>Discount Amount</th>
+            <th>Tax Rate</th>
+            <th>Tax Amount</th>
+            <th>Total</th>
+            <th>Selected Currency</th>
+            <th>Selected Payment Mode</th>
+            {/* Add more headers as needed */}
+          </tr>
+        </thead>
+        <tbody>
+          {invoices.map((invoice, index) => (
+            <tr key={invoice._id} className={index % 2 === 0 ? "even" : "odd"}>
+              <td>{invoice.invoiceNo}</td>
+              <td>{invoice.invoiceDate}</td>
+              <td>{invoice.clientName}</td>
+              <td>{invoice.clientContact}</td>
+              <td>{invoice.subTotal}</td>
+              <td>{invoice.discountRate}</td>
+              <td>{invoice.discountAmount}</td>
+              <td>{invoice.taxRate}</td>
+              <td>{invoice.taxAmount}</td>
+              <td>{invoice.total}</td>
+              <td>{invoice.selectedCurrency}</td>
+              <td>{invoice.selectedPaymentMode}</td>
+              {/* Add more columns as needed */}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
