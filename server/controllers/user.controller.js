@@ -57,6 +57,8 @@ exports.registerUser = async (req, res) => {
 //   }
 // };
 
+
+
 exports.loginUser = async (req, res) => {
   const { storeId, password } = req.body;
 
@@ -93,7 +95,6 @@ exports.loginStaff = async (req, res) => {
       return res.status(400).json({ message: "Invalid storeId or password" });
     }
 
-    // Authentication successful
     res.status(200).json({ message: "Staff login successful" });
   } catch (error) {
     console.error("Error logging in as staff:", error);
@@ -118,6 +119,7 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+
 // exports.getUserByEmail = async (req, res) => {
 //   const { email } = req.params;
 
@@ -135,6 +137,7 @@ exports.getAllUsers = async (req, res) => {
 //     });
 //   }
 // };
+
 
 
 
@@ -156,6 +159,7 @@ exports.getUserByStoreId = async (req, res) => {
   }
 };
 
+
 exports.getAll = async (req, res) => {
   try {
     const users = await User.find({});
@@ -165,6 +169,7 @@ exports.getAll = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while fetching users. Please try again later.' });
   }
 }
+
 
 exports.getNextStoreId = async (req, res) => {
   try {
@@ -188,6 +193,8 @@ exports.getNextStoreId = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
 exports.getAreaByStoreId = async (req, res) => {
   const { storeId } = req.params;
 
@@ -204,6 +211,49 @@ exports.getAreaByStoreId = async (req, res) => {
     res.status(500).json({
       message:
         "An error occurred while fetching area by storeId. Please try again later.",
+    });
+  }
+};
+
+
+
+exports.activateUser = async (req, res) => {
+  const { storeId } = req.body;
+  try {
+    // Find the user by storeId
+    const user = await User.findOne({ storeId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Update user's activation status to true
+    user.active = true;
+    await user.save();
+    res.status(200).json({ message: "User activated successfully" });
+  } catch (error) {
+    console.error("Error activating user:", error);
+    res.status(500).json({
+      message: "An error occurred while activating user. Please try again later.",
+    });
+  }
+};
+
+// Deactivate user endpoint
+exports.deactivateUser = async (req, res) => {
+  const { storeId } = req.body;
+  try {
+    // Find the user by storeId
+    const user = await User.findOne({ storeId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Update user's activation status to false
+    user.active = false;
+    await user.save();
+    res.status(200).json({ message: "User deactivated successfully" });
+  } catch (error) {
+    console.error("Error deactivating user:", error);
+    res.status(500).json({
+      message: "An error occurred while deactivating user. Please try again later.",
     });
   }
 };

@@ -11,7 +11,9 @@ function Login() {
   const [signIn, setSignIn] = useState(true);
   const [staffError, setStaffError] = useState("");
   const [area, setArea] = useState("");
-  const [storeId, setStoreId] = useState(""); // Declare storeId state
+  const [storeId, setStoreId] = useState(""); 
+  
+  
 
   const fetchArea = async () => {
     // Remove storeId parameter from fetchArea function
@@ -34,41 +36,41 @@ function Login() {
     fetchArea();
   }, [storeId]); // Update useEffect dependency
 
+  
   const handleLogin = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-
-    const userData = {
-      storeId: formData.get("storeId"),
-      password: formData.get("password"),
-    };
-
     try {
-      const response = await fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+        const response = await fetch('http://localhost:5000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ storeId }),
+        });
 
-      if (response.ok) {
-        // Handle successful login
-        toast.success("Master login successful");
-        setTimeout(() => {
-          navigate("/Dashboard");
-        }, 1500);
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Invalid storeId or password");
-      }
+        if (response.ok) {
+            const responseData = await response.json();
+            if (responseData.active) {
+                // User is active, proceed to dashboard
+                toast.success('Login successful');
+                setTimeout(() => {
+                    navigate('/Dashboard');
+                }, 1500);
+            } else {
+                // User is inactive, display error message
+                toast.error('User must be activated to log in');
+            }
+        } else {
+            const errorData = await response.json();
+            toast.error(errorData.message || 'Invalid storeId or password');
+        }
     } catch (error) {
-      console.error("Error logging in:", error);
-      toast.error(
-        "An error occurred while logging in. Please try again later."
-      );
+        console.error('Error logging in:', error);
+        toast.error('An error occurred while logging in. Please try again later.');
     }
-  };
+};
+
+
 
   const handleLogin1 = async (event) => {
     event.preventDefault();
@@ -150,11 +152,11 @@ function Login() {
               <Components.Form onSubmit={handleLogin}>
                 <Components.Title>Master Login</Components.Title>
                 <Components.Input
-                  name="storeId"
-                  type="text"
-                  placeholder="Store ID"
-                  required
-                  onChange={(e) => setStoreId(e.target.value)} // Update storeId state
+                  name='storeId'
+                  type='text'
+                  placeholder='Store ID'
+                  value={storeId}
+                  onChange={(e) => setStoreId(e.target.value)}
                 />
                 <Components.Input
                   type="text"
