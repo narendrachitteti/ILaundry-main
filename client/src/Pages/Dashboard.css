@@ -60,7 +60,7 @@ body {
 }
 
 .stat-card {
-    height: 96px;
+    height: 120px;
     flex: 1;
     padding: 15px;
     background: linear-gradient(to right, #1bdd96 2%, #ffffff 5%);
