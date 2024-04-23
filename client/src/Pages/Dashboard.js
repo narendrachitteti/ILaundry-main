@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import "./Dashboard.css";
@@ -10,8 +10,10 @@ import { BsFileEarmarkSpreadsheet } from "react-icons/bs";
 import { IoNewspaper } from "react-icons/io5";
 import { FaSearchLocation } from "react-icons/fa";
 import Navbar from "../components/Navbar";
-
-const POPUP_CLASSNAME = "dashboard-popup";
+import { useNavigate } from "react-router-dom";
+import AllStores from "./AllStores.js";
+// Import the OrdersTable component
+import OrdersTable from "./OrdersTable";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -34,21 +36,36 @@ const Dashboard = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [users, setUsers] = useState([]);
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
+
+
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+    if (card === "totalStores") {
+      // Navigate to AllStores page programmatically
+      navigate("/AllStores");
+    }
+  };
+
+  // Fetch total stores data function
+  const fetchTotalStores = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/users/totalStores`);
+      setStats((prevStats) => ({
+        ...prevStats,
+        totalStores: response.data.totalStores,
+      }));
+      // Fetch user data after fetching total stores data
+    } catch (error) {
+      console.error("Error fetching total stores:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/registerdetails`);
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchData();
+    // Fetch total stores data when component mounts
+    fetchTotalStores();
   }, []);
-
+  
   const [totalCustomers, setTotalCustomers] = useState(0);
 
   useEffect(() => {
@@ -69,21 +86,6 @@ const Dashboard = () => {
     setShowLocations((prev) => !prev);
   };
 
-  const handleCardClick = (card) => {
-    setSelectedCard(card);
-    if (card === "totalStores") {
-      setShowPopup(true);
-    }
-  };
-
-  const navigateToTotalCustomers = () => {
-    navigate("/TotalCustomer");
-  };
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
-
   return (
     <div className="dashboard-main-container">
       <Navbar />
@@ -91,7 +93,8 @@ const Dashboard = () => {
         <h2 className="dashcol">Master Dashboard</h2>
         <div className="stats-container">
           <div className="row">
-          <div className="stat-card" onClick={navigateToTotalCustomers}>
+          {/* <div className="stat-card" onClick={navigateToTotalCustomers}> */}
+          <div className="stat-card" >
               <h3>
                 <span className="stat-heading">
                   <FaPeopleGroup /> Total Customers
@@ -157,78 +160,6 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        {/* Popup */}
-        {showPopup && (
-          <div className={`${POPUP_CLASSNAME} popup`}>
-            <div className={`${POPUP_CLASSNAME}-inner popup-inner`}>
-              {/* Close icon */}
-              <div
-                className={`${POPUP_CLASSNAME}-close`}
-                onClick={handleClosePopup}
-              >
-                <svg
-                  className={`${POPUP_CLASSNAME}-close-icon`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </div>
-              <h2 className="dashboard-h2-heading">All Stores</h2>
-
-              {/* Search text field and icon */}
-              <div className={`${POPUP_CLASSNAME}-search`}>
-                <input type="text" placeholder="Search..." />
-                <svg
-                  className={`${POPUP_CLASSNAME}-search-icon`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-              </div>
-
-              {/* Table */}
-              <table className={`${POPUP_CLASSNAME}-table`}>
-                <thead>
-                  <tr>
-                    <th>StoreId</th>
-                    <th>Area</th>
-                    <th>Name</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                    <th>User Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* Map over data and populate table rows */}
-                  {users.map((user) => (
-                    <tr key={user.storeId}>
-                      <td>{user.storeId}</td>
-                      <td>{user.area}</td>
-                      <td>{user.name}</td>
-                      <td>{user.phoneNumber}</td>
-                      <td>{user.email}</td>
-                      <td>{user.userType}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-        {/* <OrdersTable /> */}
       </div>
     </div>
   );

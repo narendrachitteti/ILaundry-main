@@ -39,31 +39,41 @@ function Login() {
   
   const handleLogin = async (event) => {
     event.preventDefault();
+    const formData = new FormData(event.target);
+  
+    const userData = {
+      storeId: formData.get("storeId"),
+      password: formData.get("password"),
+    };
+  
     try {
-        const response = await fetch('http://localhost:5000/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ storeId }),
-        });
-
+      const response = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+  
       if (response.ok) {
         // Handle successful login
         toast.success("Master login successful");
+        localStorage.setItem("storeId", formData.get("storeId"));
         setTimeout(() => {
           navigate("/Dashboard");
         }, 1500);
+      } else if (response.status === 403) {
+        setStaffError("You are not authorized to access this page.");
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || "Invalid storeId or password");
       }
     } catch (error) {
-        console.error('Error logging in:', error);
-        toast.error('An error occurred while logging in. Please try again later.');
+      console.error("Error logging in:", error);
+      toast.error("An error occurred while logging in. Please try again later.");
     }
-};
-
+  };
+  
 
 
   const handleLogin1 = async (event) => {
@@ -231,7 +241,7 @@ function Login() {
                     marginTop: "10px",
                   }}
                 >
-                  <p className="user-login-donthave-account" style={{ color: "black" }}>Don't have an account?</p>{" "}
+                  {/* <p className="user-login-donthave-account" style={{ color: "black" }}>Don't have an account?</p>{" "}
                   &nbsp;&nbsp;
                   <Link to="/Register" style={{ textDecoration: "none" }}>
                     <div>
@@ -245,7 +255,7 @@ function Login() {
                         Register
                       </p>
                     </div>
-                  </Link>
+                  </Link> */}
                 </div>
 
                 {staffError && (

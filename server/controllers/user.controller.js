@@ -212,3 +212,16 @@ exports.getAreaByStoreId = async (req, res) => {
     });
   }
 };
+
+
+exports.getTotalStores = async (req, res) => {
+  try {
+    const totalStores = await User.countDocuments();
+    res.status(200).json({ totalStores });
+  } catch (error) {
+    console.error("Error fetching total stores:", error);
+    res.status(500).json({
+      message: "An error occurred while fetching total stores. Please try again later.",
+    });
+  }
+};
