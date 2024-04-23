@@ -58,7 +58,7 @@ function App() {
 
             <Route path="/rating" element={<StarRating />} />
             <Route path="/orderstable" element={<OrdersTable />} />
-            <Route path="/TotalCustomer" element={<TotalCustomer/>}/>
+            {/* <Route path="/TotalCustomer" element={<TotalCustomer/>}/> */}
 
             <Route path="/stafflogin" element={<StaffNavbar/>}/>
           </Routes>

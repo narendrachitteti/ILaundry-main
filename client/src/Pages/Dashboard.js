@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import "./Dashboard.css";
@@ -61,20 +61,11 @@ const Dashboard = () => {
     }
   };
 
-  // Fetch total stores data when component mounts
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/registerdetails`);
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchData();
+    // Fetch total stores data when component mounts
+    fetchTotalStores();
   }, []);
-
+  
   const [totalCustomers, setTotalCustomers] = useState(0);
 
   useEffect(() => {
@@ -102,7 +93,8 @@ const Dashboard = () => {
         <h2 className="dashcol">Master Dashboard</h2>
         <div className="stats-container">
           <div className="row">
-          <div className="stat-card" onClick={navigateToTotalCustomers}>
+          {/* <div className="stat-card" onClick={navigateToTotalCustomers}> */}
+          <div className="stat-card" >
               <h3>
                 <span className="stat-heading">
                   <FaPeopleGroup /> Total Customers

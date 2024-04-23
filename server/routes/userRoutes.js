@@ -19,7 +19,6 @@ router.get("/area/:storeId", UserController.getAreaByStoreId);
 router.get("/users/:storeId", UserController.getUserByStoreId);
 
 
-// In your backend router file
 router.get("/api/users/totalStores", UserController.getTotalStores);
 
 
