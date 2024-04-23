@@ -20,8 +20,10 @@ const Navbar = () => {
       const storedStoreId = localStorage.getItem("storeId");
       if (storedStoreId) {
         try {
-          const response = await axios.get(`${BASE_URL}/users/${storedStoreId}`);
-          console.log("User data from backend:", response.data); // Log the response data
+          const response = await axios.get(
+            `${BASE_URL}/users/${storedStoreId}`
+          );
+
           setUser(response.data);
         } catch (error) {
           console.error("Error fetching user by storeId:", error);
@@ -37,7 +39,6 @@ const Navbar = () => {
     setUser({}); // Clear user data
     navigate("/"); // Navigate to the login page
   };
-  
 
   return (
     <div>
@@ -51,7 +52,11 @@ const Navbar = () => {
         </Link>
         <Link to="/Dashboard">
           <div className="bills">
-            <img src="https://cdn-icons-png.freepik.com/512/7664/7664156.png" alt="" style={{ height: "2.5rem" }} />
+            <img
+              src="https://cdn-icons-png.freepik.com/512/7664/7664156.png"
+              alt=""
+              style={{ height: "2.5rem" }}
+            />
             <p>Dashboard</p>
           </div>
         </Link>
@@ -72,7 +77,7 @@ const Navbar = () => {
           </div>
         </Link>
 
-         <Link to="/Bills">
+        <Link to="/Bills">
           <div className="bills">
             <img src={image17} alt="" style={{ height: "2.5rem" }} />
             <p>Customer Bills</p>
@@ -91,13 +96,17 @@ const Navbar = () => {
             <p>Registerdetails</p>
           </div>
         </Link>
-        
+
         <div className="bills">
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
           <p>Profile</p>
           <div className="dropdown-content">
             <p>Name: {user?.name}</p>
             <p>Store ID: {user?.storeId}</p>
+            <Link to="/register">
+              <p>Add Staff</p>
+            </Link>
+
             <p
               onClick={logout}
               style={{ display: "flex", alignItems: "center", gap: "1rem" }}

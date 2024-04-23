@@ -236,7 +236,7 @@ function Login() {
                     marginTop: "10px",
                   }}
                 >
-                  <p className="user-login-donthave-account" style={{ color: "black" }}>Don't have an account?</p>{" "}
+                  {/* <p className="user-login-donthave-account" style={{ color: "black" }}>Don't have an account?</p>{" "}
                   &nbsp;&nbsp;
                   <Link to="/Register" style={{ textDecoration: "none" }}>
                     <div>
@@ -250,7 +250,7 @@ function Login() {
                         Register
                       </p>
                     </div>
-                  </Link>
+                  </Link> */}
                 </div>
 
                 {staffError && (
