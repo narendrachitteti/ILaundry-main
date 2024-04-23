@@ -1,7 +1,7 @@
 .dashboard-container {
     position: relative;
-    top: 90px;
-    padding: 20px;
+    top: 70px;
+    padding:80px;
     background-color: #c4c1c1;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -9,6 +9,8 @@
     width: 95%;
     height: auto;
     margin: auto; /* Centers the container */
+  
+    
 }
 body {
     font-family: Arial, sans-serif;
@@ -16,6 +18,8 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100vh;
 }
 
 .dashcol {
@@ -45,28 +49,33 @@ body {
 
 .row {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     gap: 20px;
+    margin-left: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    
+
 }
 
 .stat-card {
-    height: 96px;
+    height: 120px;
     flex: 1;
     padding: 15px;
-    background: linear-gradient(to right, #007BFF 2%, #ffffff 5%);
+    background: linear-gradient(to right, #1bdd96 2%, #ffffff 5%);
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     color: #333;
-   
 }
-.AllStoresDetails{
-    text-decoration: none;
-}
+
+
 .stat-card h3 {
     margin-bottom: 10px;
     font-size: 20px;
     color: #555;
+
 }
 
 .stat-card p {
@@ -101,6 +110,66 @@ body {
 
 .close-button:hover {
     color: #000;
+}
+.total-customers{
+    width: 400px;
+    height: 130px;
+    background-color: #dae3e6e5;
+    border-radius: 15px;
+    background: whitesmoke;
+}
+.total-customers:hover{ 
+    background-color: rgba(255, 255, 128, .5);
+    cursor: pointer;
+}
+
+.complete-order{
+    width: 400px;
+    height: 130px;
+    background-color: #dae3e6e5;
+    border-radius: 15px;
+    background: whitesmoke;
+    
+}
+.complete-order:hover{ 
+    background-color: rgba(255, 255, 128, .5);
+    cursor: pointer;
+}
+.total-orders{
+    width: 400px;
+    height: 130px;
+    background-color: #dae3e6e5;
+    border-radius: 15px;
+    background: whitesmoke;
+}
+.total-orders:hover{
+    background-color: rgba(255, 255, 128, .5);
+    cursor: pointer;
+}  
+    
+.today-orders{
+    width: 400px;
+    height: 130px;
+    background-color: #dae3e6e5;
+    border-radius: 15px;
+    background-color: whitesmoke;
+}
+.today-orders:hover{ 
+    background-color: rgba(255, 255, 128, .5);
+    cursor: pointer;
+
+}
+.total-stores{
+    width: 400px;
+    height: 130px;
+    background-color: #dae3e6e5;
+    border-radius: 15px;
+    background: whitesmoke;
+    
+}
+.total-stores:hover{ 
+    background-color: rgba(255, 255, 128, .5);
+    cursor: pointer;
 }
 
 .location-card {
@@ -198,101 +267,22 @@ body {
     background-color: #f5f5f5;
     border-radius: 10px;
 }
-
-.dashboard-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 95%; /* Adjust the width as needed */
-    height: 80%;
-    background-color: rgb(242, 239, 239);
-    border-radius: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-}
-
-  
-  .dashboard-popup-inner {
-  
-  }
-  .dashboard-h2-heading{
-    text-align: center;
-    font-weight: 700;
-    color: #8a8080;
-  }
-  
-  .dashboard-popup-close {
+.custom1 span{
+    display: flex;
+    font-size: 20px;
     position: absolute;
-    top: 2px;
-    right: 10px;
-    cursor: pointer;
-  }
-  
-  .dashboard-popup-close-icon {
-    width: 30px;
-    height: 30px;
-   margin: 5px;
-  }
-  
-  .dashboard-popup-search {
-    text-align: center;
-    margin-top: 10px;
     
-  }
+} 
   
-  .dashboard-popup-search input[type="text"] {
-    padding: 8px;
-    width: 50%;
-    border-radius: 4px;
-    border: 1px solid #867d7d;
-    margin-right: 1px;
-    background-color: rgb(242, 239, 239);
-    position: relative;
-    left: 26%;
-  }
-  
-  .dashboard-popup-search-icon {
-    width: 30px;
-    height: 30px;
-   position: relative;
-   top: -47px;
-   left: 94%;
-    cursor: pointer;
-  }
-  .dashboard-popup-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .dashboard-popup-table-heading,
-  .dashboard-popup-table-row {
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .dashboard-popup-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .dashboard-popup-table th,
-  .dashboard-popup-table td {
-    border: 1px solid #00129b;
-    padding: 4px;
-    text-align: center;
-    font-size: 14px;
-  }
-  
-  .dashboard-popup-table th {
-    background-color: #f2f2f2;
-    color: #1f1c1c;
-  }
-  
-  .dashboard-popup-table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
-  .dashboard-popup-table tbody tr:hover {
-    background-color: #ddd;
-  }
-  
+.custom1{
+    display: flex;
+    gap: 6%;
+    padding-top: 2%;
+
+
+    /* margin-left: 30px;
+    margin-top: 9px; */
+}
+.icons{
+    font-size: 5vh;
+}

@@ -46,6 +46,27 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+
+
+
+// exports.loginUser = async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     const user = await User.findOne({ email, password });
+//     if (!user) {
+//       return res.status(400).json({ message: "Invalid email or password" });
+//     }
+
+//     res.status(200).json({ message: "Login successful" });
+//   } catch (error) {
+//     console.error("Error logging in:", error);
+//     res.status(500).json({
+//       message: "An error occurred while logging in. Please try again later.",
+//     });
+//   }
+// };
+
 exports.loginUser = async (req, res) => {
   const { storeId, password } = req.body;
 
@@ -81,7 +102,6 @@ exports.loginStaff = async (req, res) => {
       return res.status(400).json({ message: "Invalid storeId or password" });
     }
 
-    // Authentication successful
     res.status(200).json({ message: "Staff login successful" });
   } catch (error) {
     console.error("Error logging in as staff:", error);
@@ -105,6 +125,44 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+// exports.getUserByEmail = async (req, res) => {
+//   const { email } = req.params;
+
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+//     res.status(200).json(user);
+//   } catch (error) {
+//     console.error("Error fetching user by email:", error);
+//     res.status(500).json({
+//       message:
+//         "An error occurred while fetching user by email. Please try again later.",
+//     });
+//   }
+// };
+
+
+
+exports.getUserByStoreId = async (req, res) => {
+  const { storeId } = req.params;
+
+  try {
+    const user = await User.findOne({ storeId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user by storeId:", error);
+    res.status(500).json({
+      message:
+        "An error occurred while fetching user by storeId. Please try again later.",
+    });
+  }
+};
+
 exports.getAll = async (req, res) => {
   try {
     const users = await User.find({});
@@ -116,7 +174,7 @@ exports.getAll = async (req, res) => {
         "An error occurred while fetching users. Please try again later.",
     });
   }
-};
+}
 
 exports.getNextStoreId = async (req, res) => {
   try {
@@ -140,6 +198,8 @@ exports.getNextStoreId = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
 exports.getAreaByStoreId = async (req, res) => {
   const { storeId } = req.params;
 
@@ -156,33 +216,6 @@ exports.getAreaByStoreId = async (req, res) => {
     res.status(500).json({
       message:
         "An error occurred while fetching area by storeId. Please try again later.",
-    });
-  }
-};
-
-exports.getUserByStoreId = async (req, res) => {
-  try {
-    const storeId = req.params.storeId;
-    const user = await User.findOne({ storeId });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    console.error("Error fetching user by storeId:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-
-exports.getTotalStores = async (req, res) => {
-  try {
-    const totalStores = await User.countDocuments();
-    res.status(200).json({ totalStores });
-  } catch (error) {
-    console.error("Error fetching total stores:", error);
-    res.status(500).json({
-      message: "An error occurred while fetching total stores. Please try again later.",
     });
   }
 };

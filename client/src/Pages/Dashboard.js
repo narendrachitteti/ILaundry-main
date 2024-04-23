@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import "./Dashboard.css";
@@ -15,20 +16,12 @@ import AllStores from "./AllStores.js";
 import OrdersTable from "./OrdersTable";
 
 const Dashboard = () => {
-  // State variables
   const [stats, setStats] = useState({
     totalCustomers: 0,
-    totalShops: 0,
-    totalOrders: 0,
-    todayOrders: 0,
-    completedOrders: 0,
-    newOrders: 0,
-    pickupOrders: 0,
     totalStores: 0,
-    deliveredOrders: 0,
-    urgentOrders: 0,
-    location: "",
+    // Other stats...
   });
+
   const [showLocations, setShowLocations] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [locations] = useState([
@@ -70,33 +63,53 @@ const Dashboard = () => {
 
   // Fetch total stores data when component mounts
   useEffect(() => {
-    fetchTotalStores();
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/registerdetails`);
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  // Handle location click
+  const [totalCustomers, setTotalCustomers] = useState(0);
+
+  useEffect(() => {
+    const fetchTotalCustomers = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/get-bills`);
+        const totalCustomers = response.data.length; // Assuming the response is an array of customer data
+        setTotalCustomers(totalCustomers);
+      } catch (error) {
+        console.error("Error fetching total customers:", error);
+      }
+    };
+
+    fetchTotalCustomers();
+  }, []);
+
   const handleLocationClick = () => {
     setShowLocations((prev) => !prev);
   };
 
   return (
     <div className="dashboard-main-container">
-      {/* <Sidebar /> */}
       <Navbar />
       <div className="dashboard-container">
         <h2 className="dashcol">Master Dashboard</h2>
-
-        {/* Cards container has been removed, along with the sales, revenue, and expenses cards */}
-
         <div className="stats-container">
           <div className="row">
-            <div className="stat-card">
+          <div className="stat-card" onClick={navigateToTotalCustomers}>
               <h3>
                 <span className="stat-heading">
                   <FaPeopleGroup /> Total Customers
                 </span>
               </h3>
-              <p>{stats.totalCustomers}</p>
-            </div>
+            <p>{totalCustomers}</p>
+          </div>
             <div className="stat-card">
               <h3>
                 <span className="stat-heading">
