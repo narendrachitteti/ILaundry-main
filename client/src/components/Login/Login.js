@@ -1,123 +1,85 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import * as Components from "./Components";
-import "./Login.css";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import * as Components from './Components';
+import './Login.css';
 
 function Login() {
   const navigate = useNavigate();
   const [signIn, setSignIn] = useState(true);
-  const [staffError, setStaffError] = useState("");
-  const [area, setArea] = useState("");
-  const [storeId, setStoreId] = useState(""); 
-  
-  
+  const [staffError, setStaffError] = useState('');
+  const [area, setArea] = useState('');
+  const [storeId, setStoreId] = useState('');
+  const [password, setPassword] = useState('');
 
-  const fetchArea = async () => {
-    // Remove storeId parameter from fetchArea function
-    try {
-      const response = await fetch(`http://localhost:5000/area/${storeId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setArea(data.area);
-      } else {
-        setArea(""); // Reset area if not found
-      }
-    } catch (error) {
-      console.error("Error fetching area:", error);
-      setArea(""); // Reset area on error
-    }
-  };
-
-  useEffect(() => {
-    // Fetch area when store ID changes
-    fetchArea();
-  }, [storeId]); // Update useEffect dependency
-
-  
   const handleLogin = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-  
-    const userData = {
-      storeId: formData.get("storeId"),
-      password: formData.get("password"),
-    };
-  
+    const userData = { storeId, password };
+
     try {
-      const response = await fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-  
-      if (response.ok) {
+      const response = await axios.post('http://localhost:5000/login', userData);
+
+      if (response.status === 200) {
         // Handle successful login
-        toast.success("Master login successful");
-        localStorage.setItem("storeId", formData.get("storeId"));
+        toast.success('Master login successful');
+        localStorage.setItem('storeId', storeId);
         setTimeout(() => {
-          navigate("/Dashboard");
+          navigate('/Dashboard');
         }, 1500);
-      } else if (response.status === 403) {
-        setStaffError("You are not authorized to access this page.");
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Invalid storeId or password");
       }
     } catch (error) {
-      console.error("Error logging in:", error);
-      toast.error("An error occurred while logging in. Please try again later.");
+      console.error('Error logging in:', error);
+      toast.error(error.response.data.message || 'An error occurred while logging in. Please try again later.');
     }
   };
-  
 
-
-  const handleLogin1 = async (event) => {
+  const handleLoginStaff = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-
-    const userData = {
-      storeId: formData.get("storeId"),
-      password: formData.get("password"),
-    };
+    const userData = { storeId, password };
 
     try {
-      const response = await fetch("http://localhost:5000/login/staff", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+      const response = await axios.post('http://localhost:5000/login/staff', userData);
 
-      if (response.ok) {
+      if (response.status === 200) {
         // Handle successful login
-        toast.success("Staff login successful");
-        localStorage.setItem("storeId", formData.get("storeId"));
+        toast.success('Staff login successful');
+        localStorage.setItem('storeId', storeId);
         setTimeout(() => {
-          navigate("/Bills");
+          navigate('/Bills');
         }, 1500);
-      } else if (response.status === 403) {
-        setStaffError("You are not authorized to access this page.");
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Invalid storeId or password");
       }
     } catch (error) {
-      console.error("Error logging in:", error);
-      toast.error(
-        "An error occurred while logging in. Please try again later."
-      );
+      console.error('Error logging in as staff:', error);
+      toast.error(error.response.data.message || 'An error occurred while logging in. Please try again later.');
     }
   };
 
   const handleBackButtonClick = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    // Fetch area when store ID changes
+    const fetchArea = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/area/${storeId}`);
+        if (response.status === 200) {
+          setArea(response.data.area);
+        } else {
+          setArea(''); // Reset area if not found
+        }
+      } catch (error) {
+        console.error('Error fetching area:', error);
+        setArea(''); // Reset area on error
+      }
+    };
+
+    if (storeId) {
+      fetchArea();
+    }
+  }, [storeId]);
 
   return (
     <div>
@@ -126,7 +88,7 @@ function Login() {
         <button
           className="cursor-pointer duration-200 hover:scale-125 active:scale-100"
           title="Go Back"
-          style={{ marginLeft: "-90%", marginTop: "-5%" }}
+          style={{ marginLeft: '-90%', marginTop: '-5%' }}
           onClick={handleBackButtonClick}
         >
           <svg
@@ -149,7 +111,7 @@ function Login() {
         <Components.Container
           style={{
             boxShadow:
-              "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+              '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
           }}
         >
           {signIn ? (
@@ -157,9 +119,9 @@ function Login() {
               <Components.Form onSubmit={handleLogin}>
                 <Components.Title>Master Login</Components.Title>
                 <Components.Input
-                  name='storeId'
-                  type='text'
-                  placeholder='Store ID'
+                  name="storeId"
+                  type="text"
+                  placeholder="Store ID"
                   value={storeId}
                   onChange={(e) => setStoreId(e.target.value)}
                 />
@@ -174,28 +136,30 @@ function Login() {
                   name="password"
                   type="password"
                   placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <Components.Button type="submit">Login</Components.Button>
                 <div
                   style={{
-                    display: "flex",
-                    height: "40px",
-                    borderRadius: "6px",
-                    width: "100%",
-                    padding: "3px",
-                    marginTop: "10px",
+                    display: 'flex',
+                    height: '40px',
+                    borderRadius: '6px',
+                    width: '100%',
+                    padding: '3px',
+                    marginTop: '10px',
                   }}
                 >
-                  <p style={{ color: "black" }}>Don't have an account?</p>{" "}
+                  <p style={{ color: 'black' }}>Don't have an account?</p>{' '}
                   &nbsp;&nbsp;
-                  <Link to="/Register" style={{ textDecoration: "none" }}>
+                  <Link to="/Register" style={{ textDecoration: 'none' }}>
                     <div>
                       <p
                         style={{
-                          color: "orange",
-                          fontWeight: "bold",
-                          textDecoration: "none",
+                          color: 'orange',
+                          fontWeight: 'bold',
+                          textDecoration: 'none',
                         }}
                       >
                         Register
@@ -207,14 +171,15 @@ function Login() {
             </Components.SignInContainer>
           ) : (
             <Components.SignUpContainer signingIn={signIn}>
-              <Components.Form onSubmit={handleLogin1}>
+              <Components.Form onSubmit={handleLoginStaff}>
                 <Components.Title>Staff Login</Components.Title>
                 <Components.Input
                   name="storeId"
                   type="text"
                   placeholder="Store ID"
+                  value={storeId}
+                  onChange={(e) => setStoreId(e.target.value)}
                   required
-                  onChange={(e) => setStoreId(e.target.value)} // Update storeId state
                 />
                 <Components.Input
                   type="text"
@@ -228,35 +193,21 @@ function Login() {
                   name="password"
                   type="password"
                   placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <Components.Button type="submit">Login</Components.Button>
                 <div
                   style={{
-                    display: "flex",
-                    height: "25px",
-                    borderRadius: "6px",
-                    width: "100%",
-                    padding: "3px",
-                    marginTop: "10px",
+                    display: 'flex',
+                    height: '25px',
+                    borderRadius: '6px',
+                    width: '100%',
+                    padding: '3px',
+                    marginTop: '10px',
                   }}
-                >
-                  {/* <p className="user-login-donthave-account" style={{ color: "black" }}>Don't have an account?</p>{" "}
-                  &nbsp;&nbsp;
-                  <Link to="/Register" style={{ textDecoration: "none" }}>
-                    <div>
-                      <p
-                        style={{
-                          color: "orange",
-                          fontWeight: "bold",
-                          textDecoration: "none",
-                        }}
-                      >
-                        Register
-                      </p>
-                    </div>
-                  </Link> */}
-                </div>
+                ></div>
 
                 {staffError && (
                   <div className="error-message">{staffError}</div>
