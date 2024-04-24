@@ -12,12 +12,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import ReactWhatsapp from "react-whatsapp";
 import axios from "axios";
 import QRCode from "qrcode.react";
-import Barcode from 'react-barcode';
+import Barcode from "react-barcode";
 
 const currencies = currencyCodes.data;
 
 const Bills = () => {
   const [user, setUser] = useState(null);
+  const BASE_URL = 'http://localhost:5000'; 
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("mail");
@@ -39,7 +40,6 @@ const Bills = () => {
       setUsername(user.username); // Update the username state after user state is set
     }
   }, [user]);
-
 
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [selectedPopupItem, setSelectedPopupItem] = useState("");
@@ -372,7 +372,7 @@ const Bills = () => {
       deliveryDate: formatDate(deliveryDate), // Include delivery date
       store: selectedStore,
       factory: selectedFactory,
-      
+
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
@@ -391,10 +391,10 @@ const Bills = () => {
       selectedPopupItem,
       user: user
         ? {
-          userId: user._id,
-          username: user.name,
-          name: user.name,
-        }
+            userId: user._id,
+            username: user.name,
+            name: user.name,
+          }
         : null,
     };
 
@@ -426,29 +426,38 @@ const Bills = () => {
     const logoUrl = "./logo.png";
     const logoWidth = 50; // Adjust as needed
     const logoHeight = 20; // Adjust as needed
-    doc.addImage(logoUrl, "PNG", doc.internal.pageSize.getWidth() - logoWidth - 10, 10, logoWidth, logoHeight);
+    doc.addImage(
+      logoUrl,
+      "PNG",
+      doc.internal.pageSize.getWidth() - logoWidth - 10,
+      10,
+      logoWidth,
+      logoHeight
+    );
 
     // Add a heading for the invoice
     doc.setFontSize(16);
-    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, 40, { align: "center" });
+    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, 40, {
+      align: "center",
+    });
 
     // Define the data for the table
     const tableData = [
-        ["Invoice No:", invoiceNo],
-        ["Invoice Date:", formatDate(invoiceDate)],
-        ["Client Name:", clientName],
-        ["Client Contact:", clientContact],
-        ["Selected Item:", selectedPopupItem],
-        ["Total:", total],
-        ["Tax Amount:", taxAmount]
+      ["Invoice No:", invoiceNo],
+      ["Invoice Date:", formatDate(invoiceDate)],
+      ["Client Name:", clientName],
+      ["Client Contact:", clientContact],
+      ["Selected Item:", selectedPopupItem],
+      ["Total:", total],
+      ["Tax Amount:", taxAmount],
     ];
 
     // Set up styles for the table
     const tableStyles = {
-        fontSize: 10,
-        fontStyle: 'normal', // normal, bold, italic
-        textColor: [0, 0, 0], // Black color
-        cellPadding: 5
+      fontSize: 10,
+      fontStyle: "normal", // normal, bold, italic
+      textColor: [0, 0, 0], // Black color
+      cellPadding: 5,
     };
 
     // Set up column widths
@@ -463,22 +472,21 @@ const Bills = () => {
 
     // Add the table to the PDF
     doc.autoTable({
-        body: tableData,
-        startY: 70, // Start below the heading
-        startX: margin,
-        styles: tableStyles,
-        columnStyles: {
-            0: { fontStyle: 'bold' }, // Make the first column bold
-            1: { fontStyle: 'normal' } // Make the second column normal
-        },
-        columnWidth: columnWidths,
-        margin: { top: 50 } // Add margin to avoid overlapping with the heading and logo
+      body: tableData,
+      startY: 70, // Start below the heading
+      startX: margin,
+      styles: tableStyles,
+      columnStyles: {
+        0: { fontStyle: "bold" }, // Make the first column bold
+        1: { fontStyle: "normal" }, // Make the second column normal
+      },
+      columnWidth: columnWidths,
+      margin: { top: 50 }, // Add margin to avoid overlapping with the heading and logo
     });
 
     // Save the PDF file
     doc.save("Laundry Invoice.pdf");
-};
-
+  };
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
@@ -488,10 +496,7 @@ const Bills = () => {
     const url = window.URL.createObjectURL(pdfFile);
 
     // Open WhatsApp with the PDF file attached
-    ReactWhatsapp.send(
-      customerContact,
-      message,
-      url);
+    ReactWhatsapp.send(customerContact, message, url);
   };
 
   const [showPopup, setShowPopup] = useState(false);
@@ -517,7 +522,7 @@ const Bills = () => {
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
   };
-  
+
   const [deliveryDate, setDeliveryDate] = useState(null);
   const handleDeliveryDateChange = (date) => {
     setDeliveryDate(date);
@@ -529,38 +534,37 @@ const Bills = () => {
     setPickupdate(date);
   };
   const [selectedStore, setSelectedStore] = useState("");
-const [selectedFactory, setSelectedFactory] = useState("");
+  const [selectedFactory, setSelectedFactory] = useState("");
 
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString(); // Convert to a string
 
-const currentDate = new Date();
-const formattedDate = currentDate.toLocaleDateString(); // Convert to a string
+  // const [user, setUser] = useState("");
 
-// const [user, setUser] = useState("");
-
-useEffect(() => {
-  const fetchUserDetails = async () => {
-    const storedStoreId = localStorage.getItem("storeId");
-    if (storedStoreId) {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/users/${storedStoreId}`
-        );
-        console.log("User data from backend:", response.data); // Log the response data
-        setUser(response.data);
-      } catch (error) {
-        console.error("Error fetching user by storeId:", error);
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const storedStoreId = localStorage.getItem("storeId");
+      if (storedStoreId) {
+        try {
+          const response = await axios.get(
+            `${BASE_URL}/users/${storedStoreId}`
+          );
+          console.log("User data from backend:", response.data); // Log the response data
+          setUser(response.data);
+        } catch (error) {
+          console.error("Error fetching user by storeId:", error);
+        }
       }
-    }
-  };
+    };
 
-  fetchUserDetails();
-}, []); // Empty dependency array to only call this effect once on component mount
+    fetchUserDetails();
+  }, []); // Empty dependency array to only call this effect once on component mount
 
   return (
     <div className="billtotal">
       <div className="nav111">
-      {/* <Sidebar /> */}
-        <StaffNavbar />
+        {/* <Sidebar /> */}
+        {/* <StaffNavbar /> */}
       </div>
       <div className="invoice-form">
         <div className="input-group">
@@ -572,7 +576,7 @@ useEffect(() => {
             onChange={(e) => setInvoiceNo(e.target.value)}
           />
         </div>
-      
+
         <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
           {/* Placeholder for your date picker component */}
@@ -595,81 +599,76 @@ useEffect(() => {
         <div className="input-group">
           <label htmlFor="clientContact">Customer Contact No:</label>
           <input
-    type="tel"
-    maxLength="10"
-    
-    onInput={(e) => (e.target.value = e.target.value.replace(/\D/, "").slice(0, 10))}
-    required
-    id="clientContact"
-    value={clientContact}
-    onChange={(e) => setClientContact(e.target.value)}
-/>
-
+            type="tel"
+            maxLength="10"
+            onInput={(e) =>
+              (e.target.value = e.target.value.replace(/\D/, "").slice(0, 10))
+            }
+            required
+            id="clientContact"
+            value={clientContact}
+            onChange={(e) => setClientContact(e.target.value)}
+          />
         </div>
         <div className="input-group">
           <label htmlFor="clientContact">Customer Address:</label>
           <input
-    type="text"
-    maxLength="100"
-    id="clientaddress"
-    value={customeraddress}
-    onChange={(e) => setcustomeraddress(e.target.value.slice(0, 100))}
-/>
-
-        </div>    
+            type="text"
+            maxLength="100"
+            id="clientaddress"
+            value={customeraddress}
+            onChange={(e) => setcustomeraddress(e.target.value.slice(0, 100))}
+          />
+        </div>
       </div>
-<br/>
-      <div className="invoice-form" >
-     
-      <div className="input-group">
-  <label htmlFor="pickupDate">Pickup Date:</label>
-  <DatePicker
-    id="pickupDate"
-    selected={pickupdate}
-    onChange={handlePickupDateChange}
-    dateFormat="dd-MM-yyyy"
-  />
-</div>
-    
-      <div className="input-group">
-        <label htmlFor="invoiceDate">Delivery Date:</label>
-        <DatePicker
-          id="deliveryDate"
-          selected={deliveryDate}
-          onChange={handleDeliveryDateChange}
-          dateFormat="dd-MM-yyyy" // Set the desired date format
-        />
+      <br />
+      <div className="invoice-form">
+        <div className="input-group">
+          <label htmlFor="pickupDate">Pickup Date:</label>
+          <DatePicker
+            id="pickupDate"
+            selected={pickupdate}
+            onChange={handlePickupDateChange}
+            dateFormat="dd-MM-yyyy"
+          />
+        </div>
 
+        <div className="input-group">
+          <label htmlFor="invoiceDate">Delivery Date:</label>
+          <DatePicker
+            id="deliveryDate"
+            selected={deliveryDate}
+            onChange={handleDeliveryDateChange}
+            dateFormat="dd-MM-yyyy" // Set the desired date format
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="store">Store:</label>
+          <select
+            id="store"
+            value={selectedStore}
+            onChange={(e) => setSelectedStore(e.target.value)}
+          >
+            <option value="">Select Store</option>
+            <option value="storein">Store In</option>
+            <option value="storeout">Store Out</option>
+          </select>
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="factory">Factory:</label>
+          <select
+            id="factory"
+            value={selectedFactory}
+            onChange={(e) => setSelectedFactory(e.target.value)}
+          >
+            <option value="">Select Factory</option>
+            <option value="factoryin">Factory In</option>
+            <option value="factoryout">Factory Out</option>
+          </select>
+        </div>
       </div>
-      <div className="input-group">
-  <label htmlFor="store">Store:</label>
-  <select
-    id="store"
-    value={selectedStore}
-    onChange={(e) => setSelectedStore(e.target.value)}
-  >
-    <option value="">Select Store</option>
-    <option value="storein">Store In</option>
-    <option value="storeout">Store Out</option>
-  </select>
-</div>
-
-<div className="input-group">
-  <label htmlFor="factory">Factory:</label>
-  <select
-    id="factory"
-    value={selectedFactory}
-    onChange={(e) => setSelectedFactory(e.target.value)}
-  >
-    <option value="">Select Factory</option>
-    <option value="factoryin">Factory In</option>
-    <option value="factoryout">Factory Out</option>
-  </select>
-</div>
-
-    
-    </div>
-    <div className="table-container">
+      <div className="table-container">
         <table className="medicine-table">
           <thead>
             <tr>
@@ -869,7 +868,7 @@ useEffect(() => {
                 </span>
               </div>
             </Col>
-          </Row>     
+          </Row>
           <button
             className="review-button"
             onClick={() => {
@@ -879,100 +878,102 @@ useEffect(() => {
           >
             Review Invoice
           </button>
-          <p value="userType">{user?.name }</p>
+          <p value="userType">{user?.name}</p>
           {showPopup && (
-          <div className="popup34">
-          <div className="popup-header34">
-            Billing Data
-            <button
-              className="close-button34"
-              onClick={() => {
-                togglePopup(true);
-                resetFields();
-              }}
-            >
-              X
-            </button>
-          </div>
-          <div className="popup-content456">
-            <form>
-            <Barcode value={invoiceNumber.toString()} /> 
-              <div className="data-placeholder">
-                <label className="nameclass-label">User:</label>
-                <span>{user?.name }</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">InvoiceNo:</label>
-                <span>{invoiceNumber}</span>
-              </div>
-              <label className="nameclass-label">InvoiceDate</label>:
-                  <input type="text" value={invoiceDate} />
-              <div className="data-placeholder">
-                <label className="nameclass-label">ClientName:</label>
-                <span>{clientName}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">ClientContact:</label>
-                <span>{clientContact}</span>
-              </div>
-              <div className="data-placeholder">
-              <label className="nameclass-label">Pickup Date</label>:
-                  <input  type="text" value={pickupdate} />
-              </div>
-              <div className="data-placeholder">
-              <label className="nameclass-label">Delivery Date</label>:
-                  <input type="text" value={deliveryDate} />
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Customer Address:</label>
-                <span>{customeraddress}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Item:</label>
-                <span>{selectedItems}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Services:</label>
-                <span>{selectedServices}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Quantity:</label>
-                <span>{quantities}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Tax Rate:</label>
-                <span>{taxRate}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Discount Rate:</label>
-                <span>{discountRate}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Subtotal:</label>
-                <span>{subTotal}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Tax Amount:</label>
-                <span>{taxAmount}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Discount Amount:</label>
-                <span>{discountAmount}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Total:</label>
-                <span>{total}</span>
-              </div>
-              <div className="merge-karthik-bill">
-                <button className="downloadcopy">Send Copy</button>
-                <button className="downloadcopy" onClick={handledownloadcopy}>
-                  Download Copy
+            <div className="popup34">
+              <div className="popup-header34">
+                Billing Data
+                <button
+                  className="close-button34"
+                  onClick={() => {
+                    togglePopup(true);
+                    resetFields();
+                  }}
+                >
+                  X
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
-        
+              <div className="popup-content456">
+                <form>
+                  <Barcode value={invoiceNumber.toString()} />
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">User:</label>
+                    <span>{user?.name}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">InvoiceNo:</label>
+                    <span>{invoiceNumber}</span>
+                  </div>
+                  <label className="nameclass-label">InvoiceDate</label>:
+                  <input type="text" value={invoiceDate} />
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">ClientName:</label>
+                    <span>{clientName}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">ClientContact:</label>
+                    <span>{clientContact}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Pickup Date</label>:
+                    <input type="text" value={pickupdate} />
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Delivery Date</label>:
+                    <input type="text" value={deliveryDate} />
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Customer Address:</label>
+                    <span>{customeraddress}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Item:</label>
+                    <span>{selectedItems}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Services:</label>
+                    <span>{selectedServices}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Quantity:</label>
+                    <span>{quantities}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Tax Rate:</label>
+                    <span>{taxRate}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Discount Rate:</label>
+                    <span>{discountRate}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Subtotal:</label>
+                    <span>{subTotal}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Tax Amount:</label>
+                    <span>{taxAmount}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Discount Amount:</label>
+                    <span>{discountAmount}</span>
+                  </div>
+                  <div className="data-placeholder">
+                    <label className="nameclass-label">Total:</label>
+                    <span>{total}</span>
+                  </div>
+                  <div className="merge-karthik-bill">
+                    <button className="downloadcopy">Send Copy</button>
+                    <button
+                      className="downloadcopy"
+                      onClick={handledownloadcopy}
+                    >
+                      Download Copy
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           )}
         </div>
       </center>
