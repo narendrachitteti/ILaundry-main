@@ -20,7 +20,7 @@ import OrdersTable from "./Pages/OrdersTable.js";
 import StarRating from "./Pages/StarRating.js";
 import StaffNavbar from "./components/StaffNavbar.js";
 import AllStores from './Pages/AllStores.js';
-
+import TotalCustomers from "./Pages/TotalCustomers.js";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -58,8 +58,7 @@ function App() {
 
             <Route path="/rating" element={<StarRating />} />
             <Route path="/orderstable" element={<OrdersTable />} />
-            {/* <Route path="/TotalCustomer" element={<TotalCustomer/>}/> */}
-
+            <Route path="/TotalCustomer" element={<TotalCustomers />} />
             <Route path="/stafflogin" element={<StaffNavbar/>}/>
           </Routes>
         </Router>

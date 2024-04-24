@@ -154,26 +154,9 @@ const createOrUpdateBilling = async (req, res) => {
   const { id } = req.params;
 
   try {
-    let invoiceNumber = req.body.invoiceNo;
+    const count = await Billing.countDocuments();
+    const invoiceNumber = `INV${(count + 1).toString().padStart(5, "0")}`;
 
-    if (!invoiceNumber) {
-      // Generate a new invoice number if not provided
-      const lastBilling = await Billing.findOne({}, {}, { sort: { invoiceNo: -1 } });
-      let lastInvoiceNumber = 1;
-
-      if (lastBilling) {
-        const lastInvoiceNo = lastBilling.invoiceNo;
-        lastInvoiceNumber = parseInt(lastInvoiceNo.substring(3), 10) + 1;
-      }
-
-      invoiceNumber = `INV${lastInvoiceNumber.toString().padStart(5, "0")}`;
-
-      // Ensure the generated invoiceNo is unique
-      while (await Billing.findOne({ invoiceNo: invoiceNumber })) {
-        lastInvoiceNumber++;
-        invoiceNumber = `INV${lastInvoiceNumber.toString().padStart(5, "0")}`;
-      }
-    }
     const newBilling = {
       user: {
         userId: req.body.user.userId,
