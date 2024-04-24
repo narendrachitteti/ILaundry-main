@@ -11,9 +11,9 @@ import { IoNewspaper } from "react-icons/io5";
 import { FaSearchLocation } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 
-const POPUP_CLASSNAME = "dashboard-popup";
 
 const Dashboard = () => {
+  const [totalStores, setTotalStores] = useState(0);
   const [stats, setStats] = useState({
     totalCustomers: 0,
     totalStores: 0,
@@ -37,18 +37,21 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTotalStores = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/registerdetails`);
-        setUsers(response.data);
+        const response = await axios.get(`${BASE_URL}/totalStores`);
+        setTotalStores(response.data.totalStores);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching total stores:", error);
       }
     };
 
-    fetchData();
+    fetchTotalStores();
   }, []);
+
+ 
 
 
   useEffect(() => {
@@ -65,25 +68,24 @@ const Dashboard = () => {
     fetchTotalCustomers();
   }, []);
 
+  const handleCardClick = (cardType) => {
+    if (cardType === "totalStores") {
+      navigate("/AllStores");
+    }
+  };
+
 
   const handleLocationClick = () => {
     setShowLocations((prev) => !prev);
   };
 
-  const handleCardClick = (card) => {
-    setSelectedCard(card);
-    if (card === "totalStores") {
-      setShowPopup(true);
-    }
-  };
+
 
   const navigateToTotalCustomers = () => {
     navigate("/TotalCustomer");
   };
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
+
 
   return (
     <div className="dashboard-main-container">
@@ -137,7 +139,7 @@ const Dashboard = () => {
                   Total Stores <MdGroups />
                 </span>
               </h3>
-              <p>{stats.totalStores}</p>
+              <p>{totalStores}</p>
             </div>
           </div>
           <div className="stat-card location-card">

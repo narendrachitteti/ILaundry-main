@@ -574,6 +574,7 @@ const Bills = () => {
             id="invoiceNo"
             value={invoiceNumber}
             onChange={(e) => setInvoiceNo(e.target.value)}
+            className="bills-input"
           />
         </div>
 

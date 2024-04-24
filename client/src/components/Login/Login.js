@@ -124,10 +124,11 @@ function Login() {
       <ToastContainer />
       <div className="complete98">
         <button
-          className="cursor-pointer duration-200 hover:scale-125 active:scale-100"
+          className="cursor-pointer-back-login duration-200 hover:scale-125 active:scale-100"
           title="Go Back"
           style={{ marginLeft: "-90%", marginTop: "-5%" }}
           onClick={handleBackButtonClick}
+        
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -162,6 +163,7 @@ function Login() {
                   placeholder='Store ID'
                   value={storeId}
                   onChange={(e) => setStoreId(e.target.value)}
+                  className="login-input-master-staff"
                 />
                 <Components.Input
                   type="text"
@@ -169,12 +171,15 @@ function Login() {
                   value={area}
                   readOnly
                   placeholder="Area"
+                  className="login-input-master-staff"
                 />
                 <Components.Input
+                
                   name="password"
                   type="password"
                   placeholder="Password"
                   required
+                  className="login-input-master-staff"
                 />
                 <Components.Button type="submit">Login</Components.Button>
                 <div
@@ -187,7 +192,7 @@ function Login() {
                     marginTop: "10px",
                   }}
                 >
-                  <p style={{ color: "black" }}>Don't have an account?</p>{" "}
+                  <p className="link-account-register" style={{ color: "black" }}>Don't have an account?</p>{" "}
                   &nbsp;&nbsp;
                   <Link to="/Register" style={{ textDecoration: "none" }}>
                     <div>
@@ -197,7 +202,10 @@ function Login() {
                           fontWeight: "bold",
                           textDecoration: "none",
                         }}
+                        className="rigister-link-login"
+
                       >
+                        
                         Register
                       </p>
                     </div>
@@ -215,6 +223,7 @@ function Login() {
                   placeholder="Store ID"
                   required
                   onChange={(e) => setStoreId(e.target.value)} // Update storeId state
+                  className="login-input-master-staff"
                 />
                 <Components.Input
                   type="text"
@@ -222,6 +231,7 @@ function Login() {
                   value={area}
                   readOnly
                   placeholder="Area"
+                  className="login-input-master-staff"
                 />
 
                 <Components.Input
@@ -229,6 +239,7 @@ function Login() {
                   type="password"
                   placeholder="Password"
                   required
+                  className="login-input-master-staff"
                 />
                 <Components.Button type="submit">Login</Components.Button>
                 <div
