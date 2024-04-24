@@ -48,7 +48,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTotalStores = async () => {
       try {
-        const response = await axios.get(${BASE_URL}/totalStores);
+        const response = await axios.get(`${BASE_URL}/totalStores`);
+
         setTotalStores(response.data.totalStores);
       } catch (error) {
         console.error("Error fetching total stores:", error);
