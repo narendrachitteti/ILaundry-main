@@ -105,8 +105,6 @@ const Dashboard = () => {
       <div className="dashboard-container">
         <h2 className="dashcol">Master Dashboard</h2>
 
-        {/* Cards container has been removed, along with the sales, revenue, and expenses cards */}
-
         <div className="stats-container" >
 
           <div className="row">
