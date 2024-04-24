@@ -140,7 +140,7 @@ const Dashboard = () => {
               <p>{stats.totalStores}</p>
             </div>
           </div>
-          <div className="stat-card location-card">
+          {/* <div className="stat-card location-card">
             <h3 onClick={handleLocationClick} style={{ cursor: "pointer" }}>
               <span className="stat-heading">
                 Location <FaSearchLocation />
@@ -156,7 +156,7 @@ const Dashboard = () => {
                 ))}
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
