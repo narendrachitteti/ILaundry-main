@@ -16,6 +16,8 @@ import OrdersTable from "./OrdersTable";
 
 const Dashboard = () => {
   // State variables
+  const [totalStores, setTotalStores] = useState(0);
+
   const [stats, setStats] = useState({
     totalCustomers: 0,
     totalShops: 0,
@@ -42,6 +44,20 @@ const Dashboard = () => {
   const [totalCustomers, setTotalCustomers] = useState(0); // Define totalCustomers state variable
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTotalStores = async () => {
+      try {
+        const response = await axios.get(${BASE_URL}/totalStores);
+        setTotalStores(response.data.totalStores);
+      } catch (error) {
+        console.error("Error fetching total stores:", error);
+      }
+    };
+
+    fetchTotalStores();
+  }, []);
+
  
   useEffect(() => {
     const fetchTotalCustomers = async () => {
@@ -94,9 +110,17 @@ const Dashboard = () => {
   };
 
   // Handle card click
-  const handleCardClick = (card) => {
-    setSelectedCard(card);
+  // const handleCardClick = (card) => {
+  //   setSelectedCard(card);
+  // };
+  
+  const handleCardClick = (cardType) => {
+    if (cardType === "totalStores") {
+      navigate("/AllStores");
+    }
   };
+
+
 
   return (
     <div className="dashboard-main-container">
