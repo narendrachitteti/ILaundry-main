@@ -6,6 +6,13 @@ const UserSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+
+
+  isActive: {
+    type: Boolean,
+    default: true // User is active by default
+  },
+  
   storeId: {
     type: String,
     required: true,
@@ -22,6 +29,8 @@ const UserSchema = new mongoose.Schema({
   userType: String,
   password: String,
   confirmPassword: String,
+
+  
 });
 
 const UserModel = mongoose.model("User", UserSchema);

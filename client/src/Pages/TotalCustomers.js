@@ -30,12 +30,27 @@ const TotalCustomers = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Calculate total number of pages
+  const totalPages = Math.ceil(invoices.length / invoicesPerPage);
+
+  // Generate array for page numbers to display
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  // Display only 5 page numbers at a time
+  const displayPageNumbers = pageNumbers.slice(
+    Math.max(0, Math.min(currentPage - 2, totalPages - 4)),
+    Math.min(pageNumbers.length, Math.max(currentPage + 2, 4))
+  );
+
   return (
     <div>
       <Navbar />
       <div className="invoices-data">
         <h2>Total Invoices: {invoices.length}</h2>
-        <table className="invoices-table">
+       <table className="invoices-table">
           <thead>
             <tr>
               <th>Invoice Number</th>
@@ -75,11 +90,21 @@ const TotalCustomers = () => {
         </table>
         {/* Pagination */}
         <div className="pagination">
-          {Array.from({ length: Math.ceil(invoices.length / invoicesPerPage) }, (_, i) => (
-            <button key={i + 1} onClick={() => paginate(i + 1)} className={currentPage === i + 1 ? "active" : null}>
-              {i + 1}
+          {currentPage > 1 && (
+            <button onClick={() => paginate(currentPage - 1)}>{'<'}</button>
+          )}
+          {displayPageNumbers.map((pageNumber) => (
+            <button 
+              key={pageNumber} 
+              onClick={() => paginate(pageNumber)} 
+              className={currentPage === pageNumber ? "active" : null}
+            >
+              {pageNumber}
             </button>
           ))}
+          {currentPage < totalPages && (
+            <button onClick={() => paginate(currentPage + 1)}>{'>'}</button>
+          )}
         </div>
       </div>
     </div>

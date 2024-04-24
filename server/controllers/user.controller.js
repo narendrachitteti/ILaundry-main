@@ -196,7 +196,7 @@ exports.getAreaByStoreId = async (req, res) => {
 
   try {
     const user = await User.findOne({ storeId });
-    
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -222,6 +222,95 @@ exports.getTotalStores = async (req, res) => {
     console.error("Error fetching total stores:", error);
     res.status(500).json({
       message: "An error occurred while fetching total stores. Please try again later.",
+    });
+  }
+};
+
+
+exports.activateUser = async (req, res) => {
+  const { storeId } = req.body;
+
+  try {
+      // Find the user by storeId and update the isActive field to true
+      const user = await User.findOneAndUpdate({ storeId }, { isActive: true });
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+      res.status(200).json({ message: "User activated successfully" });
+  } catch (error) {
+      console.error("Error activating user:", error);
+      res.status(500).json({ message: "An error occurred while activating user" });
+  }
+};
+
+exports.deactivateUser = async (req, res) => {
+  const { storeId } = req.body;
+
+  try {
+      // Find the user by storeId and update the isActive field to false
+      const user = await User.findOneAndUpdate({ storeId }, { isActive: false });
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+      res.status(200).json({ message: "User deactivated successfully" });
+  } catch (error) {
+      console.error("Error deactivating user:", error);
+      res.status(500).json({ message: "An error occurred while deactivating user" });
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  const { storeId, password } = req.body;
+
+  try {
+    const user = await User.findOne({ storeId, password });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid StoreId or password" });
+    }
+
+    // Check if the user's account is active
+    if (!user.isActive) {
+      return res.status(403).json({ message: "Your account is inactive. Please contact an administrator." });
+    }
+
+    // Check if the user is an admin
+    if (user.userType !== "admin") {
+      return res
+        .status(403)
+        .json({ message: "Access denied. Only admins are allowed to login" });
+    }
+
+    // Authentication successful
+    res.status(200).json({ message: "Login successful" });
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res.status(500).json({
+      message: "An error occurred while logging in. Please try again later.",
+    });
+  }
+};
+
+exports.loginStaff = async (req, res) => {
+  const { storeId, password } = req.body;
+
+  try {
+    const user = await User.findOne({ storeId, password, userType: "staff" });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid storeId or password" });
+    }
+
+    // Check if the user's account is active
+    if (!user.isActive) {
+      return res.status(403).json({ message: "Your account is inactive. Please contact an administrator." });
+    }
+
+    // Authentication successful
+    res.status(200).json({ message: "Staff login successful" });
+  } catch (error) {
+    console.error("Error logging in as staff:", error);
+    res.status(500).json({
+      message:
+        "An error occurred while logging in as staff. Please try again later.",
     });
   }
 };
