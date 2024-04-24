@@ -30,7 +30,7 @@ const Userlist = () => {
 
     const handleActivate = async (storeId) => {
         try {
-            const response = await axios.post('http://localhost:5000/api/activateUser', { storeId });
+            const response = await axios.post('http://localhost:5000/api/activate', { storeId });
             if (response.status === 200) {
                 setActiveUsers(prevActiveUsers => [...prevActiveUsers, storeId]);
                 setPopupMessage('User activated successfully');
