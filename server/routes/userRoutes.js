@@ -11,7 +11,8 @@ router.get("/getusers", UserController.getAllUsers);
 router.post("/login/staff", UserController.loginStaff);
 router.get("/api/registerdetails", UserController.getAll);
 // Route to get the next store ID
-router.get("/getNextStoreId", UserController.getNextStoreId);
+router.get('/getNextStoreId', UserController.getNextStoreId);
+
 
 // New route to fetch area based on storeId
 router.get("/area/:storeId", UserController.getAreaByStoreId);
@@ -19,7 +20,6 @@ router.get("/area/:storeId", UserController.getAreaByStoreId);
 router.get("/users/:storeId", UserController.getUserByStoreId);
 
 
-router.get("/api/users/totalStores", UserController.getTotalStores);
 
 
 module.exports = router;
