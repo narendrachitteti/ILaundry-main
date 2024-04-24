@@ -42,7 +42,7 @@ const TotalCustomers = () => {
   // Display only 5 page numbers at a time
   const displayPageNumbers = pageNumbers.slice(
     Math.max(0, Math.min(currentPage - 2, totalPages - 4)),
-    Math.min(pageNumbers.length, Math.max(currentPage + 2, 5))
+    Math.min(pageNumbers.length, Math.max(currentPage + 2, 4))
   );
 
   return (
