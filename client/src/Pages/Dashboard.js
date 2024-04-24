@@ -194,9 +194,9 @@ const Dashboard = () => {
               </h3>
               <p>{stats.todayOrders}</p>
             </div>
-            <div className="total-stores">
+            <div className="total-stores"  onClick={() => handleCardClick("totalStores")}>
               <h3>
-                <div className="custom1">
+                <div className="custom1" >
                   <div className="icons">
                     <MdGroups />
                   </div>
