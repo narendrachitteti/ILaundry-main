@@ -81,9 +81,9 @@ const Userlist = () => {
     };
 
     const filteredDetails = details.filter(detail =>
-        detail.email && detail.email.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
+        (detail.email && detail.email.toLowerCase().includes(searchQuery)) ||
+        (detail.storeId && detail.storeId.toLowerCase().includes(searchQuery))
+    )
     return (
         <>
             <Navbar />
