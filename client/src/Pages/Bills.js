@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import "./Bills.css";
 import { GiClothes } from "react-icons/gi";
@@ -12,14 +13,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import ReactWhatsapp from "react-whatsapp";
 import axios from "axios";
 import QRCode from "qrcode.react";
-import StaffNavbar from "../components/StaffNavbar.js";
-import Barcode from "react-barcode";
+import Barcode from 'react-barcode';
+import StaffNavbar from "../components/StaffNavbar";
+import { BASE_URL } from "../Helper/Helper";
 
 const currencies = currencyCodes.data;
 
 const Bills = () => {
   const [user, setUser] = useState(null);
-  const BASE_URL = 'http://localhost:5000'; 
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("mail");
@@ -41,6 +42,7 @@ const Bills = () => {
       setUsername(user.username); // Update the username state after user state is set
     }
   }, [user]);
+
 
   const [selectedInvoice, setSelectedInvoice] = useState({});
   const [selectedPopupItem, setSelectedPopupItem] = useState("");
@@ -373,7 +375,7 @@ const Bills = () => {
       deliveryDate: formatDate(deliveryDate), // Include delivery date
       store: selectedStore,
       factory: selectedFactory,
-
+      
       items: rows.map((row, index) => ({
         item: selectedItems[index],
         quantity: quantities[index],
@@ -392,10 +394,10 @@ const Bills = () => {
       selectedPopupItem,
       user: user
         ? {
-            userId: user._id,
-            username: user.name,
-            name: user.name,
-          }
+          userId: user._id,
+          username: user.name,
+          name: user.name,
+        }
         : null,
     };
 
@@ -418,47 +420,23 @@ const Bills = () => {
   const handledownloadcopy = () => {
     const doc = new jsPDF();
 
-    // Add GST number to the top left corner
-    const gstNumber = "GSTIN29ABCDE1234F1ZW";
-    doc.setFontSize(10);
-    doc.text(gstNumber, 10, 20);
-
-    // Add logo to the top right corner
-    const logoUrl = "./logo.png";
-    const logoWidth = 50; // Adjust as needed
-    const logoHeight = 20; // Adjust as needed
-    doc.addImage(
-      logoUrl,
-      "PNG",
-      doc.internal.pageSize.getWidth() - logoWidth - 10,
-      10,
-      logoWidth,
-      logoHeight
-    );
-
-    // Add a heading for the invoice
-    doc.setFontSize(16);
-    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, 40, {
-      align: "center",
-    });
-
     // Define the data for the table
     const tableData = [
-      ["Invoice No:", invoiceNo],
-      ["Invoice Date:", formatDate(invoiceDate)],
-      ["Client Name:", clientName],
-      ["Client Contact:", clientContact],
-      ["Selected Item:", selectedPopupItem],
-      ["Total:", total],
-      ["Tax Amount:", taxAmount],
+        ["Invoice No:", invoiceNo],
+        ["Invoice Date:", formatDate(invoiceDate)],
+        ["Client Name:", clientName],
+        ["Client Contact:", clientContact],
+        ["Selected Item:", selectedPopupItem],
+        ["Total:", total],
+        ["Tax Amount:", taxAmount]
     ];
 
     // Set up styles for the table
     const tableStyles = {
-      fontSize: 10,
-      fontStyle: "normal", // normal, bold, italic
-      textColor: [0, 0, 0], // Black color
-      cellPadding: 5,
+        fontSize: 10,
+        fontStyle: 'normal', // normal, bold, italic
+        textColor: [128, 128, 128], // Grey color
+        cellPadding: 5
     };
 
     // Set up column widths
@@ -469,25 +447,37 @@ const Bills = () => {
     const contentWidth = doc.internal.pageSize.getWidth() - 2 * margin;
     const contentHeight = doc.internal.pageSize.getHeight() - 2 * margin;
     doc.setDrawColor(0); // Black border
-    doc.rect(margin, margin + 30, contentWidth, contentHeight - 30); // Adjust position for GST number
+    doc.rect(margin, margin, contentWidth, contentHeight); // Adjusted position for the border
+
+    // Add GST number inside the border, aligned to the right, and bold
+    const gstNumber = "GSTIN:29ABCDE1234F1ZW";
+    const gstTextWidth = doc.getStringUnitWidth(gstNumber) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text(gstNumber, doc.internal.pageSize.getWidth() - margin - gstTextWidth + 20, margin + 5); // Adjusted position for GST number
+
+    // Add a heading for the invoice inside the border, centered, and bold
+    doc.setFont("bold");
+    doc.setFontSize(18);
+    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 40, { align: "center" }); // Adjusted position for the heading
 
     // Add the table to the PDF
     doc.autoTable({
-      body: tableData,
-      startY: 70, // Start below the heading
-      startX: margin,
-      styles: tableStyles,
-      columnStyles: {
-        0: { fontStyle: "bold" }, // Make the first column bold
-        1: { fontStyle: "normal" }, // Make the second column normal
-      },
-      columnWidth: columnWidths,
-      margin: { top: 50 }, // Add margin to avoid overlapping with the heading and logo
+        body: tableData,
+        startY: margin + 60, // Start below the heading
+        startX: margin,
+        styles: tableStyles,
+        columnStyles: {
+            0: { fontStyle: 'bold' }, // Make the first column bold
+            1: { fontStyle: 'normal' } // Make the second column normal
+        },
+        columnWidth: columnWidths,
+        margin: { top: margin + 50 } // Add margin to avoid overlapping with the heading and GST number
     });
 
     // Save the PDF file
     doc.save("Laundry Invoice.pdf");
-  };
+};
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
@@ -497,7 +487,10 @@ const Bills = () => {
     const url = window.URL.createObjectURL(pdfFile);
 
     // Open WhatsApp with the PDF file attached
-    ReactWhatsapp.send(customerContact, message, url);
+    ReactWhatsapp.send(
+      customerContact,
+      message,
+      url);
   };
 
   const [showPopup, setShowPopup] = useState(false);
@@ -523,7 +516,7 @@ const Bills = () => {
   const togglePopup = (isCancel) => {
     setShowPopup(!showPopup);
   };
-
+  
   const [deliveryDate, setDeliveryDate] = useState(null);
   const handleDeliveryDateChange = (date) => {
     setDeliveryDate(date);
@@ -535,36 +528,37 @@ const Bills = () => {
     setPickupdate(date);
   };
   const [selectedStore, setSelectedStore] = useState("");
-  const [selectedFactory, setSelectedFactory] = useState("");
+const [selectedFactory, setSelectedFactory] = useState("");
 
-  const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleDateString(); // Convert to a string
 
-  // const [user, setUser] = useState("");
+const currentDate = new Date();
+const formattedDate = currentDate.toLocaleDateString(); // Convert to a string
 
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      const storedStoreId = localStorage.getItem("storeId");
-      if (storedStoreId) {
-        try {
-          const response = await axios.get(
-            `${BASE_URL}/users/${storedStoreId}`
-          );
-          console.log("User data from backend:", response.data); // Log the response data
-          setUser(response.data);
-        } catch (error) {
-          console.error("Error fetching user by storeId:", error);
-        }
+// const [user, setUser] = useState("");
+
+useEffect(() => {
+  const fetchUserDetails = async () => {
+    const storedStoreId = localStorage.getItem("storeId");
+    if (storedStoreId) {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/users/${storedStoreId}`
+        );
+        console.log("User data from backend:", response.data); // Log the response data
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user by storeId:", error);
       }
-    };
+    }
+  };
 
-    fetchUserDetails();
-  }, []); // Empty dependency array to only call this effect once on component mount
+  fetchUserDetails();
+}, []); // Empty dependency array to only call this effect once on component mount
 
   return (
     <div className="billtotal">
       <div className="nav111">
-        {/* <Sidebar /> */}
+      {/* <Sidebar /> */}
         <StaffNavbar />
       </div>
       <div className="invoice-form">
@@ -575,10 +569,9 @@ const Bills = () => {
             id="invoiceNo"
             value={invoiceNumber}
             onChange={(e) => setInvoiceNo(e.target.value)}
-            className="bills-input"
           />
         </div>
-
+      
         <div className="input-group">
           <label htmlFor="invoiceDate">Invoice Date:</label>
           {/* Placeholder for your date picker component */}
@@ -601,76 +594,58 @@ const Bills = () => {
         <div className="input-group">
           <label htmlFor="clientContact">Customer Contact No:</label>
           <input
-            type="tel"
-            maxLength="10"
-            onInput={(e) =>
-              (e.target.value = e.target.value.replace(/\D/, "").slice(0, 10))
-            }
-            required
-            id="clientContact"
-            value={clientContact}
-            onChange={(e) => setClientContact(e.target.value)}
-          />
+    type="tel"
+    maxLength="10"
+    
+    onInput={(e) => (e.target.value = e.target.value.replace(/\D/, "").slice(0, 10))}
+    required
+    id="clientContact"
+    value={clientContact}
+    onChange={(e) => setClientContact(e.target.value)}
+/>
+
         </div>
         <div className="input-group">
           <label htmlFor="clientContact">Customer Address:</label>
           <input
-            type="text"
-            maxLength="100"
-            id="clientaddress"
-            value={customeraddress}
-            onChange={(e) => setcustomeraddress(e.target.value.slice(0, 100))}
-          />
-        </div>
-      </div>
-      <br />
-      <div className="invoice-form">
-        <div className="input-group">
-          <label htmlFor="pickupDate">Pickup Date:</label>
-          <DatePicker
-            id="pickupDate"
-            selected={pickupdate}
-            onChange={handlePickupDateChange}
-            dateFormat="dd-MM-yyyy"
-          />
-        </div>
+    type="text"
+    maxLength="100"
+    id="clientName"
+    value={customeraddress}
+    onChange={(e) => setcustomeraddress(e.target.value.slice(0, 100))}
+/>
 
-        <div className="input-group">
-          <label htmlFor="invoiceDate">Delivery Date:</label>
-          <DatePicker
-            id="deliveryDate"
-            selected={deliveryDate}
-            onChange={handleDeliveryDateChange}
-            dateFormat="dd-MM-yyyy" // Set the desired date format
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="store">Store:</label>
-          <select
-            id="store"
-            value={selectedStore}
-            onChange={(e) => setSelectedStore(e.target.value)}
-          >
-            <option value="">Select Store</option>
-            <option value="storein">Store In</option>
-            <option value="storeout">Store Out</option>
-          </select>
-        </div>
-
-        <div className="input-group">
-          <label htmlFor="factory">Factory:</label>
-          <select
-            id="factory"
-            value={selectedFactory}
-            onChange={(e) => setSelectedFactory(e.target.value)}
-          >
-            <option value="">Select Factory</option>
-            <option value="factoryin">Factory In</option>
-            <option value="factoryout">Factory Out</option>
-          </select>
-        </div>
+        </div>    
       </div>
-      <div className="table-container">
+<br/>
+      <div className="invoice-form" >
+     
+      <div className="input-group">
+  <label htmlFor="pickupDate">Pickup Date:</label>
+  <DatePicker
+    id="pickupDate"
+    selected={pickupdate}
+    onChange={handlePickupDateChange}
+    dateFormat="dd-MM-yyyy"
+  />
+</div>
+    
+      <div className="input-group">
+        <label htmlFor="invoiceDate">Delivery Date:</label>
+        <DatePicker
+          id="deliveryDate"
+          selected={deliveryDate}
+          onChange={handleDeliveryDateChange}
+          dateFormat="dd-MM-yyyy" // Set the desired date format
+        />
+
+      </div>
+
+  
+
+    
+    </div>
+    <div className="table-container">
         <table className="medicine-table">
           <thead>
             <tr>
@@ -744,42 +719,43 @@ const Bills = () => {
                       onClick={() => handleDeleteRow(index)}
                       disabled={rows.length === 1}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 69 14"
-                        class="svgIcon bin-top"
-                      >
-                        <g clip-path="url(#clip0_35_24)">
-                          <path
-                            fill="black"
-                            d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"
-                          ></path>
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_35_24">
-                            <rect fill="white" height="14" width="69"></rect>
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 69 57"
-                        class="svgIcon bin-bottom"
-                      >
-                        <g clip-path="url(#clip0_35_22)">
-                          <path
-                            fill="black"
-                            d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"
-                          ></path>
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_35_22">
-                            <rect fill="white" height="57" width="69"></rect>
-                          </clipPath>
-                        </defs>
-                      </svg>
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 69 14"
+                    class="svgIcon bin-top"
+                  >
+                    <g clip-path="url(#clip0_35_24)">
+                      <path
+                        fill="black"
+                        d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"
+                      ></path>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_35_24">
+                        <rect fill="white" height="14" width="69"></rect>
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 69 57"
+                    class="svgIcon bin-bottom"
+                  >
+                    <g clip-path="url(#clip0_35_22)">
+                      <path
+                        fill="black"
+                        d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"
+                      ></path>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_35_22">
+                        <rect fill="white" height="57" width="69"></rect>
+                      </clipPath>
+                    </defs>
+                  </svg>
+
                     </button>
                   </div>
                 </td>
@@ -870,7 +846,7 @@ const Bills = () => {
                 </span>
               </div>
             </Col>
-          </Row>
+          </Row>     
           <button
             className="review-button"
             onClick={() => {
@@ -880,102 +856,100 @@ const Bills = () => {
           >
             Review Invoice
           </button>
-          <p value="userType">{user?.name}</p>
+          <p value="userType">{user?.name }</p>
           {showPopup && (
-            <div className="popup34">
-              <div className="popup-header34">
-                Billing Data
-                <button
-                  className="close-button34"
-                  onClick={() => {
-                    togglePopup(true);
-                    resetFields();
-                  }}
-                >
-                  X
+          <div className="popup34">
+          <div className="popup-header34">
+            Billing Data
+            <button
+              className="close-button34"
+              onClick={() => {
+                togglePopup(true);
+                resetFields();
+              }}
+            >
+              X
+            </button>
+          </div>
+          <div className="popup-content456">
+            <form>
+            <Barcode value={invoiceNumber.toString()} /> 
+              <div className="data-placeholder">
+                <label className="nameclass-label">User:</label>
+                <span>{user?.name }</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">InvoiceNo:</label>
+                <span>{invoiceNumber}</span>
+              </div>
+              <label className="nameclass-label">InvoiceDate</label>:
+                  <input type="text" value={invoiceDate} />
+              <div className="data-placeholder">
+                <label className="nameclass-label">ClientName:</label>
+                <span>{clientName}</span>
+              </div>
+              <div className="data-placeholder">
+                <label className="nameclass-label">ClientContact:</label>
+                <span>{clientContact}</span>
+              </div>
+              <div className="data-placeholder">
+              <label className="nameclass-label">Pickup Date</label>:
+                  <input  type="text" value={pickupdate} />
+              </div>
+              <div className="data-placeholder">
+              <label className="nameclass-label">Delivery Date</label>:
+                  <input type="text" value={deliveryDate} />
+              </div>
+              <div className="data-placeholder">
+              <label className="nameclass-label">Customer Address:</label>
+              <span>{customeraddress}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Item:</label>
+              <span>{selectedItems}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Services:</label>
+              <span>{selectedServices}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Quantity:</label>
+              <span>{quantities}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Tax Rate:</label>
+              <span>{taxRate}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Discount Rate:</label>
+              <span>{discountRate}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Subtotal:</label>
+              <span>{subTotal}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Tax Amount:</label>
+              <span>{taxAmount}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Discount Amount:</label>
+              <span>{discountAmount}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Total:</label>
+              <span>{total}</span>
+            </div>
+              <div className="merge-karthik-bill">
+                <button className="downloadcopy">Send Copy</button>
+                <button className="downloadcopy" onClick={handledownloadcopy}>
+                  Download Copy
                 </button>
               </div>
-              <div className="popup-content456">
-                <form>
-                  <Barcode value={invoiceNumber.toString()} />
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">User:</label>
-                    <span>{user?.name}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">InvoiceNo:</label>
-                    <span>{invoiceNumber}</span>
-                  </div>
-                  <label className="nameclass-label">InvoiceDate</label>:
-                  <input type="text" value={invoiceDate} />
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">ClientName:</label>
-                    <span>{clientName}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">ClientContact:</label>
-                    <span>{clientContact}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Pickup Date</label>:
-                    <input type="text" value={pickupdate} />
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Delivery Date</label>:
-                    <input type="text" value={deliveryDate} />
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Customer Address:</label>
-                    <span>{customeraddress}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Item:</label>
-                    <span>{selectedItems}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Services:</label>
-                    <span>{selectedServices}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Quantity:</label>
-                    <span>{quantities}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Tax Rate:</label>
-                    <span>{taxRate}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Discount Rate:</label>
-                    <span>{discountRate}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Subtotal:</label>
-                    <span>{subTotal}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Tax Amount:</label>
-                    <span>{taxAmount}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Discount Amount:</label>
-                    <span>{discountAmount}</span>
-                  </div>
-                  <div className="data-placeholder">
-                    <label className="nameclass-label">Total:</label>
-                    <span>{total}</span>
-                  </div>
-                  <div className="merge-karthik-bill">
-                    <button className="downloadcopy">Send Copy</button>
-                    <button
-                      className="downloadcopy"
-                      onClick={handledownloadcopy}
-                    >
-                      Download Copy
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+            </form>
+          </div>
+        </div>
+        
           )}
         </div>
       </center>

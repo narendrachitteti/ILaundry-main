@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import moment from "moment";
 import { BASE_URL } from "../Helper/Helper.js";
 import "../Styles/PreviousBills.css";
 import Popup from "reactjs-popup";
+import { MdEdit } from "react-icons/md";
 import CustomerForm from "./CustomerForm.js";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
@@ -28,8 +30,10 @@ import InvoiceDetailsPopup from "./InvoiceDetailsPopup.js";
 import { autoTable } from "pdfmake/build/pdfmake";
 import "jspdf-autotable";
 import StaffNavbar from "../components/StaffNavbar.js";
+import { GiClothes } from "react-icons/gi";
+import { FaEdit } from "react-icons/fa";
 
-const PreviousBills = () => {
+const PreviousBills = ({service}) => {
   const [customerServicesCus, setcustomerServicesCus] = useState([]);
   const [searchTextCus, setsearchTextCus] = useState("");
   const [activePage, setActivePage] = useState(1);
@@ -57,8 +61,7 @@ const PreviousBills = () => {
           ...billing,
           username: billing.user ? billing.user.fullName : "", // Add null check here
           address: billing.user ? billing.user.address : "", // Add null check here
-          selectedStoreOption: "in", // Initialize with default value "in"
-          selectedFactoryOption: "in", // Initialize with default value "in"
+
         }));
         setcustomerServicesCus(billingDataWithUsername);
         setAllData(billingDataWithUsername);
@@ -112,20 +115,7 @@ const PreviousBills = () => {
     }
   }, [showUploadfilesPopup, selectedServiceId]);
 
-  const handleAddCusOrUpdate = async (formData) => {
-    try {
-      if (selectedServiceCus) {
-        await axios.put(`${BASE_URL}/invoice/${selectedServiceCus._id}`, formData);
-      } else {
-        await axios.post(`${BASE_URL}/invoice/`, formData);
-      }
-      fetchcustomerServicesCus(); // Refresh data after update
-      setselectedServiceCus(null);
-      setAddPopupOpenCus(false);
-    } catch (error) {
-      console.error("Error adding/updating Customer Details:", error);
-    }
-  };
+ 
 
   const handlesearchTextCusChange = (newValue) => {
     console.log("Search Text:", newValue);
@@ -142,32 +132,21 @@ const PreviousBills = () => {
     );
   };
 
-  const handleDeleteCus = async (serviceId) => {
-    try {
-      await axios.delete(`${BASE_URL}/api/billing/${serviceId}`);
-      // Update local state after successful deletion
-      setcustomerServicesCus((prevServices) =>
-        prevServices.filter((service) => service._id !== serviceId)
-      );
-      setSelectedInvoice(null); // Close any open popups if needed
-    } catch (error) {
-      console.error("Error deleting Customer Details:", error);
-      // Handle error or show notification to user
-    }
-  };
 
- const filteredData = customerServicesCus.filter((service) => {
-  return (
-    service.invoiceNo.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-    moment(service.invoiceDate)
-      .format("DD-MM-YYYY")
-      .includes(searchTextCus) ||
-    service.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-    service.clientContact.includes(searchTextCus)
-  );
-});
+ 
 
-console.log("Filtered Data:", filteredData);
+  const filteredData = customerServicesCus.filter((service) => {
+    return (
+      service?.invoiceNo?.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+      moment(service?.invoiceDate).format("DD-MM-YYYY").includes(searchTextCus) ||
+      service?.clientName?.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+      (service?.clientContact && service.clientContact.includes(searchTextCus))
+    );
+  });
+  
+  console.log("customerServicesCus:", customerServicesCus);
+
+  console.log("Filtered Data:", filteredData);
 
   
   const handleDownloadPDF = (service) => {
@@ -234,6 +213,7 @@ console.log("Filtered Data:", filteredData);
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
 
+    
     const boldLabels = [
       "Discount Rate",
       "Discount Amount",
@@ -429,30 +409,106 @@ console.log("Filtered Data:", filteredData);
     
     setcustomerServicesCus(filteredData);
   };
-  
-  const [selectedStoreOption, setSelectedStoreOption] = useState("in");
-  const [selectedFactoryOption, setSelectedFactoryOption] = useState("in");
-
 
   
-  const handleStoreOptionChange = (option, service) => {
-    const updatedServices = [...customerServicesCus];
-    const index = updatedServices.findIndex((s) => s._id === service._id);
-    if (index !== -1) {
-      updatedServices[index].selectedStoreOption = option;
-      setcustomerServicesCus(updatedServices);
+
+  const handleDeleteCus = async (serviceId) => {
+    try {
+      await axios.delete(`${BASE_URL}/api/billing/${serviceId}`);
+      // Update local state after successful deletion
+      setcustomerServicesCus((prevServices) =>
+        prevServices.filter((service) => service._id !== serviceId)
+      );
+      setSelectedInvoice(null); // Close any open popups if needed
+    } catch (error) {
+      console.error("Error deleting Customer Details:", error);
+      // Handle error or show notification to user
+    }
+  };
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(null);
+  const [tempStatus, setTempStatus] = useState(null); // Temp state for editing
+  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [Service, setService] = useState(null);
+  const [, setCustomerServicesCus] = useState([]);
+
+  const [selectedService, setSelectedService] = useState(null);
+
+  // Function to handle in/out button click
+  const handleButtonClick = (value) => {
+    setTempStatus(value); // Update temp status
+  };
+
+  const handleEditClick = (service) => {
+    setSelectedService(service);
+    setShowEditPopup(true);
+  };
+
+  // Function to handle closing edit popup
+  const handleClosePopup = () => {
+    setShowEditPopup(false);
+    setSelectedService(null); // Reset selected service after closing popup
+  };
+  
+
+  const payload = {
+    user: {
+      userId: '',
+      fullName: ''
+    },
+    // Other billing details...
+  };
+  const handleUpdateClick = async () => {
+    try {
+      if (!selectedService || !selectedService._id) {
+        console.error("Selected service or ID is undefined");
+        return;
+      }
+  
+      const updatedService = {
+        storeStatus: storeStatus,
+        factoryStatus: factoryStatus,
+        // Add other fields to update as needed...
+      };
+  
+      await axios.put(`${BASE_URL}/api/billing/${selectedService._id}`, updatedService);
+  
+      console.log("Billing updated successfully");
+      // Close the edit popup after successful update
+      setShowEditPopup(false);
+      // Update the local state with the updated service
+      setCustomerServicesCus((prevServices) =>
+        prevServices.map((service) =>
+          service._id === selectedService._id ? { ...service, ...updatedService } : service
+        )
+      );
+    } catch (error) {
+      console.error("Error updating billing record:", error);
+      // Handle error if needed
     }
   };
   
-  const handleFactoryOptionChange = (option, service) => {
-    const updatedServices = [...customerServicesCus];
-    const index = updatedServices.findIndex((s) => s._id === service._id);
-    if (index !== -1) {
-      updatedServices[index].selectedFactoryOption = option;
-      setcustomerServicesCus(updatedServices);
-    }
-  };
   
+  const handleCancelButton = () => {
+    setSelectedService(null);
+    setShowEditPopup(false);
+  };
+
+  const handleStatusChange = (status) => {
+    setSelectedStatus(status);
+  };
+
+  const [storeStatus, setStoreStatus] = useState("");
+const [factoryStatus, setFactoryStatus] = useState("");
+
+const handleStoreStatusClick = (status) => {
+  setStoreStatus(storeStatus === status ? "" : status);
+};
+
+const handleFactoryStatusClick = (status) => {
+  setFactoryStatus(factoryStatus === status ? "" : status);
+};
+
 
   return (
     <>
@@ -490,25 +546,25 @@ console.log("Filtered Data:", filteredData);
         <table className="lab-service-table_5">
           <thead>
             <tr className="product-ooi">
-              <th className="product-ooi">Invoice No</th>
-              <th className="product-ooi">Invoice Date</th>
-              <th className="product-ooi">Staff Name</th>
-              <th className="product-ooi">Customer Name</th>
-              <th className="product-ooi">Contact</th>
-              <th className="product-ooi">Address</th>
-              <th className="product-ooi">D&R</th>
-              <th className="product-ooi">D&A</th>
-              <th className="product-ooi">T&R</th>
-              <th className="product-ooi">T&A</th>
-              <th className="product-ooi">Total</th>
-              <th className="product-ooi">Subtotal </th>
-              <th className="product-ooi">Currency</th>
-              <th className="product-ooi">Items</th>
-              <th className="product-ooi">Actions</th>             
-              <th className="product-ooi">Pay Mode</th>
-              <th className='thbilling87' colSpan="2">Store (In/Out)</th>
-              <th className="product-ooi" colSpan="2">Factory (In/Out)</th>
-              <th className="product-ooi">Status</th>             
+            <th className="product-ooi">Invoice No</th>
+            <th className="product-ooi">Invoice Date</th>
+            <th className="product-ooi">Staff Name</th>
+            <th className="product-ooi">Customer Name</th>
+            <th className="product-ooi">Contact</th>
+            <th className="product-ooi">Address</th>
+            <th className="product-ooi">D&R</th>
+            <th className="product-ooi">D&A</th>
+            <th className="product-ooi">T&R</th>
+            <th className="product-ooi">T&A</th>
+            <th className="product-ooi">Total</th>
+            <th className="product-ooi">Subtotal </th>
+            <th className="product-ooi">Currency</th>
+            <th className="product-ooi">Items</th>
+            <th className="product-ooi">Actions</th>             
+            <th className="product-ooi">Pay Mode</th>
+              <th className='thbilling87' >Store (In/Out)</th>
+              <th className="product-ooi" >Factory (In/Out)</th>
+               <th className="product-ooi">Status</th>              
               {/* <th className="product-ooi">Staff Name</th> */}
             </tr>
 
@@ -518,7 +574,7 @@ console.log("Filtered Data:", filteredData);
           <tbody>
             {filteredData
               .slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage)
-              .map((service) => (
+              .map((service, index) => (
                 <tr key={service._id}>
                   <td onClick={() => handleFieldClick(service)}>
                     {service.invoiceNo}
@@ -529,15 +585,16 @@ console.log("Filtered Data:", filteredData);
                       : ""}
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
-                    {service.user ? service.user.fullName : ""} {/* Add null check */}
-                  </td>
-                  <td onClick={() => handleFieldClick(service)}>
-                    {service.clientName}
-                  </td>
-                  <td onClick={() => handleFieldClick(service)}>
+                  {service.user ? service.user.fullName : ""} {/* Add null check */}
+                </td>
+                <td onClick={() => handleFieldClick(service)}>
+                  {service.clientName}
+                </td>
+                <td onClick={() => handleFieldClick(service)}>
                     {service.clientContact}
                   </td>
-                  <td onClick={() => handleFieldClick(service)}>
+
+                <td onClick={() => handleFieldClick(service)}>
                     {service.customeraddress}
                   </td>
 
@@ -650,62 +707,63 @@ console.log("Filtered Data:", filteredData);
                     </div>
                   </td>
                   <td>{service.selectedPaymentMode}</td>
-                
-            <td colSpan="2">
-            <label>
-                  <input
-                    type="radio"
-                    value="in"
-                    checked={service.selectedStoreOption === "in"}
-                    onChange={() => handleStoreOptionChange("in", service)}
-                  />
-                  In
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="out"
-                    checked={service.selectedStoreOption === "out"}
-                    onChange={() => handleStoreOptionChange("out", service)}
-                  />
-                  Out
-                </label>
-            </td>
 
-            <td colSpan="2">
-            <label>
-                  <input
-                    type="radio"
-                    value="in"
-                    checked={service.selectedFactoryOption === "in"}
-                    onChange={() => handleFactoryOptionChange("in", service)}
-                  />
-                  In
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="out"
-                    checked={service.selectedFactoryOption === "out"}
-                    onChange={() => handleFactoryOptionChange("out", service)}
-                  />
-                  Out
-                </label>
-            </td>
-            <td>
-            <button className="edit-button_5" onClick={() => handleEditCus(service)}>
-    Edit
-  </button>
-                <button className="delete-button_5" onClick={() => handleDeleteCus(service._id)}>
-  Delete
-</button>
+            
 
-            </td>
+                  <td> <span className={service.storeStatus.includes("SIn") ? "S-In" : "S-Out"}>{service.storeStatus.includes("SIn") ? "S-In" : "S-Out"}</span></td>
+                  <td> <span className={service.factoryStatus.includes("FIn") ? "F-In" : "F-Out"}>{service.factoryStatus.includes("FIn") ? "F-In" : "F-Out"}</span></td>
+
+             <td>
+             <button className="Btn77" onClick={() => handleEditClick(service)}>Edit
+              <svg class="svg" viewBox="0 0 512 512">
+        <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"></path></svg></button>
+               
+            </td> 
            
                 </tr>
               ))}
           </tbody>
         </table>
+
+        <Popup open={showEditPopup} onClose={handleClosePopup}>
+        <div className="edit-popup">
+          <h2>Select Status</h2>
+          <button
+          onClick={() => handleStoreStatusClick("SIn")}
+          className={`status-button ${storeStatus === "SIn" ? "enabled" : "disabled"}`}
+          disabled={storeStatus === "SOut"}
+        >
+         <span>S-In</span> 
+        </button>
+        <button
+          onClick={() => handleStoreStatusClick("SOut")}
+          className={`status-button ${storeStatus === "SOut" ? "enabled" : "disabled"}`}
+          disabled={storeStatus === "SIn"}
+        >
+           <span>S-Out</span>
+        </button>
+        <button
+          onClick={() => handleFactoryStatusClick("FIn")}
+          className={`status-button ${factoryStatus === "FIn" ? "enabled" : "disabled"}`}
+          disabled={factoryStatus === "FOut"}
+        >
+           <span>F-In</span>
+        </button>
+        <button
+          onClick={() => handleFactoryStatusClick("FOut")}
+          className={`status-button ${factoryStatus === "FOut" ? "enabled" : "disabled"}`}
+          disabled={factoryStatus === "FIn"}
+        >
+           <span>F-Out</span>
+        </button>
+        
+
+        
+          <button onClick={handleUpdateClick}>Update</button>
+          <button onClick={handleCancelButton}>Cancel</button>
+
+        </div>
+      </Popup>
         <div className="pagination-container">
           <ReactJsPagination
             activePage={activePage}
@@ -749,18 +807,7 @@ console.log("Filtered Data:", filteredData);
           />
         </Popup>
 
-        <Popup
-          open={selectedServiceCus !== null || isAddPopupOpenCus}
-          onClose={handleCancelCus}
-          closeOnDocumentClick={true}
-        >
-          <CustomerForm
-            selectedServiceCus={selectedServiceCus}
-            onSubmit={handleAddCusOrUpdate}
-            onCancel={handleCancelCus}
-            onDelete={handleDeleteCus}
-          />
-        </Popup>
+       
       </div>
     </>
   );
