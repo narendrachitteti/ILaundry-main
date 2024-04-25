@@ -163,10 +163,10 @@ const Dashboard = () => {
                   <div className="icons">
                     <IoNewspaper />
                   </div>
-                  <div> Today Orders </div>
+                  <div> Total Stores </div>
                 </div>
               </h3>
-              <p>{stats.todayOrders}</p>
+              <p>{totalStores}</p>
             </div>
           </div>
 
