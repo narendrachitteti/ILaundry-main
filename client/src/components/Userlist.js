@@ -88,8 +88,6 @@ const Userlist = () => {
         <>
             <Navbar />
             <br />
-            <br />
-            <br />
             <div className='overalldiv'>
                 <br />
                 <h1 className='details'>Register Details</h1>

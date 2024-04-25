@@ -24,11 +24,11 @@
     /* margin-left: 10px;/ */
   }
   .details{
-    text-align: center;
-    font-size: 1.8 rem;
+    text-align: left;
+    /* font-size: 14px; */
     padding-top: 20px;
     color: #528575;
-    margin-left: 40px;
+    margin-left: 30px;
   }
   .search098{
     padding: 10px 18px;
@@ -36,7 +36,9 @@
     border-radius: 5px;
     /* left: 30%; */
   }
- 
+  .search-container098{
+    margin-left: 25px;
+  }
   
   .user-table th {
     /* background-color: #f2f2f2; */
