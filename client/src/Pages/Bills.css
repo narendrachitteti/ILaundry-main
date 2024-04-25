@@ -58,7 +58,7 @@
 
 form {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
 }
 
 .nameclass-label {
@@ -66,7 +66,7 @@ form {
   font-weight: bold;
 }
 
-input[type="text"] {
+.bills-input[type="text"] {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;

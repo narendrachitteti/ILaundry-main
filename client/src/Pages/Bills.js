@@ -12,6 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import ReactWhatsapp from "react-whatsapp";
 import axios from "axios";
 import QRCode from "qrcode.react";
+import StaffNavbar from "../components/StaffNavbar.js";
 import Barcode from "react-barcode";
 
 const currencies = currencyCodes.data;
@@ -564,7 +565,7 @@ const Bills = () => {
     <div className="billtotal">
       <div className="nav111">
         {/* <Sidebar /> */}
-        {/* <StaffNavbar /> */}
+        <StaffNavbar />
       </div>
       <div className="invoice-form">
         <div className="input-group">
@@ -574,6 +575,7 @@ const Bills = () => {
             id="invoiceNo"
             value={invoiceNumber}
             onChange={(e) => setInvoiceNo(e.target.value)}
+            className="bills-input"
           />
         </div>
 

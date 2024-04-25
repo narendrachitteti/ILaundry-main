@@ -11,17 +11,18 @@ import { IoNewspaper } from "react-icons/io5";
 import { FaSearchLocation } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 
-const POPUP_CLASSNAME = "dashboard-popup";
-
 const Dashboard = () => {
+  const [totalStores, setTotalStores] = useState(0);
   const [stats, setStats] = useState({
     totalCustomers: 0,
     totalStores: 0,
+    totalShops: 0,
+    totalOrders: 0,
+    todayOrders: 0,
+    completedOrders: 0,
     // Other stats...
   });
-
   const [showLocations, setShowLocations] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
   const [locations] = useState([
     "RR Nagar",
     "Marathahalli",
@@ -31,134 +32,148 @@ const Dashboard = () => {
     "BTM Layout",
     "Malleshwaram",
   ]);
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [totalCustomers, setTotalCustomers] = useState(0); // Define totalCustomers state variable
-
+  const [totalCustomers, setTotalCustomers] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTotalStores = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/registerdetails`);
-        setUsers(response.data);
+        const response = await axios.get(`${BASE_URL}/totalStores`);
+        setTotalStores(response.data.totalStores);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching total stores:", error);
+        // Optionally, you can set totalStores to a default value or show an error message to the user
       }
     };
 
-    fetchData();
+    fetchTotalStores();
   }, []);
-
 
   useEffect(() => {
     const fetchTotalCustomers = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/api/get-bills`);
-        const totalCustomers = response.data.length; // Assuming the response is an array of customer data
-        setTotalCustomers(totalCustomers);
+        setTotalCustomers(response.data.length);
       } catch (error) {
         console.error("Error fetching total customers:", error);
+        // Optionally, you can set totalCustomers to a default value or show an error message to the user
       }
     };
 
     fetchTotalCustomers();
   }, []);
 
+  const handleCardClick = (cardType) => {
+    if (cardType === "totalStores") {
+      navigate("/AllStores");
+    }
+  };
 
   const handleLocationClick = () => {
     setShowLocations((prev) => !prev);
-  };
-
-  const handleCardClick = (card) => {
-    setSelectedCard(card);
-    if (card === "totalStores") {
-      setShowPopup(true);
-    }
   };
 
   const navigateToTotalCustomers = () => {
     navigate("/TotalCustomer");
   };
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
+ // Fetch data function
+ const fetchData = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/dashboard`);
+    const data = response.data;
+
+    setStats({
+      totalCustomers: data.totalCustomers,
+      totalShops: data.totalShops,
+      totalStores: data.totalStores,
+      todayOrders: data.todayOrders,
+    });
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+  }
+};
+
+  // Fetch data when component mounts
+  useEffect(() => {
+    fetchData();
+  }, []);
+
 
   return (
     <div className="dashboard-main-container">
+      {/* <Sidebar /> */}
       <Navbar />
       <div className="dashboard-container">
         <h2 className="dashcol">Master Dashboard</h2>
+
         <div className="stats-container">
           <div className="row">
-            <div className="stat-card" onClick={navigateToTotalCustomers}>
+            <div className="total-customers" onClick={navigateToTotalCustomers}>
               <h3>
-                <span className="stat-heading">
-                  <FaPeopleGroup /> Total Customers
-                </span>
+                <div className="custom1" onc>
+                  <div className="icons">
+                    <FaPeopleGroup />
+                  </div>
+                  <div> Total Customers </div>
+                </div>
               </h3>
               <p>{totalCustomers}</p>
             </div>
-            <div className="stat-card">
+            <div className="complete-order">
               <h3>
-                <span className="stat-heading">
-                  <IoNewspaper /> Completed Orders
-                </span>
+                <div className="custom1">
+                  <div className="icons">
+                    <IoNewspaper />
+                  </div>
+                  <div> Completed Orders </div>
+                </div>
               </h3>
               <p>{stats.completedOrders}</p>
             </div>
-
-            <div className="stat-card">
+            <div className="total-orders">
               <h3>
-                <span className="stat-heading">
-                  <BsFileEarmarkSpreadsheet /> Total Orders
-                </span>
+                <div className="custom1">
+                  <div className="icons">
+                    <BsFileEarmarkSpreadsheet />
+                  </div>
+                  <div> Total Orders </div>
+                </div>
               </h3>
               <p>{stats.totalOrders}</p>
             </div>
-            <div className="stat-card">
+            <div className="today-orders">
               <h3>
-                <span className="stat-heading">
-                  <IoNewspaper /> Today Orders
-                </span>
+                <div className="custom1">
+                  <div className="icons">
+                    <IoNewspaper />
+                  </div>
+                  <div> Today Orders </div>
+                </div>
+              </h3>
+              <p>{stats.todayOrders}</p>
+            </div>
+            <div className="today-orders">
+            <div
+              // className="stat-card"
+              onClick={() => handleCardClick("totalStores")}
+            >
+              <h3>
+               <div className="custom1">
+                  <div className="icons">
+                    <IoNewspaper />
+                  </div>
+                  <div> Today Orders </div>
+                </div>
               </h3>
               <p>{stats.todayOrders}</p>
             </div>
           </div>
 
-          <div className="row">
-            <div
-              className="stat-card"
-              onClick={() => handleCardClick("totalStores")}
-            >
-              <h3>
-                <span className="stat-heading">
-                  Total Stores <MdGroups />
-                </span>
-              </h3>
-              <p>{stats.totalStores}</p>
-            </div>
           </div>
-          {/* <div className="stat-card location-card">
-            <h3 onClick={handleLocationClick} style={{ cursor: "pointer" }}>
-              <span className="stat-heading">
-                Location <FaSearchLocation />
-              </span>
-            </h3>
-            <p>{stats.location}</p>
-            {showLocations && (
-              <div className="locations-dropdown">
-                {locations.map((location, index) => (
-                  <div key={index} className="location-item">
-                    {location}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div> */}
         </div>
       </div>
+      {/* <OrdersTable /> */}
     </div>
   );
 };

@@ -18,8 +18,35 @@
 }
 
 
-.cursor-pointer{
+.cursor-pointer-back-login{
   background-color: white;
   border-radius: 1rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.login-input-master-staff[type="text"],
+.login-input-master-staff[type="password"]{
+  border-radius: 5px;
+}
+@media screen and (min-width: 320px) and (max-width: 426px) {
+  .link-account-register{
+    position: relative;
+    right: 10px;
+    font-size: 10px;
+  }
+  .rigister-link-login{
+    font-size: 10px;
+    position: relative;
+    top: 28px;
+    left: -9px;
+  }
+ .cursor-pointer-back-login{
+  position: relative;
+  top: -5px;
+  left: 10px;
+ }
+ .login-input-master-staff[type="text"],
+ .login-input-master-staff[type="password"]{
+  width: 130px;
+  border-radius: 4px;
+ }
 }
