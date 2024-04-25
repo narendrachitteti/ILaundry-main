@@ -47,7 +47,7 @@ const AllStores = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input-allstore"
           />
-          <FaSearch className="search-icon-allstore" />
+          
         </div>
         <table className="users-table">
           <thead>

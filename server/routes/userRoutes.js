@@ -15,6 +15,11 @@ router.get("/getNextStoreId", UserController.getNextStoreId);
 
 // New route to fetch area based on storeId
 router.get("/area/:storeId", UserController.getAreaByStoreId);
+// Route to get total stores
+router.get("/totalStores", UserController.getTotalStores);
+
+// Route to get total stores
+router.get("/totalStores", UserController.getTotalStores);
 
 router.get("/users/:storeId", UserController.getUserByStoreId);
 

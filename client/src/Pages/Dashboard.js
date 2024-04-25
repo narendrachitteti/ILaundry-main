@@ -159,14 +159,14 @@ const Dashboard = () => {
               onClick={() => handleCardClick("totalStores")}
             >
               <h3>
-              <div className="custom1">
+               <div className="custom1">
                   <div className="icons">
                     <IoNewspaper />
                   </div>
-                  <div> Total Stores </div>
+                  <div> Today Orders </div>
                 </div>
               </h3>
-              <p>{totalStores}</p>
+              <p>{stats.todayOrders}</p>
             </div>
           </div>
 

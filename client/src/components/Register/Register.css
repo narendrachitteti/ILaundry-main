@@ -120,5 +120,25 @@
  
 }
 .selectabcd1233:focus {
-  outline: black;
+  outline: rgb(0, 0, 0);
+}
+
+
+@media screen and (min-width: 320px) and (max-width: 426px) {
+ .Inner-container-abed23s{
+   border-radius: 10px;
+   width: 90%;
+ }
+ .back-icon{
+  left: 20px;
+  top: 5px;
+ }
+ .selectabcd1233{
+  padding: 1px;
+  height: 5px !important;
+}
+}
+
+@media screen and (max-width: 768px) {
+ 
 }
