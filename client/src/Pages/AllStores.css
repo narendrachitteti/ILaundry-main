@@ -22,6 +22,7 @@
   /* Search container styles */
   .search-container-allstore {
     margin-bottom: 20px; /* Adjust margin as needed */
+    width: 450px;
   }
   
   .search-input-allstore {
@@ -36,7 +37,7 @@
     font-weight: 600;
     position: absolute;
     top: 76px; 
-    right: 110px;
+    left: 420px;
   }
   
   /* Users table styles */

@@ -222,8 +222,8 @@ exports.getTotalStores = async (req, res) => {
     console.error("Error fetching total stores:", error);
     res.status(500).json({
       message: "An error occurred while fetching total stores. Please try again later.",
-    });
-  }
+ });
+}
 };
 
 
