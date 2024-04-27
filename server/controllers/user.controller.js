@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+// const Order = require("../models/order.model"); 
 exports.registerUser = async (req, res) => {
   const { fullName, storeId, userType, email, password, confirmPassword, area } = req.body;
 
@@ -191,6 +192,8 @@ exports.getNextStoreId = async (req, res) => {
 };
 
 
+
+
 exports.getAreaByStoreId = async (req, res) => {
   const { storeId } = req.params;
 
@@ -289,6 +292,24 @@ exports.loginUser = async (req, res) => {
     });
   }
 };
+
+exports.getAllCustomers = async (req, res) => {
+  try {
+    // Query the database to fetch all users with userType 'customer'
+    const customers = await User.find({ userType: 'customer' });
+
+    // Send the fetched customers as a JSON response
+    res.status(200).json(customers);
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    // If an error occurs, send an error response
+    res.status(500).json({
+      message: "An error occurred while fetching customers. Please try again later.",
+    });
+  }
+};
+
+
 
 exports.loginStaff = async (req, res) => {
   const { storeId, password } = req.body;

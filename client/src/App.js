@@ -21,6 +21,8 @@ import StarRating from "./Pages/StarRating.js";
 import StaffNavbar from "./components/StaffNavbar.js";
 import AllStores from './Pages/AllStores.js';
 import TotalCustomers from "./Pages/TotalCustomers.js";
+import TodayOrders from "./Pages/TodayOrders.js";
+
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -54,11 +56,12 @@ function App() {
 
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/AllStores" element={<AllStores />} />
+            <Route path="/TodayOrders" element={<TodayOrders />} />
 
 
             <Route path="/rating" element={<StarRating />} />
             <Route path="/orderstable" element={<OrdersTable />} />
-            <Route path="/TotalCustomer" element={<TotalCustomers />} />
+            <Route path="/TotalCustomers" element={<TotalCustomers />} />
             <Route path="/stafflogin" element={<StaffNavbar/>}/>
           </Routes>
         </Router>
