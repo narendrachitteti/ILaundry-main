@@ -103,7 +103,7 @@ const Navbar = () => {
           <div className="dropdown-content">
             <p>Name: {user?.name}</p>
             <p>Store ID: {user?.storeId}</p>
-            <Link to="/register">
+            <Link to="/StaffRegister">
               <p>Add Staff</p>
             </Link>
 
