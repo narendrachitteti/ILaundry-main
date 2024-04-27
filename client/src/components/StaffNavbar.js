@@ -6,37 +6,38 @@ import image16 from "../components/images/profile.jpg";
 import image17 from "../components/images/customer.jpg";
 import register from "../components/images/register.png";
 import { IoLogOutOutline } from "react-icons/io5";
-
 import "../Styles/Navbar.css";
 import axios from "axios";
 import { BASE_URL } from "../Helper/Helper";
+
+
 const StaffNavbar = () => {
   const navigate = useNavigate();
+  const [staffId, setStaffId] = useState("");
 
-  const [user, setUser] = useState("");
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      const storedStoreId = localStorage.getItem("storeId");
-      if (storedStoreId) {
+    const fetchStaffDetails = async () => {
+      const storedStaffId = localStorage.getItem("staffId");
+     
+      if (storedStaffId) {
         try {
           const response = await axios.get(
-            `${BASE_URL}/users/${storedStoreId}`
+            `${BASE_URL}/profile/${storedStaffId}`
           );
-          console.log("User data from backend:", response.data); // Log the response data
-          setUser(response.data);
+          setStaffId(response.data); // Update staffId state with response data
         } catch (error) {
-          console.error("Error fetching user by storeId:", error);
+          console.error("Error fetching staff by staffId:", error);
         }
       }
     };
-
-    fetchUserDetails();
-  }, []); // Empty dependency array to only call this effect once on component mount
-
+  
+    fetchStaffDetails();
+  }, []);
+  
   const logout = () => {
     localStorage.removeItem("storeId");
-    setUser({}); // Clear user data
+    setStaffId({}); // Clear staffId data
     navigate("/"); // Navigate to the login page
   };
 
@@ -80,9 +81,8 @@ const StaffNavbar = () => {
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
           <p>Profile</p>
           <div className="dropdown-content">
-            {/* <p>{`${user?.firstName} ${user?.lastName}`}</p> */}
-            <p>Name: {user?.name}</p>
-            <p>Store ID: {user?.storeId}</p>
+            
+          <p>Staff ID: {staffId?.staffId}</p>
             <p
               onClick={logout}
               style={{ display: "flex", alignItems: "center", gap: "1rem" }}

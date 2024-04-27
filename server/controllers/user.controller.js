@@ -86,24 +86,24 @@ exports.loginUser = async (req, res) => {
 };
 
 
-exports.loginStaff = async (req, res) => {
-  const { storeId, password } = req.body;
+// exports.loginStaff = async (req, res) => {
+//   const { storeId, password } = req.body;
 
-  try {
-    const user = await User.findOne({ storeId, password, userType: "staff" });
-    if (!user) {
-      return res.status(400).json({ message: "Invalid storeId or password" });
-    }
+//   try {
+//     const user = await User.findOne({ storeId, password, userType: "staff" });
+//     if (!user) {
+//       return res.status(400).json({ message: "Invalid storeId or password" });
+//     }
 
-    res.status(200).json({ message: "Staff login successful" });
-  } catch (error) {
-    console.error("Error logging in as staff:", error);
-    res.status(500).json({
-      message:
-        "An error occurred while logging in as staff. Please try again later.",
-    });
-  }
-};
+//     res.status(200).json({ message: "Staff login successful" });
+//   } catch (error) {
+//     console.error("Error logging in as staff:", error);
+//     res.status(500).json({
+//       message:
+//         "An error occurred while logging in as staff. Please try again later.",
+//     });
+//   }
+// };
 
 
 exports.getAllUsers = async (req, res) => {
@@ -314,3 +314,9 @@ exports.loginStaff = async (req, res) => {
     });
   }
 };
+
+
+
+
+
+
