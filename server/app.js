@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const billRoutes = require("./routes/billsRoutes");
 const userRoutes = require("./routes/userRoutes");
+const staffRoutes = require("./routes/staffRoutes");
 const registerRoutes = require("./routes/registerRoutes");
 const contactRoutes = require("./routes/ContactRoutes");
 const dotenv = require("dotenv");
@@ -34,6 +35,7 @@ mongoose
 // Use Routes
 app.use("/", invoiceRoutes);
 app.use("/", userRoutes);
+app.use("/", staffRoutes);
 app.use("/api", registerRoutes);
 app.use("/api", billRoutes);
 app.use('/api/contact', contactRoutes); 
