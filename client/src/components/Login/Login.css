@@ -50,3 +50,46 @@
   border-radius: 4px;
  }
 }
+
+.dropdown-container-master-login {
+  position: relative;
+  width: 100%;
+  
+}
+
+.dropdown-button-master-login {
+  position: relative;
+  padding: 10px 40px 10px 10px; /* Adjust padding to accommodate the icon */
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  cursor: pointer;
+}
+
+.dropdown-button-master-login::after {
+  content: "\25BC"; /* Unicode character for dropdown arrow */
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+}
+
+.dropdown-options-master-login {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  z-index: 1;
+}
+
+.dropdown-options-master-login div {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-options-master-login div:hover {
+  background-color: #f0f0f0;
+}

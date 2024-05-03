@@ -1,5 +1,7 @@
 .invoices-data {
-    padding-top: 110px; /* Adjust this value based on your navbar height */
+    padding-top: 110px;
+    width: 90%;
+    margin: auto; /* Adjust this value based on your navbar height */
   }
   
   .invoices-data h2 {
@@ -16,7 +18,7 @@
   }
   
   .invoices-table th {
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ddd;
     text-align: center;
     font-size: 18px;
@@ -24,8 +26,9 @@
   }
   
   .invoices-table td {
-    padding: 10px;
+    padding: 7px;
     border: 1px solid #ddd;
+    font-size: 15px;
     text-align: left;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
   }

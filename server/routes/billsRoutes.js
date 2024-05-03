@@ -12,6 +12,10 @@ router.get("/last-invoice-number", billsController.getLastInvoiceNumber);
 
 router.get("/get-bills", billsController.getAll);
 
+router.get("/get-bills/:date", billsController.getTodayOrders);
+
+
+
 // Get all billing records
 router.get("/billing", billsController.getAll);
 

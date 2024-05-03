@@ -12,7 +12,9 @@ import { FaSearchLocation } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 
 const Dashboard = () => {
+  // State variables
   const [totalStores, setTotalStores] = useState(0);
+  const [totalCustomers, setTotalCustomers] = useState(0);
   const [stats, setStats] = useState({
     totalCustomers: 0,
     totalStores: 0,
@@ -32,7 +34,10 @@ const Dashboard = () => {
     "BTM Layout",
     "Malleshwaram",
   ]);
-  const [totalCustomers, setTotalCustomers] = useState(0);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [invoices, setInvoices] = useState([]); // Define invoices state
+  const [todayOrders, setTodayOrders] = useState(0); // Define todayOrders state
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +47,6 @@ const Dashboard = () => {
         setTotalStores(response.data.totalStores);
       } catch (error) {
         console.error("Error fetching total stores:", error);
-        // Optionally, you can set totalStores to a default value or show an error message to the user
       }
     };
 
@@ -53,14 +57,57 @@ const Dashboard = () => {
     const fetchTotalCustomers = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/api/get-bills`);
-        setTotalCustomers(response.data.length);
+        const totalCustomers = response.data.length; // Assuming the response is an array of customer data
+        setTotalCustomers(totalCustomers);
       } catch (error) {
         console.error("Error fetching total customers:", error);
-        // Optionally, you can set totalCustomers to a default value or show an error message to the user
       }
     };
 
     fetchTotalCustomers();
+  }, []);
+
+  useEffect(() => {
+    const fetchTodayInvoices = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/get-bills`);
+        
+        const today = new Date();
+        const formattedToday = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+        const todayInvoices = response.data.filter(invoice => invoice.invoiceDate === formattedToday);
+        
+        setInvoices(todayInvoices);
+        setTodayOrders(todayInvoices.length);
+      } catch (error) {
+        console.error("Error fetching today's invoices:", error);
+      }
+    };
+  
+    fetchTodayInvoices();
+  }, []);
+  
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/dashboard`);
+      const data = response.data;
+      setStats({
+        totalCustomers: data.totalCustomers,
+        totalShops: data.totalShops,
+        totalStores: data.totalStores,
+        todayOrders: data.todayOrders,
+        completedOrders: data.completedOrders,
+        newOrders: data.newOrders,
+        pickupOrders: data.pickupOrders,
+        deliveredOrders: data.deliveredOrders,
+        location: data.location,
+      });
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const handleCardClick = (cardType) => {
@@ -69,53 +116,30 @@ const Dashboard = () => {
     }
   };
 
-  const handleLocationClick = () => {
-    setShowLocations((prev) => !prev);
-  };
-
   const navigateToTotalCustomers = () => {
-    navigate("/TotalCustomer");
+    navigate("/TotalCustomers")
   };
 
- // Fetch data function
- const fetchData = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/api/dashboard`);
-    const data = response.data;
-
-    setStats({
-      totalCustomers: data.totalCustomers,
-      totalShops: data.totalShops,
-      totalStores: data.totalStores,
-      todayOrders: data.todayOrders,
-    });
-  } catch (error) {
-    console.error("Error fetching dashboard data:", error);
-  }
-};
-
-  // Fetch data when component mounts
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+  const handleTodayOrdersClick = async () => { // Fetch today's orders
+    navigate("/TodayOrders"); // Navigate to the "Today Orders" page
+  };
 
   return (
+    <div>
+      <Navbar/>
     <div className="dashboard-main-container">
-      {/* <Sidebar /> */}
       <Navbar />
       <div className="dashboard-container">
         <h2 className="dashcol">Master Dashboard</h2>
-
         <div className="stats-container">
           <div className="row">
             <div className="total-customers" onClick={navigateToTotalCustomers}>
               <h3>
-                <div className="custom1" onc>
+                <div className="custom1">
                   <div className="icons">
                     <FaPeopleGroup />
                   </div>
-                  <div> Total Customers </div>
+                  <div>Total Customers</div>
                 </div>
               </h3>
               <p>{totalCustomers}</p>
@@ -126,7 +150,7 @@ const Dashboard = () => {
                   <div className="icons">
                     <IoNewspaper />
                   </div>
-                  <div> Completed Orders </div>
+                  <div>Completed Orders</div>
                 </div>
               </h3>
               <p>{stats.completedOrders}</p>
@@ -137,7 +161,7 @@ const Dashboard = () => {
                   <div className="icons">
                     <BsFileEarmarkSpreadsheet />
                   </div>
-                  <div> Total Orders </div>
+                  <div>Total Orders</div>
                 </div>
               </h3>
               <p>{stats.totalOrders}</p>
@@ -145,35 +169,29 @@ const Dashboard = () => {
             <div className="today-orders">
               <h3>
                 <div className="custom1">
-                  <div className="icons">
+                  <div className="icons" >
                     <IoNewspaper />
                   </div>
-                  <div> Today Orders </div>
+                  <div onClick={handleTodayOrdersClick}> Today Orders </div>
                 </div>
               </h3>
-              <p>{stats.todayOrders}</p>
+              <p>{todayOrders}</p>
             </div>
-            <div className="today-orders">
-            <div
-              // className="stat-card"
-              onClick={() => handleCardClick("totalStores")}
-            >
+            <div className="total-stores" onClick={() => handleCardClick("totalStores")}>
               <h3>
-               <div className="custom1">
+                <div className="custom1">
                   <div className="icons">
-                    <IoNewspaper />
+                    <MdGroups />
                   </div>
-                  <div> Total Stores </div>
+                  <div>Total Stores</div>
                 </div>
               </h3>
               <p>{totalStores}</p>
             </div>
           </div>
-
-          </div>
         </div>
       </div>
-      {/* <OrdersTable /> */}
+    </div>
     </div>
   );
 };

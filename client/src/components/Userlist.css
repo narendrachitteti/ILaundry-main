@@ -92,9 +92,7 @@
   
 }
 
-.button-active:hover{
-  background-color: rgb(2, 163, 2);
-}
+
 .button-inactive:hover {
   background-color: #8f0b0f; /* Green */
 }
@@ -110,23 +108,24 @@
 }
 
 /* Popup styles */
-/* .popup {
+.popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgba(0, 0, 0, 0.5);
-  width: 100%;
-  height: 100%;
+  width: 40%;
+  height: 50%;
   z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
-} */
+  border-radius: 10px;
+}
 
 .popup-content {
   background-color: rgb(171, 160, 160);
-  padding: 20px;
+  padding: 25px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   text-align: center;
@@ -139,5 +138,29 @@
   font-size: 20px;
   cursor: pointer;
 }
+.button-active {
+  background-color: green; /* Green color for active button */
+  color: white;
+}
+
+.button-inactive {
+  background-color: red; /* Red color for inactive button */
+  color: white;
+}
+/* CSS for the Font Awesome toggle icons */
+.toggle-icon {
+  cursor: pointer;
+  font-size: 32px; /* Adjust the font size as needed */
+  margin-right: 10px; /* Adjust margin as needed */
+}
+
+.toggle-icon.active {
+  color: green; /* Change color for active state */
+}
+
+.toggle-icon.inactive {
+  color: red; /* Change color for inactive state */
+}
+
 
   

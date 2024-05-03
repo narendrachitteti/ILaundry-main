@@ -1,78 +1,96 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import * as Components from './Components';
-import './Login.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import * as Components from "./Components";
+import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
   const [signIn, setSignIn] = useState(true);
-  const [staffError, setStaffError] = useState('');
-  const [area, setArea] = useState('');
-  const [storeId, setStoreId] = useState('');
-  const [password, setPassword] = useState('');
+  const [staffError, setStaffError] = useState("");
+  const [staffId, setStaffId] = useState("");
+  const [area, setArea] = useState("");
+  const [staffArea, setStaffArea] = useState("");
+  const [storeId, setStoreId] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const userData = { storeId, password };
+    const userData = { storeId, password, role: selectedRole };
 
     try {
-      const response = await axios.post('http://localhost:5000/login', userData);
+      const response = await axios.post(
+        "http://localhost:5000/login",
+        userData
+      );
 
       if (response.status === 200) {
         // Handle successful login
-        toast.success('Master login successful');
-        localStorage.setItem('storeId', storeId);
+        toast.success("Master login successful");
+        localStorage.setItem("storeId", storeId);
         setTimeout(() => {
-          navigate('/Dashboard');
+          navigate("/Dashboard");
         }, 1500);
       }
     } catch (error) {
-      console.error('Error logging in:', error);
-      toast.error(error.response.data.message || 'An error occurred while logging in. Please try again later.');
+      console.error("Error logging in:", error);
+      toast.error(
+        error.response.data.message ||
+          "An error occurred while logging in. Please try again later."
+      );
     }
   };
 
   const handleLoginStaff = async (event) => {
     event.preventDefault();
-    const userData = { storeId, password };
-
+    const userData = { staffId, password };
+  
     try {
-      const response = await axios.post('http://localhost:5000/login/staff', userData);
-
+      const response = await axios.post(
+        "http://localhost:5000/loginStaff",
+        userData
+      );
+  
       if (response.status === 200) {
         // Handle successful login
-        toast.success('Staff login successful');
-        localStorage.setItem('storeId', storeId);
+        toast.success("Staff login successful");
+        localStorage.setItem("staffId", staffId);
         setTimeout(() => {
-          navigate('/Bills');
+          navigate("/Bills");
         }, 1500);
       }
     } catch (error) {
-      console.error('Error logging in as staff:', error);
-      toast.error(error.response.data.message || 'An error occurred while logging in. Please try again later.');
+      if (error.response && error.response.status === 404) {
+        setStaffError("Staff not found. Please check your staffId and try again.");
+      } else {
+        console.error("Error logging in as staff:", error);
+        toast.error(
+          error.response.data.message ||
+            "An error occurred while logging in. Please try again later."
+        );
+      }
     }
-  };
-
-  const handleBackButtonClick = () => {
-    navigate(-1);
   };
 
   useEffect(() => {
     // Fetch area when store ID changes
     const fetchArea = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/area/${storeId}`);
+        const response = await axios.get(
+          `http://localhost:5000/area/${storeId}`
+        );
         if (response.status === 200) {
           setArea(response.data.area);
         } else {
-          setArea(''); // Reset area if not found
+          setArea(""); // Reset area if not found
         }
       } catch (error) {
-        console.error('Error fetching area:', error);
-        setArea(''); // Reset area on error
+        console.error("Error fetching area:", error);
+        setArea(""); // Reset area on error
       }
     };
 
@@ -81,6 +99,37 @@ function Login() {
     }
   }, [storeId]);
 
+  useEffect(() => {
+    const fetchAreaByStaffId = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/staffArea/${staffId}`);
+        if (response.status === 200) {
+          setStaffArea(response.data.staffArea);
+        } else {
+          setStaffArea(""); // Reset staffArea if not found
+        }
+      } catch (error) {
+        console.error("Error fetching area by staffId:", error);
+        setStaffArea(""); // Reset staffArea on error
+        toast.error("Error fetching area by staffId. Please try again later.");
+      }
+    };
+  
+    // Fetch area only if staffId is present and it's for staff login
+    if (staffId &&!signIn) {
+      fetchAreaByStaffId();
+    }
+  }, [staffId, signIn]);
+
+
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role);
+    setShowDropdown(false);
+  };
+  const handleBackButtonClick = () => {
+    navigate(-1);
+  };
+
   return (
     <div>
       <ToastContainer />
@@ -88,9 +137,8 @@ function Login() {
         <button
           className="cursor-pointer-back-login duration-200 hover:scale-125 active:scale-100"
           title="Go Back"
-          style={{ marginLeft: '-90%', marginTop: '-5%' }}
+          style={{ marginLeft: "-90%", marginTop: "-5%" }}
           onClick={handleBackButtonClick}
-        
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +160,7 @@ function Login() {
         <Components.Container
           style={{
             boxShadow:
-              '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+              "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
           }}
         >
           {signIn ? (
@@ -127,6 +175,23 @@ function Login() {
                   onChange={(e) => setStoreId(e.target.value)}
                   className="login-input-master-staff"
                 />
+                <div className="dropdown-container-master-login">
+                  <div
+                    className="dropdown-button-master-login"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                     {selectedRole || "Select Role"}
+                  </div>
+                  {showDropdown && (
+                    <div className="dropdown-options-master-login">
+                      <div onClick={() => handleRoleSelect("Admin")}>Admin</div>
+                      <div onClick={() => handleRoleSelect("Super-Admin")}>
+                        Super-Admin
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <Components.Input
                   type="text"
                   name="area"
@@ -136,7 +201,6 @@ function Login() {
                   className="login-input-master-staff"
                 />
                 <Components.Input
-                
                   name="password"
                   type="password"
                   placeholder="Password"
@@ -148,28 +212,26 @@ function Login() {
                 <Components.Button type="submit">Login</Components.Button>
                 <div
                   style={{
-                    display: 'flex',
-                    height: '40px',
-                    borderRadius: '6px',
-                    width: '100%',
-                    padding: '3px',
-                    marginTop: '10px',
+                    display: "flex",
+                    height: "40px",
+                    borderRadius: "6px",
+                    width: "100%",
+                    padding: "3px",
+                    marginTop: "10px",
                   }}
                 >
-                  <p style={{ color: 'black' }}>Don't have an account?</p>{' '}
+                  <p style={{ color: "black" }}>Don't have an account?</p>{" "}
                   &nbsp;&nbsp;
-                  <Link to="/Register" style={{ textDecoration: 'none' }}>
+                  <Link to="/Register" style={{ textDecoration: "none" }}>
                     <div>
                       <p
                         style={{
-                          color: 'orange',
-                          fontWeight: 'bold',
-                          textDecoration: 'none',
+                          color: "orange",
+                          fontWeight: "bold",
+                          textDecoration: "none",
                         }}
                         className="rigister-link-login"
-
                       >
-                        
                         Register
                       </p>
                     </div>
@@ -180,19 +242,19 @@ function Login() {
           ) : (
             <Components.SignUpContainer signingIn={signIn}>
               <Components.Form onSubmit={handleLoginStaff}>
-                <Components.Title>Staff Login</Components.Title>
+                <Components.Title  className="title-master-login">Staff Login</Components.Title>
                 <Components.Input
-                  name="storeId"
+                  name="staffId"
                   type="text"
-                  placeholder="Store ID"
-                  value={storeId}
-                  onChange={(e) => setStoreId(e.target.value)}
+                  placeholder="Staff ID"
+                  value={staffId}
+                  onChange={(e) => setStaffId(e.target.value)}
                   required
                 />
                 <Components.Input
                   type="text"
-                  name="area"
-                  value={area}
+                  name="staffArea" // Change the name to staffArea
+                  value={staffArea} 
                   readOnly
                   placeholder="Area"
                   className="login-input-master-staff"
@@ -210,12 +272,12 @@ function Login() {
                 <Components.Button type="submit">Login</Components.Button>
                 <div
                   style={{
-                    display: 'flex',
-                    height: '25px',
-                    borderRadius: '6px',
-                    width: '100%',
-                    padding: '3px',
-                    marginTop: '10px',
+                    display: "flex",
+                    height: "25px",
+                    borderRadius: "6px",
+                    width: "100%",
+                    padding: "3px",
+                    marginTop: "10px",
                   }}
                 ></div>
 

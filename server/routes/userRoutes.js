@@ -8,16 +8,16 @@ router.post("/register", UserController.registerUser);
 router.post("/login", UserController.loginUser);
 router.get("/getusers", UserController.getAllUsers);
 // router.get("/users/:email", UserController.getUserByEmail);
-router.post("/login/staff", UserController.loginStaff);
+
+// router.post("/login/staff", UserController.loginStaff);
+
 router.get("/api/registerdetails", UserController.getAll);
+
 // Route to get the next store ID
 router.get("/getNextStoreId", UserController.getNextStoreId);
 
 // New route to fetch area based on storeId
 router.get("/area/:storeId", UserController.getAreaByStoreId);
-// Route to get total stores
-router.get("/totalStores", UserController.getTotalStores);
-
 // Route to get total stores
 router.get("/totalStores", UserController.getTotalStores);
 
@@ -33,3 +33,4 @@ router.post("/api/deactivate", UserController.deactivateUser);
 
 
 module.exports = router;
+

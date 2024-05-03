@@ -31,7 +31,7 @@ export const Container = styled.div`
   overflow: hidden;
   width: 678px;
   max-width: 100%;
-  min-height: 400px;
+  min-height: 410px;
 `;
 
 export const SignUpContainer = styled.div`
@@ -71,13 +71,14 @@ background-color: #fff;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0 50px;
+  padding: 0 40px;
   height: 100%;
   text-align: center;
 `;
 
 export const Title = styled.h1`
   font-weight: bold;
+  font-size:25px;
   margin: 0;
 `;
 
