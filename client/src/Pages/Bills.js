@@ -420,24 +420,6 @@ const Bills = () => {
   const handledownloadcopy = () => {
     const doc = new jsPDF();
 
-    const logoUrl = "./logo.png";
-    const logoWidth = 50; // Adjust as needed
-    const logoHeight = 20; // Adjust as needed
-    doc.addImage(
-      logoUrl,
-      "PNG",
-      doc.internal.pageSize.getWidth() - logoWidth - 10,
-      10,
-      logoWidth,
-      logoHeight
-    );
-
-    // Add a heading for the invoice
-    doc.setFontSize(16);
-    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, 40, {
-      align: "center",
-    });
-
     // Define the data for the table
     const tableData = [
         ["Invoice No:", invoiceNo],
@@ -587,7 +569,6 @@ useEffect(() => {
             id="invoiceNo"
             value={invoiceNumber}
             onChange={(e) => setInvoiceNo(e.target.value)}
-            className="bills-input"
           />
         </div>
       
