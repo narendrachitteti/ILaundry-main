@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -10,30 +10,32 @@ function Login() {
   const navigate = useNavigate();
   const [signIn, setSignIn] = useState(true);
   const [staffError, setStaffError] = useState("");
-  const [staffId, setStaffId] = useState("");
-  const [area, setArea] = useState("");
-  const [staffArea, setStaffArea] = useState("");
-  const [storeId, setStoreId] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedStaffType, setSelectedStaffType] = useState("");
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const userData = { storeId, password, role: selectedRole };
-
     try {
-      const response = await axios.post(
-        "http://localhost:5000/login",
-        userData
-      );
+      let url = "";
+      const userData = { mobileNumber, password };
+      if (selectedRole === "Admin") {
+        url = "http://localhost:5000/api/login-admin";
+      } else if (selectedRole === "SuperAdmin") {
+        url = "http://localhost:5000/login-superadmin";
+      } else {
+        // Handle other roles if needed
+        return;
+      }
+      
+      const response = await axios.post(url, userData);
 
       if (response.status === 200) {
-        // Handle successful login
-        toast.success("Master login successful");
-        localStorage.setItem("storeId", storeId);
+        toast.success("Login successful");
         setTimeout(() => {
-          navigate("/Dashboard");
+          navigate("/dashboard"); // Redirect to dashboard after successful login
         }, 1500);
       }
     } catch (error) {
@@ -47,25 +49,26 @@ function Login() {
 
   const handleLoginStaff = async (event) => {
     event.preventDefault();
-    const userData = { staffId, password };
-  
     try {
+      const userData = { mobileNumber, password, staffType: selectedStaffType };
+      console.log("Attempting staff login with data:", userData);
       const response = await axios.post(
-        "http://localhost:5000/loginStaff",
+        "http://localhost:5000/api/staff/login",
         userData
       );
-  
+
       if (response.status === 200) {
-        // Handle successful login
         toast.success("Staff login successful");
-        localStorage.setItem("staffId", staffId);
+        localStorage.setItem("staffId", mobileNumber);
         setTimeout(() => {
           navigate("/Bills");
         }, 1500);
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        setStaffError("Staff not found. Please check your staffId and try again.");
+        toast.error(
+          "Staff not found. Please check your mobile number and try again."
+        );
       } else {
         console.error("Error logging in as staff:", error);
         toast.error(
@@ -76,58 +79,18 @@ function Login() {
     }
   };
 
-  useEffect(() => {
-    // Fetch area when store ID changes
-    const fetchArea = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/area/${storeId}`
-        );
-        if (response.status === 200) {
-          setArea(response.data.area);
-        } else {
-          setArea(""); // Reset area if not found
-        }
-      } catch (error) {
-        console.error("Error fetching area:", error);
-        setArea(""); // Reset area on error
-      }
-    };
-
-    if (storeId) {
-      fetchArea();
-    }
-  }, [storeId]);
-
-  useEffect(() => {
-    const fetchAreaByStaffId = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/staffArea/${staffId}`);
-        if (response.status === 200) {
-          setStaffArea(response.data.staffArea);
-        } else {
-          setStaffArea(""); // Reset staffArea if not found
-        }
-      } catch (error) {
-        console.error("Error fetching area by staffId:", error);
-        setStaffArea(""); // Reset staffArea on error
-        toast.error("Error fetching area by staffId. Please try again later.");
-      }
-    };
-  
-    // Fetch area only if staffId is present and it's for staff login
-    if (staffId &&!signIn) {
-      fetchAreaByStaffId();
-    }
-  }, [staffId, signIn]);
-
+  const handleBackButtonClick = () => {
+    navigate(-1);
+  };
 
   const handleRoleSelect = (role) => {
     setSelectedRole(role);
     setShowDropdown(false);
   };
-  const handleBackButtonClick = () => {
-    navigate(-1);
+
+  const handleStaffTypeSelect = (staffType) => {
+    setSelectedStaffType(staffType);
+    setShowDropdown(false);
   };
 
   return (
@@ -167,49 +130,48 @@ function Login() {
             <Components.SignInContainer signingIn={signIn}>
               <Components.Form onSubmit={handleLogin}>
                 <Components.Title>Master Login</Components.Title>
-                <Components.Input
-                  name="storeId"
-                  type="text"
-                  placeholder="Store ID"
-                  value={storeId}
-                  onChange={(e) => setStoreId(e.target.value)}
-                  className="login-input-master-staff"
-                />
                 <div className="dropdown-container-master-login">
                   <div
                     className="dropdown-button-master-login"
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
-                     {selectedRole || "Select Role"}
+                    {selectedRole || "Select Role"}
                   </div>
                   {showDropdown && (
                     <div className="dropdown-options-master-login">
                       <div onClick={() => handleRoleSelect("Admin")}>Admin</div>
-                      <div onClick={() => handleRoleSelect("Super-Admin")}>
+                      <div onClick={() => handleRoleSelect("SuperAdmin")}>
                         Super-Admin
                       </div>
                     </div>
                   )}
                 </div>
 
-                <Components.Input
-                  type="text"
-                  name="area"
-                  value={area}
-                  readOnly
-                  placeholder="Area"
-                  className="login-input-master-staff"
-                />
-                <Components.Input
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="login-input-master-staff"
-                />
+                {selectedRole && (
+                  <React.Fragment>
+                    <Components.Input
+                      name="mobileNumber"
+                      type="tel"
+                      placeholder="Mobile Number"
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
+                      required
+                      className="login-input-master-staff"
+                    />
+                    <Components.Input
+                      name="password"
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="login-input-master-staff"
+                    />
+                  </React.Fragment>
+                )}
+
                 <Components.Button type="submit">Login</Components.Button>
+
                 <div
                   style={{
                     display: "flex",
@@ -242,24 +204,37 @@ function Login() {
           ) : (
             <Components.SignUpContainer signingIn={signIn}>
               <Components.Form onSubmit={handleLoginStaff}>
-                <Components.Title  className="title-master-login">Staff Login</Components.Title>
+                <Components.Title className="title-master-login">
+                  Staff Login
+                </Components.Title>
+                <div className="dropdown-container-master-login">
+                  <div
+                    className="dropdown-button-master-login"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    {selectedStaffType || "Select Staff Type"}
+                  </div>
+                  {showDropdown && (
+                    <div className="dropdown-options-master-login">
+                      <div onClick={() => handleStaffTypeSelect("StoreStaff")}>
+                        Store Staff
+                      </div>
+                      <div
+                        onClick={() => handleStaffTypeSelect("FactoryStaff")}
+                      >
+                        Factory Staff
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <Components.Input
-                  name="staffId"
-                  type="text"
-                  placeholder="Staff ID"
-                  value={staffId}
-                  onChange={(e) => setStaffId(e.target.value)}
+                  name="mobileNumber"
+                  type="tel"
+                  placeholder="Mobile Number"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
                   required
                 />
-                <Components.Input
-                  type="text"
-                  name="staffArea" // Change the name to staffArea
-                  value={staffArea} 
-                  readOnly
-                  placeholder="Area"
-                  className="login-input-master-staff"
-                />
-
                 <Components.Input
                   name="password"
                   type="password"

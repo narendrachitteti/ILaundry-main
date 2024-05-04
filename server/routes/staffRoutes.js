@@ -1,16 +1,12 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const staffController = require("../controllers/staffController");
+const staffController = require('../controllers/staffController');
 
-router.post("/registerStaff", staffController.registerStaff);
+// Route to handle staff registration
+router.post('/staff', staffController.registerStaff);
 
-router.get('/getNextStaffId', staffController.getNextStaffId);
-
-router.post("/loginStaff", staffController.loginStaff);
-
-router.get('/staffArea/:staffId', staffController.getStaffAreaByStaffId);
-
-router.get("/profile/:staffId", staffController.getStaffProfile);
+// Route to handle staff login
+router.post('/staff/login', staffController.loginStaff);
 
 
 module.exports = router;

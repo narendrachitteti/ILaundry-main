@@ -19,8 +19,10 @@ import Dashboard from "./Pages/Dashboard.js";
 import OrdersTable from "./Pages/OrdersTable.js";
 import StarRating from "./Pages/StarRating.js";
 import StaffNavbar from "./components/StaffNavbar.js";
-import AllStores from './Pages/AllStores.js';
+
+import AllStores from "./Pages/AllStores.js";
 import TotalCustomers from "./Pages/TotalCustomers.js";
+import AddStore from "./components/Register/AddStore.js";
 import StaffRegister from "./components/Register/StaffRegister.js";
 
 function App() {
@@ -46,7 +48,7 @@ function App() {
             <Route path="/PreviousBills" element={<PreviousBills />} />
             <Route path="/Bills" element={<Bills />} />
             <Route path="/Register" element={<Register />} />
-            <Route path="/StaffRegister" element={<StaffRegister />} />
+           
             <Route path="/Registration" element={<Registration />} />
             <Route path="/OldLogin" element={<OldLogin />} />
             <Route path="/StaffLogin" element={<StaffLogin />} />
@@ -57,11 +59,12 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/AllStores" element={<AllStores />} />
 
-
+            <Route path="/AddStore" element={<AddStore />} />
+            <Route path="/StaffRegister" element={<StaffRegister />} />
             <Route path="/rating" element={<StarRating />} />
             <Route path="/orderstable" element={<OrdersTable />} />
             <Route path="/TotalCustomer" element={<TotalCustomers />} />
-            <Route path="/stafflogin" element={<StaffNavbar/>}/>
+            <Route path="/stafflogin" element={<StaffNavbar />} />
           </Routes>
         </Router>
       )}

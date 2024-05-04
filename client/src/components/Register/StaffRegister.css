@@ -1,122 +1,111 @@
+/* StaffRegister.css */
+
+/* Overall styling */
 .back-link {
-  display: inline-block;
+  display: block;
+  margin-bottom: 20px;
+  color: #007bff; /* Set your desired link color */
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
 }
 
 .back-icon {
+  width: 25px;
+  height: 25px;
+}
+
+.container-staffregister {
+  content: "";
   position: absolute;
-  top: 20px;
-  left: 25px;
-  border-radius: 30px;
-  padding: 8px;
-  background-color: #ffffff;
-  z-index: 2;
-  color: #ff4400;
-  font-size: 24px;
-  cursor: pointer;
-  margin-right: 10px;
-}
 
-.back-icon:hover {
-  color: #0056b3;
-}
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  background: url("../Register/Laundry-img.jpg") center/cover;
 
-.container-StaffRegister {
-  position: relative;
-  height: 100vh;
+  height: 100vh; /* Adjust height as needed */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.container-StaffRegister::before {
-  content: "";
-  position: absolute;
-  top: -25px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url("../Register/Laundry-img.jpg") center/cover;
-  filter: blur(3px);
-
+.Inner-container-staffregister {
+  background-color: white; /* Set white background for the form */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px; /* Set your desired width */
 }
 
-.Inner-container-StaffRegister {
-  background-color: rgb(255, 255, 255);
-  border-radius: 9px;
+.title {
   text-align: center;
-  z-index: 1;
-  padding: 30px;
 }
 
-.formContainer-StaffRegister {
-  max-width: 500px;
-  margin: 0 auto;
-  padding-bottom: 15px;
-  display: flex;
-  flex-direction: column; /* Arrange inputs vertically */
-  justify-content: center; /* Center vertically */
-  align-items: center; /* Center horizontally */
-  background: transparent;
+/* Form styling */
+.form-group-staffRegister {
+  margin-bottom: 20px;
 }
 
-.input-StaffRegister[type="text"],
-.input-StaffRegister[type="email"],
-.select-StaffRegister,
-.input-StaffRegister[type="password"] {
-  width: 100%; /* Full width */
-  padding: 8px;
-  margin: 8px 0;
-  border: 1px solid #bab6b6;
+.section-label,
+.name-label,
+.mobileNumber-label,
+.designation-label,
+.dob-label,
+.qualification-label,
+.password-label,
+.email-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.section-select,
+.name-input,
+.mobileNumber-input,
+.designation-input,
+.dob-input,
+.qualification-input,
+.password-input,
+.email-input {
+  width: 100%;
+  padding: 10px;
   border-radius: 5px;
+  border: 1px solid #ccc; /* Set your desired border color */
   box-sizing: border-box;
 }
 
-.select-StaffRegister {
-  appearance: none;
+.sex-input {
+  margin-top: 5px;
 }
 
-.button-StaffRegister {
-  width: 100%; /* Full width */
-  padding: 8px;
-  margin: 6px 0px;
-  background-color: #ffa600;
-  color: #ffffff;
+/* Two-column layout */
+.form-columns {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.form-column {
+  width: 48%; /* Adjust width as needed */
+}
+
+/* Button styling */
+.buttonabcd1234567 {
+  background-color: #007bff; /* Set your desired button color */
+  color: white;
   border: none;
-  font-size: large;
-  font-weight: 500;
-  border-radius: 7px;
+  padding: 10px 20px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 20px; /* Adjust margin as needed */
 }
 
-.button-StaffRegister:hover {
-  background-color: #0056b3;
-}
-
-.button-StaffRegister:focus {
-  outline: none;
-}
-
-.already-registered {
-  font-size: medium;
-  margin-top: 8px;
-}
-
-.select-StaffRegister:focus {
-  outline: rgb(0, 0, 0);
-}
-
-@media screen and (min-width: 320px) and (max-width: 426px) {
-  .Inner-container-StaffRegister {
-    border-radius: 10px;
-    width: 90%;
-  }
-  .back-icon {
-    left: 20px;
-    top: 5px;
-  }
-  .select-StaffRegister {
-    padding: 1px;
-    height: 5px !important;
-  }
+.buttonabcd1234567:hover {
+  background-color: #0056b3; /* Change button color on hover */
 }
