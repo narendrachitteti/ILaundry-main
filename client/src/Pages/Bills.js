@@ -872,8 +872,8 @@ useEffect(() => {
             </button>
           </div>
           <div className="popup-content456">
-            <form>
-            <Barcode value={invoiceNumber.toString()} /> 
+            <form className="form-flex">
+            <Barcode value={invoiceNumber.toString()} />
               <div className="data-placeholder">
                 <label className="nameclass-label">User:</label>
                 <span>{user?.name }</span>

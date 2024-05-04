@@ -122,6 +122,18 @@ const getAll = async (req, res) => {
   }
 };
 
+const getTodayOrders = async (req, res) => {
+  try {
+    const date = req.params.date;
+    const todayOrders = await Billing.find({ invoiceDate: date });
+    res.json(todayOrders);
+  } catch (error) {
+    console.error("Error fetching today's orders:", error);
+    res.status(500).json({ error: "Error fetching today's orders. Please try again later." });
+  }
+};
+
+
 // Delete a billing record by ID
 const deleteBilling = async (req, res) => {
   const { id } = req.params;
@@ -143,4 +155,5 @@ module.exports = {
   getLastInvoiceNumber,
   getAll,
   deleteBilling,
+  getTodayOrders,
 };

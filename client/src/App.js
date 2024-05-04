@@ -24,7 +24,7 @@ import AllStores from "./Pages/AllStores.js";
 import TotalCustomers from "./Pages/TotalCustomers.js";
 import AddStore from "./components/Register/AddStore.js";
 import StaffRegister from "./components/Register/StaffRegister.js";
-
+import TodayOrders from "./Pages/TodayOrders.js"
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -58,13 +58,14 @@ function App() {
 
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/AllStores" element={<AllStores />} />
+            <Route path="/TodayOrders" element={<TodayOrders />} />
 
             <Route path="/AddStore" element={<AddStore />} />
             <Route path="/StaffRegister" element={<StaffRegister />} />
             <Route path="/rating" element={<StarRating />} />
             <Route path="/orderstable" element={<OrdersTable />} />
-            <Route path="/TotalCustomer" element={<TotalCustomers />} />
-            <Route path="/stafflogin" element={<StaffNavbar />} />
+            <Route path="/TotalCustomers" element={<TotalCustomers />} />
+            <Route path="/stafflogin" element={<StaffNavbar/>}/>
           </Routes>
         </Router>
       )}
