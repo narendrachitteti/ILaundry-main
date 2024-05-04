@@ -6,7 +6,6 @@ router.post("/register", UserController.registerUser);
 
 router.post("/login-superadmin", UserController.loginSuperAdmin);
 
-
 router.get("/getusers", UserController.getAllUsers);
 
 router.get("/api/registerdetails", UserController.getAll);
@@ -14,7 +13,6 @@ router.get("/api/registerdetails", UserController.getAll);
 // Route to get total stores
 router.get("/totalStores", UserController.getTotalStores);
 
-router.get("/users/:storeId", UserController.getUserByStoreId);
 
 
 router.get("/api/users/totalStores", UserController.getTotalStores);
