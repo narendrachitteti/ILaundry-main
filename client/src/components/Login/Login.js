@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as Components from "./Components";
@@ -10,108 +10,72 @@ function Login() {
   const navigate = useNavigate();
   const [signIn, setSignIn] = useState(true);
   const [staffError, setStaffError] = useState("");
-  const [area, setArea] = useState("");
-  const [storeId, setStoreId] = useState(""); 
-  
-  
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedStaffType, setSelectedStaffType] = useState("");
 
-  const fetchArea = async () => {
-    // Remove storeId parameter from fetchArea function
-    try {
-      const response = await fetch(`http://localhost:5000/area/${storeId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setArea(data.area);
-      } else {
-        setArea(""); // Reset area if not found
-      }
-    } catch (error) {
-      console.error("Error fetching area:", error);
-      setArea(""); // Reset area on error
-    }
-  };
-
-  useEffect(() => {
-    // Fetch area when store ID changes
-    fetchArea();
-  }, [storeId]); // Update useEffect dependency
-
-  
   const handleLogin = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-  
-    const userData = {
-      storeId: formData.get("storeId"),
-      password: formData.get("password"),
-    };
-  
     try {
-      const response = await fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-  
-      if (response.ok) {
-        // Handle successful login
-        toast.success("Master login successful");
-        localStorage.setItem("storeId", formData.get("storeId"));
-        setTimeout(() => {
-          navigate("/Dashboard");
-        }, 1500);
-      } else if (response.status === 403) {
-        setStaffError("You are not authorized to access this page.");
+      let url = "";
+      const userData = { mobileNumber, password };
+      if (selectedRole === "Admin") {
+        url = "http://localhost:5000/api/login-admin";
+      } else if (selectedRole === "SuperAdmin") {
+        url = "http://localhost:5000/login-superadmin";
       } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Invalid storeId or password");
+        
+        return;
       }
-    } catch (error) {
-      console.error("Error logging in:", error);
-      toast.error("An error occurred while logging in. Please try again later.");
-    }
-  };
-  
+      
+      const response = await axios.post(url, userData);
 
-
-  const handleLogin1 = async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-
-    const userData = {
-      storeId: formData.get("storeId"),
-      password: formData.get("password"),
-    };
-
-    try {
-      const response = await fetch("http://localhost:5000/login/staff", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        // Handle successful login
-        toast.success("Staff login successful");
-        localStorage.setItem("storeId", formData.get("storeId"));
+      if (response.status === 200) {
+        toast.success("Login successful");
         setTimeout(() => {
-          navigate("/Bills");
+          navigate("/dashboard"); // Redirect to dashboard after successful login
         }, 1500);
-      } else if (response.status === 403) {
-        setStaffError("You are not authorized to access this page.");
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Invalid storeId or password");
       }
     } catch (error) {
       console.error("Error logging in:", error);
       toast.error(
-        "An error occurred while logging in. Please try again later."
+        error.response.data.message ||
+          "An error occurred while logging in. Please try again later."
       );
+    }
+  };
+
+  const handleLoginStaff = async (event) => {
+    event.preventDefault();
+    try {
+      const userData = { mobileNumber, password, staffType: selectedStaffType };
+      console.log("Attempting staff login with data:", userData);
+      const response = await axios.post(
+        "http://localhost:5000/api/staff/login",
+        userData
+      );
+
+      if (response.status === 200) {
+        toast.success("Staff login successful");
+        localStorage.setItem("staffId", mobileNumber);
+        setTimeout(() => {
+          navigate("/Bills");
+        }, 1500);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        toast.error(
+          "Staff not found. Please check your mobile number and try again."
+        );
+      } else {
+        console.error("Error logging in as staff:", error);
+        toast.error(
+          error.response.data.message ||
+            "An error occurred while logging in. Please try again later."
+        );
+      }
     }
   };
 
@@ -119,12 +83,22 @@ function Login() {
     navigate(-1);
   };
 
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role);
+    setShowDropdown(false);
+  };
+
+  const handleStaffTypeSelect = (staffType) => {
+    setSelectedStaffType(staffType);
+    setShowDropdown(false);
+  };
+
   return (
     <div>
       <ToastContainer />
       <div className="complete98">
         <button
-          className="cursor-pointer duration-200 hover:scale-125 active:scale-100"
+          className="cursor-pointer-back-login duration-200 hover:scale-125 active:scale-100"
           title="Go Back"
           style={{ marginLeft: "-90%", marginTop: "-5%" }}
           onClick={handleBackButtonClick}
@@ -156,27 +130,48 @@ function Login() {
             <Components.SignInContainer signingIn={signIn}>
               <Components.Form onSubmit={handleLogin}>
                 <Components.Title>Master Login</Components.Title>
-                <Components.Input
-                  name='storeId'
-                  type='text'
-                  placeholder='Store ID'
-                  value={storeId}
-                  onChange={(e) => setStoreId(e.target.value)}
-                />
-                <Components.Input
-                  type="text"
-                  name="area"
-                  value={area}
-                  readOnly
-                  placeholder="Area"
-                />
-                <Components.Input
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  required
-                />
+                <div className="dropdown-container-master-login">
+                  <div
+                    className="dropdown-button-master-login"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    {selectedRole || "Select Role"}
+                  </div>
+                  {showDropdown && (
+                    <div className="dropdown-options-master-login">
+                      <div onClick={() => handleRoleSelect("Admin")}>Admin</div>
+                      <div onClick={() => handleRoleSelect("SuperAdmin")}>
+                        Super-Admin
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {selectedRole && (
+                  <React.Fragment>
+                    <Components.Input
+                      name="mobileNumber"
+                      type="tel"
+                      placeholder="Mobile Number"
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
+                      required
+                      className="login-input-master-staff"
+                    />
+                    <Components.Input
+                      name="password"
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="login-input-master-staff"
+                    />
+                  </React.Fragment>
+                )}
+
                 <Components.Button type="submit">Login</Components.Button>
+
                 <div
                   style={{
                     display: "flex",
@@ -197,6 +192,7 @@ function Login() {
                           fontWeight: "bold",
                           textDecoration: "none",
                         }}
+                        className="rigister-link-login"
                       >
                         Register
                       </p>
@@ -207,28 +203,46 @@ function Login() {
             </Components.SignInContainer>
           ) : (
             <Components.SignUpContainer signingIn={signIn}>
-              <Components.Form onSubmit={handleLogin1}>
-                <Components.Title>Staff Login</Components.Title>
+              <Components.Form onSubmit={handleLoginStaff}>
+                <Components.Title className="title-master-login">
+                  Staff Login
+                </Components.Title>
+                <div className="dropdown-container-master-login">
+                  <div
+                    className="dropdown-button-master-login"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    {selectedStaffType || "Select Staff Type"}
+                  </div>
+                  {showDropdown && (
+                    <div className="dropdown-options-master-login">
+                      <div onClick={() => handleStaffTypeSelect("StoreStaff")}>
+                        Store Staff
+                      </div>
+                      <div
+                        onClick={() => handleStaffTypeSelect("FactoryStaff")}
+                      >
+                        Factory Staff
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <Components.Input
-                  name="storeId"
-                  type="text"
-                  placeholder="Store ID"
+                  name="mobileNumber"
+                  type="tel"
+                  placeholder="Mobile Number"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
                   required
-                  onChange={(e) => setStoreId(e.target.value)} // Update storeId state
                 />
-                <Components.Input
-                  type="text"
-                  name="area"
-                  value={area}
-                  readOnly
-                  placeholder="Area"
-                />
-
                 <Components.Input
                   name="password"
                   type="password"
                   placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
+                  className="login-input-master-staff"
                 />
                 <Components.Button type="submit">Login</Components.Button>
                 <div
@@ -240,23 +254,7 @@ function Login() {
                     padding: "3px",
                     marginTop: "10px",
                   }}
-                >
-                  {/* <p className="user-login-donthave-account" style={{ color: "black" }}>Don't have an account?</p>{" "}
-                  &nbsp;&nbsp;
-                  <Link to="/Register" style={{ textDecoration: "none" }}>
-                    <div>
-                      <p
-                        style={{
-                          color: "orange",
-                          fontWeight: "bold",
-                          textDecoration: "none",
-                        }}
-                      >
-                        Register
-                      </p>
-                    </div>
-                  </Link> */}
-                </div>
+                ></div>
 
                 {staffError && (
                   <div className="error-message">{staffError}</div>

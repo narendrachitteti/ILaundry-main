@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import "./Bills.css";
 import { GiClothes } from "react-icons/gi";
@@ -14,8 +15,6 @@ import axios from "axios";
 import QRCode from "qrcode.react";
 import Barcode from 'react-barcode';
 import StaffNavbar from "../components/StaffNavbar";
-import JsBarcode from 'jsbarcode';
-import ilaundry from "../assets/images/ilaundry.jpg";
 import { BASE_URL } from "../Helper/Helper";
 
 const currencies = currencyCodes.data;
@@ -421,138 +420,64 @@ const Bills = () => {
   const handledownloadcopy = () => {
     const doc = new jsPDF();
 
-    const imgWidth = 40;
-    const imgHeight = 15;
-    const imgX = doc.internal.pageSize.getWidth() - imgWidth - 155;
-    const imgY = 15;
-    doc.addImage(ilaundry, "PNG", imgX, imgY, imgWidth, imgHeight);
-
-
     // Define the data for the table
     const tableData = [
-      ["Particulars", "Details"],
-      ["Invoice No:", invoiceNumber],
-      ["Invoice Date:", formatDate(invoiceDate)],
-      ["Client Name:", clientName],
-      ["Client Contact:", clientContact],
-      ["Selected Item:", selectedPopupItem],
-      ["Total:", total],
-      ["Tax Amount:", taxAmount]
-  ];
-  
-  // Set up styles for the table
-  const tableStyles = {
-      fontSize: 10,
-      fontStyle: 'normal', // normal, bold, italic
-      textColor: [128, 128, 128], // Grey color
-      cellPadding: 5
-  };
-  
-  // Set up column widths
-  const columnWidths = [70, 200];
-  
-  // Add border around the content
-  const margin = 10;
-  const contentWidth = doc.internal.pageSize.getWidth() - 2 * margin;
-  const contentHeight = doc.internal.pageSize.getHeight() - 2 * margin;
-  doc.setDrawColor(0); // Black border
-  doc.rect(margin, margin, contentWidth, contentHeight); // Adjusted position for the border
-  
-  // Add GST number inside the border, aligned to the right, and bold
-  const gstNumber = "GSTIN:29ABCDE1234F1ZW";
-  const gstTextWidth = doc.getStringUnitWidth(gstNumber) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(10);
-  doc.text(gstNumber, doc.internal.pageSize.getWidth() - margin - gstTextWidth + 20, margin + 5); // Adjusted position for GST number
-  
-  // Add a heading for the invoice inside the border, centered, and bold
-  doc.setFont("bold");
-  doc.setFontSize(18);
-  doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 50, { align: "center" }); // Adjusted position for the heading
-  
-  // Add margin from the main border
-  const tableMargin = 0;
-  const tableX = margin + tableMargin;
-  const tableY = margin + 60 + tableMargin; // Adjusted position for the heading
-  
-  // Calculate equal column width
-  const columnWidth = (contentWidth - 2 * tableMargin) / 2;
-  
-  // Add the table heading row with background color
-  doc.autoTable({
-      head: [["Particulars", "Details"]],
-      startY: tableY,
-      startX: tableX,
-      styles: {
-          fontStyle: 'bold',
-          fillColor: [102, 244, 174],
-          textColor: [0, 0, 0],
-          lineColor: [192, 192, 192], // Grey border color for heading row
-          cellPadding: [3, 4] // Increase cell padding by 1px
-      },
-      columnStyles: { 0: { cellWidth: columnWidth }, 1: { cellWidth: columnWidth } },
-      draw: true // Draw borders
-  });
-  
-  // Add the table data to the PDF without background color
-  doc.autoTable({
-      body: tableData.slice(1), // Exclude the first row (heading)
-      startY: doc.lastAutoTable.finalY, // Start below the heading row
-      startX: tableX,
-      styles: tableStyles,
-      columnStyles: {
-          0: { fontStyle: 'bold' }, // Make the first column bold
-          1: { fontStyle: 'normal' } // Make the second column normal
-      },
-      columnWidth: columnWidth,
-      margin: { top: tableMargin }, // Add margin from the heading row
-      draw: true // Draw borders
-  });
-  
-  // Add "signature or stamp" after the table
-  const signatureStampText = "Signature or Stamp";
-  const signatureStampTextWidth = doc.getStringUnitWidth(signatureStampText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-  const signatureStampX = doc.internal.pageSize.getWidth() - margin - signatureStampTextWidth - 0; // Adjusted position to the right corner
-  const signatureStampY = doc.lastAutoTable.finalY + 30; // Adjusted position below the table
-  doc.setFontSize(12); // Smaller font size for signature
-  doc.text(signatureStampText, signatureStampX, signatureStampY);
-  
-  // Add "****This is system generated bill****" at the end of the page center
-  const generatedBillText = "****This is system generated bill****";
-  const generatedBillTextWidth = doc.getStringUnitWidth(generatedBillText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-  const generatedBillTextX = (doc.internal.pageSize.getWidth() - generatedBillTextWidth) / 2;
-  const generatedBillTextY = doc.internal.pageSize.getHeight() - margin - 5; // Leave some margin from the bottom
-  doc.setFontSize(14); // Restore font size for generated bill text
-  doc.text(generatedBillText, generatedBillTextX, generatedBillTextY);
-  
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-  canvas.width = 200; // Set canvas width
-  canvas.height = 100; // Set canvas height
-  
-  // Generate the barcode onto the canvas
-  JsBarcode(canvas, invoiceNumber.toString(), {
-      format: 'CODE128', // Adjust barcode format as needed
-      width: 2, // Adjust barcode width
-      height: 50, // Adjust barcode height
-  });
-  
-  // Convert the canvas to a data URL representing the image
-  const dataURL = canvas.toDataURL();
-  
-  // Adjust position for the barcode
-  const barcodeWidth = 70; // Adjust the width of the barcode image
-  const barcodeHeight = 35; // Adjust the height of the barcode image
-  const barcodeMargin = 2;
-  const barcodeX = doc.internal.pageSize.getWidth() - margin - barcodeWidth - barcodeMargin; // Adjusted position for barcode
-  const barcodeY = margin + 5 + 2; // Adjusted position below GST number with margin of 20px
-  
-  // Embed the image into the PDF
-  doc.addImage(dataURL, 'JPEG', barcodeX, barcodeY, barcodeWidth, barcodeHeight);
-  
-  // Save the PDF file
-  doc.save('Laundry Invoice.pdf');
-  };  
+        ["Invoice No:", invoiceNo],
+        ["Invoice Date:", formatDate(invoiceDate)],
+        ["Client Name:", clientName],
+        ["Client Contact:", clientContact],
+        ["Selected Item:", selectedPopupItem],
+        ["Total:", total],
+        ["Tax Amount:", taxAmount]
+    ];
+
+    // Set up styles for the table
+    const tableStyles = {
+        fontSize: 10,
+        fontStyle: 'normal', // normal, bold, italic
+        textColor: [128, 128, 128], // Grey color
+        cellPadding: 5
+    };
+
+    // Set up column widths
+    const columnWidths = [70, 200];
+
+    // Add border around the content
+    const margin = 10;
+    const contentWidth = doc.internal.pageSize.getWidth() - 2 * margin;
+    const contentHeight = doc.internal.pageSize.getHeight() - 2 * margin;
+    doc.setDrawColor(0); // Black border
+    doc.rect(margin, margin, contentWidth, contentHeight); // Adjusted position for the border
+
+    // Add GST number inside the border, aligned to the right, and bold
+    const gstNumber = "GSTIN:29ABCDE1234F1ZW";
+    const gstTextWidth = doc.getStringUnitWidth(gstNumber) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text(gstNumber, doc.internal.pageSize.getWidth() - margin - gstTextWidth + 20, margin + 5); // Adjusted position for GST number
+
+    // Add a heading for the invoice inside the border, centered, and bold
+    doc.setFont("bold");
+    doc.setFontSize(18);
+    doc.text("PAYMENT INVOICE", doc.internal.pageSize.getWidth() / 2, margin + 40, { align: "center" }); // Adjusted position for the heading
+
+    // Add the table to the PDF
+    doc.autoTable({
+        body: tableData,
+        startY: margin + 60, // Start below the heading
+        startX: margin,
+        styles: tableStyles,
+        columnStyles: {
+            0: { fontStyle: 'bold' }, // Make the first column bold
+            1: { fontStyle: 'normal' } // Make the second column normal
+        },
+        columnWidth: columnWidths,
+        margin: { top: margin + 50 } // Add margin to avoid overlapping with the heading and GST number
+    });
+
+    // Save the PDF file
+    doc.save("Laundry Invoice.pdf");
+};
 
   const sendPDFViaWhatsApp = (pdfFile) => {
     // Use react-whatsapp to send the PDF file via WhatsApp
@@ -794,42 +719,43 @@ useEffect(() => {
                       onClick={() => handleDeleteRow(index)}
                       disabled={rows.length === 1}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 69 14"
-                        class="svgIcon bin-top"
-                      >
-                        <g clip-path="url(#clip0_35_24)">
-                          <path
-                            fill="black"
-                            d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"
-                          ></path>
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_35_24">
-                            <rect fill="white" height="14" width="69"></rect>
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 69 57"
-                        class="svgIcon bin-bottom"
-                      >
-                        <g clip-path="url(#clip0_35_22)">
-                          <path
-                            fill="black"
-                            d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"
-                          ></path>
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_35_22">
-                            <rect fill="white" height="57" width="69"></rect>
-                          </clipPath>
-                        </defs>
-                      </svg>
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 69 14"
+                    class="svgIcon bin-top"
+                  >
+                    <g clip-path="url(#clip0_35_24)">
+                      <path
+                        fill="black"
+                        d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"
+                      ></path>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_35_24">
+                        <rect fill="white" height="14" width="69"></rect>
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 69 57"
+                    class="svgIcon bin-bottom"
+                  >
+                    <g clip-path="url(#clip0_35_22)">
+                      <path
+                        fill="black"
+                        d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"
+                      ></path>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_35_22">
+                        <rect fill="white" height="57" width="69"></rect>
+                      </clipPath>
+                    </defs>
+                  </svg>
+
                     </button>
                   </div>
                 </td>
@@ -946,8 +872,8 @@ useEffect(() => {
             </button>
           </div>
           <div className="popup-content456">
-            <form>
-            <Barcode value={invoiceNumber.toString()} /> 
+            <form className="form-flex">
+            <Barcode value={invoiceNumber.toString()} />
               <div className="data-placeholder">
                 <label className="nameclass-label">User:</label>
                 <span>{user?.name }</span>
@@ -975,45 +901,45 @@ useEffect(() => {
                   <input type="text" value={deliveryDate} />
               </div>
               <div className="data-placeholder">
-                <label className="nameclass-label">Customer Address:</label>
-                <span>{customeraddress}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Item:</label>
-                <span>{selectedItems}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Services:</label>
-                <span>{selectedServices}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Quantity:</label>
-                <span>{quantities}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Tax Rate:</label>
-                <span>{taxRate}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Discount Rate:</label>
-                <span>{discountRate}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Subtotal:</label>
-                <span>{subTotal}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Tax Amount:</label>
-                <span>{taxAmount}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Discount Amount:</label>
-                <span>{discountAmount}</span>
-              </div>
-              <div className="data-placeholder">
-                <label className="nameclass-label">Total:</label>
-                <span>{total}</span>
-              </div>
+              <label className="nameclass-label">Customer Address:</label>
+              <span>{customeraddress}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Item:</label>
+              <span>{selectedItems}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Services:</label>
+              <span>{selectedServices}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Quantity:</label>
+              <span>{quantities}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Tax Rate:</label>
+              <span>{taxRate}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Discount Rate:</label>
+              <span>{discountRate}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Subtotal:</label>
+              <span>{subTotal}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Tax Amount:</label>
+              <span>{taxAmount}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Discount Amount:</label>
+              <span>{discountAmount}</span>
+            </div>
+            <div className="data-placeholder">
+              <label className="nameclass-label">Total:</label>
+              <span>{total}</span>
+            </div>
               <div className="merge-karthik-bill">
                 <button className="downloadcopy">Send Copy</button>
                 <button className="downloadcopy" onClick={handledownloadcopy}>

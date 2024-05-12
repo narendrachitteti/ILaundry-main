@@ -1,6 +1,5 @@
 .back-link {
   display: inline-block;
-  /* margin-bottom: 20px;  */
 }
 
 .back-icon {
@@ -23,67 +22,85 @@
 
 .container-abed23s {
   position: relative;
-  height: 100vh; /* Adjusted to 100vh */
+  height: 104vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-
 .container-abed23s::before {
   content: "";
   position: absolute;
-  /* top: 80px; */
-  top: -25px;
+  top: -26px;
   left: 0;
   right: 0;
   bottom: 0;
   background: url("../Register/Laundry-img.jpg") center/cover;
-  filter: blur(3px); /* Example: Apply grayscale filter */
+  filter: blur(3px);
 }
 
 .Inner-container-abed23s {
   background-color: rgb(255, 255, 255);
-  border-radius: 8px;
+  border-radius: 22px;
+  position: relative;
+  top: -26px;
   text-align: center;
   z-index: 1;
-  padding: 20px; /* Added padding */
-
-  /* margin-top: 50px; */
+  padding: 15px;
   h1 {
     font-family: "Times New Roman", Times, serif;
-    margin: 10px 0px;
+    margin: 5px 0px;
     font-weight: bold;
   }
 }
+
 .formContainerabcd123 {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
-  padding-bottom: 15px;
-  display: flex; /* Added flex display */
-  flex-wrap: wrap; /* Added to wrap elements */
-  justify-content: space-between; /* Added to space elements */
+  padding-bottom: 1px;
   background: transparent;
 }
-.inputabcd123[type="text"],
-.inputabcd123[type="email"],
-.selectabcd123,
-.inputabcd123[type="password"] {
-  width: 49%; /* Adjusted width for equal splitting */
+
+
+
+
+
+.input-row input[type="text"],
+.input-row input[type="email"],
+.input-row input[type="password"]
+ {
+  width: 40%;
+}
+.formContainerabcd123 label {
+  width: 30%;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.formContainerabcd123 input[type="file"] {
+  width: calc(60% - 10px); /* Adjusted width to accommodate for margin */
+}
+
+.formContainerabcd123 input[type="file"]::-webkit-file-upload-button {
   padding: 8px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
+  background-color: #ffa600;
+  color: #ffffff;
+  border: none;
+  font-size: large;
+  font-weight: 500;
   border-radius: 5px;
-  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.formContainerabcd123 input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: #0056b3;
 }
 
 
-.selectabcd123 {
-  appearance: none; /* Removes default dropdown arrow */
-}
 
 .buttonabcd123 {
-  width: 48%; /* Adjusted width */
+  width: 48%;
   padding: 8px;
   margin: 9px 0px;
   background-color: #ffa600;
@@ -98,7 +115,6 @@
   left: -1%;
 }
 
-
 .buttonabcd123:hover {
   background-color: #0056b3;
 }
@@ -112,33 +128,13 @@
   margin-top: 8px;
 }
 
-.selectabcd1233 {
-  width: 49%;
- position: relative;
- top: 9px;
- border-radius: 5px;
- 
-}
-.selectabcd1233:focus {
-  outline: rgb(0, 0, 0);
-}
-
-
 @media screen and (min-width: 320px) and (max-width: 426px) {
- .Inner-container-abed23s{
-   border-radius: 10px;
-   width: 90%;
- }
- .back-icon{
-  left: 20px;
-  top: 5px;
- }
- .selectabcd1233{
-  padding: 1px;
-  height: 5px !important;
-}
-}
-
-@media screen and (max-width: 768px) {
- 
+  .Inner-container-abed23s {
+    border-radius: 10px;
+    width: 90%;
+  }
+  .back-icon {
+    left: 20px;
+    top: 5px;
+  }
 }

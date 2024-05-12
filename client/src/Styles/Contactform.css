@@ -65,9 +65,9 @@
     background-color: #0056b3;
   }
   
-  input[type="text"] {
+  /* input[type="text"] {
     margin-left: 1px;
-  }
+  } */
   .form-group33 [type="text"]{
         margin-left: -1px;
     }

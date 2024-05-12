@@ -77,7 +77,7 @@ const Navbar = () => {
           </div>
         </Link>
 
-        <Link to="/Bills">
+        {/* <Link to="/Bills">
           <div className="bills">
             <img src={image17} alt="" style={{ height: "2.5rem" }} />
             <p>Customer Bills</p>
@@ -88,14 +88,14 @@ const Navbar = () => {
             <img src={image15} alt="" style={{ height: "2.5rem" }} />
             <p>Previous Bills</p>
           </div>
-        </Link>
+        </Link> */}
 
-        <Link to="/Userlist">
+        {/* <Link to="/Userlist">
           <div className="bills">
             <img src={register} alt="" style={{ height: "2.5rem" }} />
             <p>Registerdetails</p>
           </div>
-        </Link>
+        </Link> */}
 
         <div className="bills">
           <img src={image16} alt="" style={{ height: "2.5rem" }} />
@@ -103,10 +103,12 @@ const Navbar = () => {
           <div className="dropdown-content">
             <p>Name: {user?.name}</p>
             <p>Store ID: {user?.storeId}</p>
-            <Link to="/register">
+            <Link to="/AddStore">
+              <p>Add Store</p>
+            </Link>
+            <Link to="/StaffRegister">
               <p>Add Staff</p>
             </Link>
-
             <p
               onClick={logout}
               style={{ display: "flex", alignItems: "center", gap: "1rem" }}

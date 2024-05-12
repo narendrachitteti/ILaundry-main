@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import moment from "moment";
 import { BASE_URL } from "../Helper/Helper.js";
 import "../Styles/PreviousBills.css";
 import Popup from "reactjs-popup";
+import { MdEdit } from "react-icons/md";
 import CustomerForm from "./CustomerForm.js";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
@@ -31,7 +33,7 @@ import StaffNavbar from "../components/StaffNavbar.js";
 import { GiClothes } from "react-icons/gi";
 import { FaEdit } from "react-icons/fa";
 
-const PreviousBills = () => {
+const PreviousBills = ({service}) => {
   const [customerServicesCus, setcustomerServicesCus] = useState([]);
   const [searchTextCus, setsearchTextCus] = useState("");
   const [activePage, setActivePage] = useState(1);
@@ -59,8 +61,7 @@ const PreviousBills = () => {
           ...billing,
           username: billing.user ? billing.user.fullName : "", // Add null check here
           address: billing.user ? billing.user.address : "", // Add null check here
-          selectedStoreOption: "in", // Initialize with default value "in"
-          selectedFactoryOption: "in", // Initialize with default value "in"
+
         }));
         setcustomerServicesCus(billingDataWithUsername);
         setAllData(billingDataWithUsername);
@@ -114,20 +115,7 @@ const PreviousBills = () => {
     }
   }, [showUploadfilesPopup, selectedServiceId]);
 
-  const handleAddCusOrUpdate = async (formData) => {
-    try {
-      if (selectedServiceCus) {
-        await axios.put(`${BASE_URL}/invoice/${selectedServiceCus._id}`, formData);
-      } else {
-        await axios.post(`${BASE_URL}/invoice/`, formData);
-      }
-      fetchcustomerServicesCus(); // Refresh data after update
-      setselectedServiceCus(null);
-      setAddPopupOpenCus(false);
-    } catch (error) {
-      console.error("Error adding/updating Customer Details:", error);
-    }
-  };
+ 
 
   const handlesearchTextCusChange = (newValue) => {
     console.log("Search Text:", newValue);
@@ -144,32 +132,21 @@ const PreviousBills = () => {
     );
   };
 
-  const handleDeleteCus = async (serviceId) => {
-    try {
-      await axios.delete(`${BASE_URL}/api/billing/${serviceId}`);
-      // Update local state after successful deletion
-      setcustomerServicesCus((prevServices) =>
-        prevServices.filter((service) => service._id !== serviceId)
-      );
-      setSelectedInvoice(null); // Close any open popups if needed
-    } catch (error) {
-      console.error("Error deleting Customer Details:", error);
-      // Handle error or show notification to user
-    }
-  };
 
- const filteredData = customerServicesCus.filter((service) => {
-  return (
-    service.invoiceNo.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-    moment(service.invoiceDate)
-      .format("DD-MM-YYYY")
-      .includes(searchTextCus) ||
-    service.clientName.toLowerCase().includes(searchTextCus.toLowerCase()) ||
-    service.clientContact.includes(searchTextCus)
-  );
-});
+ 
 
-console.log("Filtered Data:", filteredData);
+  const filteredData = customerServicesCus.filter((service) => {
+    return (
+      service?.invoiceNo?.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+      moment(service?.invoiceDate).format("DD-MM-YYYY").includes(searchTextCus) ||
+      service?.clientName?.toLowerCase().includes(searchTextCus.toLowerCase()) ||
+      (service?.clientContact && service.clientContact.includes(searchTextCus))
+    );
+  });
+  
+  console.log("customerServicesCus:", customerServicesCus);
+
+  console.log("Filtered Data:", filteredData);
 
   
   const handleDownloadPDF = (service) => {
@@ -236,6 +213,7 @@ console.log("Filtered Data:", filteredData);
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
 
+    
     const boldLabels = [
       "Discount Rate",
       "Discount Amount",
@@ -431,36 +409,106 @@ console.log("Filtered Data:", filteredData);
     
     setcustomerServicesCus(filteredData);
   };
+
   
-  
-  const handleStoreOptionChange = (serviceId, option) => {
-    const updatedServices = customerServicesCus.map((service) =>
-      service._id === serviceId
-        ? {
-            ...service,
-            selectedStoreOption: option,
-            selectedFactoryOption: option === "in" ? "out" : service.selectedFactoryOption,
-          }
-        : service
-    );
-  
-    setcustomerServicesCus(updatedServices);
+
+  const handleDeleteCus = async (serviceId) => {
+    try {
+      await axios.delete(`${BASE_URL}/api/billing/${serviceId}`);
+      // Update local state after successful deletion
+      setcustomerServicesCus((prevServices) =>
+        prevServices.filter((service) => service._id !== serviceId)
+      );
+      setSelectedInvoice(null); // Close any open popups if needed
+    } catch (error) {
+      console.error("Error deleting Customer Details:", error);
+      // Handle error or show notification to user
+    }
+  };
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(null);
+  const [tempStatus, setTempStatus] = useState(null); // Temp state for editing
+  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [Service, setService] = useState(null);
+  const [, setCustomerServicesCus] = useState([]);
+
+  const [selectedService, setSelectedService] = useState(null);
+
+  // Function to handle in/out button click
+  const handleButtonClick = (value) => {
+    setTempStatus(value); // Update temp status
+  };
+
+  const handleEditClick = (service) => {
+    setSelectedService(service);
+    setShowEditPopup(true);
+  };
+
+  // Function to handle closing edit popup
+  const handleClosePopup = () => {
+    setShowEditPopup(false);
+    setSelectedService(null); // Reset selected service after closing popup
   };
   
-  const handleFactoryOptionChange = (serviceId, option) => {
-    const updatedServices = customerServicesCus.map((service) =>
-      service._id === serviceId
-        ? {
-            ...service,
-            selectedFactoryOption: option,
-            selectedStoreOption: option === "in" ? "out" : service.selectedStoreOption,
-          }
-        : service
-    );
+
+  const payload = {
+    user: {
+      userId: '',
+      fullName: ''
+    },
+    // Other billing details...
+  };
+  const handleUpdateClick = async () => {
+    try {
+      if (!selectedService || !selectedService._id) {
+        console.error("Selected service or ID is undefined");
+        return;
+      }
   
-    setcustomerServicesCus(updatedServices);
+      const updatedService = {
+        storeStatus: storeStatus,
+        factoryStatus: factoryStatus,
+        // Add other fields to update as needed...
+      };
+  
+      await axios.put(`${BASE_URL}/api/billing/${selectedService._id}`, updatedService);
+  
+      console.log("Billing updated successfully");
+      // Close the edit popup after successful update
+      setShowEditPopup(false);
+      // Update the local state with the updated service
+      setCustomerServicesCus((prevServices) =>
+        prevServices.map((service) =>
+          service._id === selectedService._id ? { ...service, ...updatedService } : service
+        )
+      );
+    } catch (error) {
+      console.error("Error updating billing record:", error);
+      // Handle error if needed
+    }
   };
   
+  
+  const handleCancelButton = () => {
+    setSelectedService(null);
+    setShowEditPopup(false);
+  };
+
+  const handleStatusChange = (status) => {
+    setSelectedStatus(status);
+  };
+
+  const [storeStatus, setStoreStatus] = useState("");
+const [factoryStatus, setFactoryStatus] = useState("");
+
+const handleStoreStatusClick = (status) => {
+  setStoreStatus(storeStatus === status ? "" : status);
+};
+
+const handleFactoryStatusClick = (status) => {
+  setFactoryStatus(factoryStatus === status ? "" : status);
+};
+
 
   return (
     <>
@@ -498,25 +546,25 @@ console.log("Filtered Data:", filteredData);
         <table className="lab-service-table_5">
           <thead>
             <tr className="product-ooi">
-              <th className="product-ooi">Invoice No</th>
-              <th className="product-ooi">Invoice Date</th>
-              <th className="product-ooi">Staff Name</th>
-              <th className="product-ooi">Customer Name</th>
-              <th className="product-ooi">Contact</th>
-              <th className="product-ooi">Address</th>
-              <th className="product-ooi">D&R</th>
-              <th className="product-ooi">D&A</th>
-              <th className="product-ooi">T&R</th>
-              <th className="product-ooi">T&A</th>
-              <th className="product-ooi">Total</th>
-              <th className="product-ooi">Subtotal </th>
-              <th className="product-ooi">Currency</th>
-              <th className="product-ooi">Items</th>
-              <th className="product-ooi">Actions</th>             
-              <th className="product-ooi">Pay Mode</th>
+            <th className="product-ooi">Invoice No</th>
+            <th className="product-ooi">Invoice Date</th>
+            <th className="product-ooi">Staff Name</th>
+            <th className="product-ooi">Customer Name</th>
+            <th className="product-ooi">Contact</th>
+            <th className="product-ooi">Address</th>
+            <th className="product-ooi">D&R</th>
+            <th className="product-ooi">D&A</th>
+            <th className="product-ooi">T&R</th>
+            <th className="product-ooi">T&A</th>
+            <th className="product-ooi">Total</th>
+            <th className="product-ooi">Subtotal </th>
+            <th className="product-ooi">Currency</th>
+            <th className="product-ooi">Items</th>
+            <th className="product-ooi">Actions</th>             
+            <th className="product-ooi">Pay Mode</th>
               <th className='thbilling87' >Store (In/Out)</th>
               <th className="product-ooi" >Factory (In/Out)</th>
-              {/* <th className="product-ooi">Status</th>              */}
+               <th className="product-ooi">Status</th>              
               {/* <th className="product-ooi">Staff Name</th> */}
             </tr>
 
@@ -526,7 +574,7 @@ console.log("Filtered Data:", filteredData);
           <tbody>
             {filteredData
               .slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage)
-              .map((service) => (
+              .map((service, index) => (
                 <tr key={service._id}>
                   <td onClick={() => handleFieldClick(service)}>
                     {service.invoiceNo}
@@ -537,15 +585,16 @@ console.log("Filtered Data:", filteredData);
                       : ""}
                   </td>
                   <td onClick={() => handleFieldClick(service)}>
-                    {service.user ? service.user.fullName : ""} {/* Add null check */}
-                  </td>
-                  <td onClick={() => handleFieldClick(service)}>
-                    {service.clientName}
-                  </td>
-                  <td onClick={() => handleFieldClick(service)}>
+                  {service.user ? service.user.fullName : ""} {/* Add null check */}
+                </td>
+                <td onClick={() => handleFieldClick(service)}>
+                  {service.clientName}
+                </td>
+                <td onClick={() => handleFieldClick(service)}>
                     {service.clientContact}
                   </td>
-                  <td onClick={() => handleFieldClick(service)}>
+
+                <td onClick={() => handleFieldClick(service)}>
                     {service.customeraddress}
                   </td>
 
@@ -658,107 +707,63 @@ console.log("Filtered Data:", filteredData);
                     </div>
                   </td>
                   <td>{service.selectedPaymentMode}</td>
-                
-                  <td>
-                  <div className="checkbox-wrapper-8">
-          <input
-            type="checkbox"
-            id={`store-checkbox-${service._id}`}
-            className="tgl tgl-skewed"
-            checked={service.selectedStoreOption === "in"}
-            onChange={() =>
-              handleStoreOptionChange(
-                service._id,
-                service.selectedStoreOption === "in" ? "out" : "in"
-              )
-            }
-          />
-          <label
-            htmlFor={`store-checkbox-${service._id}`}
-            className="tgl-btn"
-            data-tg-on="IN"
-            data-tg-off="OUT"
-          ></label>
-        </div>
-</td>
 
-<td >
-<div className="checkbox-wrapper-8">
-          <input
-            type="checkbox"
-            id={`factory-checkbox-${service._id}`}
-            className="tgl tgl-skewed"
-            checked={service.selectedFactoryOption === "in"}
-            onChange={() =>
-              handleFactoryOptionChange(
-                service._id,
-                service.selectedFactoryOption === "in" ? "out" : "in"
-              )
-            }
-          />
-          <label
-            htmlFor={`factory-checkbox-${service._id}`}
-            className="tgl-btn"
-            data-tg-on="IN"
-            data-tg-off="OUT"
-          ></label>
-        </div>
-</td>
+            
 
-            {/* <td>
-            <button className="itembtn" onClick={() => handleEditCus(service)}>
-            <span>
-            <FaEdit />
-                                    </span>
-                        <GiClothes
-                          className="svg"
-                          style={{ fontSize: "2rem" }}
-                        />  </button>
-                <button className="buttonbin" onClick={() => handleDeleteCus(service._id)}>
-                <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 69 14"
-                        class="svgIcon bin-top"
-                      >
-                        <g clip-path="url(#clip0_35_24)">
-                          <path
-                            fill="black"
-                            d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"
-                          ></path>
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_35_24">
-                            <rect fill="white" height="14" width="69"></rect>
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 69 57"
-                        class="svgIcon bin-bottom"
-                      >
-                        <g clip-path="url(#clip0_35_22)">
-                          <path
-                            fill="black"
-                            d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"
-                          ></path>
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_35_22">
-                            <rect fill="white" height="57" width="69"></rect>
-                          </clipPath>
-                        </defs>
-                      </svg>
-</button>
+                  <td> <span className={service.storeStatus.includes("SIn") ? "S-In" : "S-Out"}>{service.storeStatus.includes("SIn") ? "S-In" : "S-Out"}</span></td>
+                  <td> <span className={service.factoryStatus.includes("FIn") ? "F-In" : "F-Out"}>{service.factoryStatus.includes("FIn") ? "F-In" : "F-Out"}</span></td>
 
-            </td> */}
+             <td>
+             <button className="Btn77" onClick={() => handleEditClick(service)}>Edit
+              <svg class="svg" viewBox="0 0 512 512">
+        <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"></path></svg></button>
+               
+            </td> 
            
                 </tr>
               ))}
           </tbody>
         </table>
+
+        <Popup open={showEditPopup} onClose={handleClosePopup}>
+        <div className="edit-popup">
+          <h2>Select Status</h2>
+          <button
+          onClick={() => handleStoreStatusClick("SIn")}
+          className={`status-button ${storeStatus === "SIn" ? "enabled" : "disabled"}`}
+          disabled={storeStatus === "SOut"}
+        >
+         <span>S-In</span> 
+        </button>
+        <button
+          onClick={() => handleStoreStatusClick("SOut")}
+          className={`status-button ${storeStatus === "SOut" ? "enabled" : "disabled"}`}
+          disabled={storeStatus === "SIn"}
+        >
+           <span>S-Out</span>
+        </button>
+        <button
+          onClick={() => handleFactoryStatusClick("FIn")}
+          className={`status-button ${factoryStatus === "FIn" ? "enabled" : "disabled"}`}
+          disabled={factoryStatus === "FOut"}
+        >
+           <span>F-In</span>
+        </button>
+        <button
+          onClick={() => handleFactoryStatusClick("FOut")}
+          className={`status-button ${factoryStatus === "FOut" ? "enabled" : "disabled"}`}
+          disabled={factoryStatus === "FIn"}
+        >
+           <span>F-Out</span>
+        </button>
+        
+
+        
+          <button onClick={handleUpdateClick}>Update</button>
+          <button onClick={handleCancelButton}>Cancel</button>
+
+        </div>
+      </Popup>
         <div className="pagination-container">
           <ReactJsPagination
             activePage={activePage}
@@ -802,18 +807,7 @@ console.log("Filtered Data:", filteredData);
           />
         </Popup>
 
-        <Popup
-          open={selectedServiceCus !== null || isAddPopupOpenCus}
-          onClose={handleCancelCus}
-          closeOnDocumentClick={true}
-        >
-          <CustomerForm
-            selectedServiceCus={selectedServiceCus}
-            onSubmit={handleAddCusOrUpdate}
-            onCancel={handleCancelCus}
-            onDelete={handleDeleteCus}
-          />
-        </Popup>
+       
       </div>
     </>
   );

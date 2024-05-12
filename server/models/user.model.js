@@ -1,27 +1,28 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  name: String, // Update to use fullName instead of firstName and lastName
+  name: String,
   email: {
     type: String,
     unique: true,
   },
-  storeId: {
-    type: String,
-    required: true,
-    unique: true
+  isActive: {
+    type: Boolean,
+    default: true
   },
-  phoneNumber:{
-    type:Number,
+  storeId: String,
+  mobileNumber: {
+    type: String,
     required: true
   },
   area: {
     type: String,
-    required: true
+    
   },
-  userType: String,
+ 
   password: String,
   confirmPassword: String,
+ 
 });
 
 const UserModel = mongoose.model("User", UserSchema);

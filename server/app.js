@@ -5,7 +5,9 @@ const bodyParser = require('body-parser');
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const billRoutes = require("./routes/billsRoutes");
 const userRoutes = require("./routes/userRoutes");
+const addStoreRoutes = require("./routes/addStoreRoutes");
 const registerRoutes = require("./routes/registerRoutes");
+const staffRoutes = require('./routes/staffRoutes');
 const contactRoutes = require("./routes/ContactRoutes");
 const dotenv = require("dotenv");
 const app = express();
@@ -34,6 +36,8 @@ mongoose
 // Use Routes
 app.use("/", invoiceRoutes);
 app.use("/", userRoutes);
+app.use("/api", addStoreRoutes);
+app.use('/api', staffRoutes);
 app.use("/api", registerRoutes);
 app.use("/api", billRoutes);
 app.use('/api/contact', contactRoutes); 

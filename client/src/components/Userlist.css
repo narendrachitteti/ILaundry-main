@@ -24,11 +24,11 @@
     /* margin-left: 10px;/ */
   }
   .details{
-    text-align: center;
-    font-size: 1.8 rem;
+    text-align: left;
+    /* font-size: 14px; */
     padding-top: 20px;
     color: #528575;
-    margin-left: 40px;
+    margin-left: 30px;
   }
   .search098{
     padding: 10px 18px;
@@ -72,6 +72,8 @@
 .button-active{
   padding: 6px 6px;
   cursor: pointer;
+  padding: 6px 12px; /* Increase padding */
+  margin-right: 10px; /* Add right margin */
   border: none;
   border-radius: 4px;
   transition: background-color 0.3s ease;
@@ -90,43 +92,44 @@
   
 }
 
-.button-active:hover,
+
 .button-inactive:hover {
-  background-color: #201c98; /* Green */
+  background-color: #8f0b0f; /* Green */
 }
 
 .button-active {
-  background-color: #350e98; /* Green */
+  background-color: #535257; /* Green */
   color: white;
 }
 
 .button-inactive {
-  background-color: #f44336; /* Red */
+  background-color: #535257; /* Red */
   color: white;
 }
 
 /* Popup styles */
-/* .popup {
+.popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgba(0, 0, 0, 0.5);
-  width: 100%;
-  height: 100%;
+  width: 40%;
+  height: 50%;
   z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
-} */
+  border-radius: 10px;
+}
 
 .popup-content {
   background-color: rgb(171, 160, 160);
-  padding: 20px;
+  padding: 25px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   text-align: center;
-} */
+} 
 
 .close {
   position: absolute;
@@ -135,5 +138,29 @@
   font-size: 20px;
   cursor: pointer;
 }
+.button-active {
+  background-color: green; /* Green color for active button */
+  color: white;
+}
+
+.button-inactive {
+  background-color: red; /* Red color for inactive button */
+  color: white;
+}
+/* CSS for the Font Awesome toggle icons */
+.toggle-icon {
+  cursor: pointer;
+  font-size: 32px; /* Adjust the font size as needed */
+  margin-right: 10px; /* Adjust margin as needed */
+}
+
+.toggle-icon.active {
+  color: green; /* Change color for active state */
+}
+
+.toggle-icon.inactive {
+  color: red; /* Change color for inactive state */
+}
+
 
   

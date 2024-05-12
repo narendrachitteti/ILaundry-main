@@ -1,0 +1,111 @@
+/* StaffRegister.css */
+
+/* Overall styling */
+.back-link {
+  display: block;
+  margin-bottom: 20px;
+  color: #007bff; /* Set your desired link color */
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.back-icon {
+  width: 25px;
+  height: 25px;
+}
+
+.container-staffregister {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  background: url("../Register/Laundry-img.jpg") center/cover;
+
+  height: 100vh; /* Adjust height as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.Inner-container-staffregister {
+  background-color: white; /* Set white background for the form */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px; /* Set your desired width */
+}
+
+.title {
+  text-align: center;
+}
+
+/* Form styling */
+.form-group-staffRegister {
+  margin-bottom: 20px;
+}
+
+.section-label,
+.name-label,
+.mobileNumber-label,
+.designation-label,
+.dob-label,
+.qualification-label,
+.password-label,
+.email-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.section-select,
+.name-input,
+.mobileNumber-input,
+.designation-input,
+.dob-input,
+.qualification-input,
+.password-input,
+.email-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc; /* Set your desired border color */
+  box-sizing: border-box;
+}
+
+.sex-input {
+  margin-top: 5px;
+}
+
+/* Two-column layout */
+.form-columns {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.form-column {
+  width: 48%; /* Adjust width as needed */
+}
+
+/* Button styling */
+.buttonabcd1234567 {
+  background-color: #007bff; /* Set your desired button color */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px; /* Adjust margin as needed */
+}
+
+.buttonabcd1234567:hover {
+  background-color: #0056b3; /* Change button color on hover */
+}

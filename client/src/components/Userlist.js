@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Userlist.css'; // Import CSS file
 import Navbar from './Navbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
+
 
 const Userlist = () => {
     const [details, setDetails] = useState([]);
@@ -30,19 +33,50 @@ const Userlist = () => {
 
     const handleActivate = async (storeId) => {
         try {
-            const response = await axios.post('http://localhost:5000/api/activateUser', { storeId });
+            const response = await axios.post('http://localhost:5000/api/activate', { storeId });
             if (response.status === 200) {
                 setActiveUsers(prevActiveUsers => [...prevActiveUsers, storeId]);
-                setPopupMessage('');
+                setPopupMessage('User activated successfully');
+
+                // Redirect the user to the login page and auto-fill the fields
+                setTimeout(() => {
+                    // Replace this URL with your login page URL
+                    window.location.href = 'http://localhost:3000/login';
+
+                    // Wait a short delay before filling the form fields
+                    setTimeout(() => {
+                        // Assuming storeId and password are input field IDs
+                        document.getElementById('storeId').value = storeId;
+                        document.getElementById('password').value = 'password'; // Assuming a default password
+
+                        // Submit the form
+                        document.getElementById('loginForm').submit();
+                    }, 1000); // Adjust the delay as needed
+                }, 2000); // Adjust the delay as needed
+
+                setShowPopup(true);
             }
         } catch (error) {
             console.error('Error activating user:', error);
+            setPopupMessage('An error occurred while activating user');
+            setShowPopup(true);
         }
     };
 
-    const handleDeactivate = (storeId) => {
-        setShowPopup(true);
-        setPopupMessage('User is inactive!'); // Set the message for the popup
+
+    const handleDeactivate = async (storeId) => {
+        try {
+            const response = await axios.post('http://localhost:5000/api/deactivate', { storeId });
+            if (response.status === 200) {
+                setActiveUsers(prevActiveUsers => prevActiveUsers.filter(id => id !== storeId));
+                setPopupMessage('User deactivated successfully');
+                setShowPopup(true);
+            }
+        } catch (error) {
+            console.error('Error deactivating user:', error);
+            setPopupMessage('An error occurred while deactivating user');
+            setShowPopup(true);
+        }
     };
 
     const handlePopupClose = () => {
@@ -50,14 +84,12 @@ const Userlist = () => {
     };
 
     const filteredDetails = details.filter(detail =>
-        detail.email && detail.email.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
+        (detail.email && detail.email.toLowerCase().includes(searchQuery)) ||
+        (detail.storeId && detail.storeId.toLowerCase().includes(searchQuery))
+    )
     return (
         <>
             <Navbar />
-            <br />
-            <br />
             <br />
             <div className='overalldiv'>
                 <br />
@@ -90,14 +122,20 @@ const Userlist = () => {
                                 <td>{detail.lastName}</td>
                                 <td>{detail.email}</td>
                                 <td>{detail.userType}</td>
-                                <td>
+                                <td onClick={() => {
+                                    if (activeUsers.includes(detail.storeId)) {
+                                        handleDeactivate(detail.storeId);
+                                    } else {
+                                        handleActivate(detail.storeId);
+                                    }
+                                }}>
                                     {activeUsers.includes(detail.storeId) ? (
-                                        <button className='button-active'>Active</button>
+                                        <FontAwesomeIcon icon={faToggleOn} className='toggle-icon active' />
                                     ) : (
-                                        <button onClick={() => handleActivate(detail.storeId)} className='button-active'>Activate</button>
+                                        <FontAwesomeIcon icon={faToggleOff} className='toggle-icon inactive' />
                                     )}
-                                    <button onClick={() => handleDeactivate(detail.storeId)} className='button-inactive'>Inactive</button>
                                 </td>
+
                             </tr>
                         ))}
                     </tbody>

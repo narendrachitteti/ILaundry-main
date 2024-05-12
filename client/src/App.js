@@ -19,9 +19,12 @@ import Dashboard from "./Pages/Dashboard.js";
 import OrdersTable from "./Pages/OrdersTable.js";
 import StarRating from "./Pages/StarRating.js";
 import StaffNavbar from "./components/StaffNavbar.js";
-import AllStores from './Pages/AllStores.js';
 
-
+import AllStores from "./Pages/AllStores.js";
+import TotalCustomers from "./Pages/TotalCustomers.js";
+import AddStore from "./components/Register/AddStore.js";
+import StaffRegister from "./components/Register/StaffRegister.js";
+import TodayOrders from "./Pages/TodayOrders.js"
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -45,6 +48,7 @@ function App() {
             <Route path="/PreviousBills" element={<PreviousBills />} />
             <Route path="/Bills" element={<Bills />} />
             <Route path="/Register" element={<Register />} />
+           
             <Route path="/Registration" element={<Registration />} />
             <Route path="/OldLogin" element={<OldLogin />} />
             <Route path="/StaffLogin" element={<StaffLogin />} />
@@ -54,12 +58,13 @@ function App() {
 
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/AllStores" element={<AllStores />} />
+            <Route path="/TodayOrders" element={<TodayOrders />} />
 
-
+            <Route path="/AddStore" element={<AddStore />} />
+            <Route path="/StaffRegister" element={<StaffRegister />} />
             <Route path="/rating" element={<StarRating />} />
             <Route path="/orderstable" element={<OrdersTable />} />
-            {/* <Route path="/TotalCustomer" element={<TotalCustomer/>}/> */}
-
+            <Route path="/TotalCustomers" element={<TotalCustomers />} />
             <Route path="/stafflogin" element={<StaffNavbar/>}/>
           </Routes>
         </Router>
